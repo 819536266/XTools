@@ -1,4 +1,3 @@
-/*
 package com.xdl.provider;
 
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
@@ -22,13 +21,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.List;
-
-*/
-/**
- * @author huboxin
- * @description: TODO
- * @date 13:32 2020/5/26
- **//*
 
 public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
 
@@ -131,4 +123,3 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
     }
 
 }
-*/

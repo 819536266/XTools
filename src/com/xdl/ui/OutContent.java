@@ -2,6 +2,8 @@ package com.xdl.ui;
 
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.EditorTextField;
+import com.xdl.model.DataCenter;
+import com.xdl.model.Row;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -9,10 +11,13 @@ import java.awt.*;
 import java.util.List;
 
 /**
- *@program: Mark
- *@description: 创建内容
- *@author: 胡博欣
- *@create: 2020-05-23-51
+ *@program:Mark
+ *
+ *@description:创建内容
+ *
+ *@author:胡博欣
+ *
+ *@create:2020-05-23-51
  */
 public class OutContent extends DialogWrapper {
 
@@ -51,7 +56,7 @@ public class OutContent extends DialogWrapper {
         return jPanel;
     }
 
-   /* @Override
+    @Override
     protected JComponent createSouthPanel() {
         JPanel jPanel = new JPanel();
         JButton jButton = new JButton("添加笔记");
@@ -68,7 +73,7 @@ public class OutContent extends DialogWrapper {
         });
         jPanel.add(jButton);
         return jPanel;
-    }*/
+    }
 
 
 

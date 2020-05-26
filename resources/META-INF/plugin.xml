@@ -1,6 +1,6 @@
 <idea-plugin>
-  <id>com.your.company.unique.plugin.id</id>
-  <name>Plugin display name here</name>
+  <id>com.xdl</id>
+  <name>XHttpPlugin</name>
   <version>1.0</version>
   <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
@@ -27,13 +27,11 @@
   <extensions defaultExtensionNs="com.intellij">
     <!--<codeInsight.lineMarkerProvider  id="XHttpLineMarkerProvider" implementationClass="com.xdl.provider.XHttpLineMarkerProvider" />-->
     <!-- Add your extensions here -->
-    <toolWindow id="XHttp" anchor="right" factoryClass="com.xdl.ui.XHttpWindowFactory"  secondary="true"/>
-    <toolWindow id="MarkBook" anchor="right" factoryClass="com.xdl.ui.OutFactory"   secondary="true"/>
+    <toolWindow id="XHttp"  anchor="right" factoryClass="com.xdl.ui.XHttpWindowFactory"  secondary="true"/>
   </extensions>
 
   <actions>
-    <!-- Add your actions here -->
-    <action id="XHttpAction" class="com.xdl.action.XHttpAction" text="创建MD笔记" description="创建MD笔记">
+    <action id="XHttpAction" class="com.xdl.action.XHttpAction" text="XHttpAction" description="XHttpAction">
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
     </action>
   </actions>
