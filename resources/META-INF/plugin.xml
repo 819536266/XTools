@@ -23,6 +23,9 @@
   <!-- uncomment to enable plugin in all products
   <depends>com.intellij.modules.lang</depends>
   -->
+  <depends>com.intellij.spring</depends>
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.java</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <!--<codeInsight.lineMarkerProvider  id="XHttpLineMarkerProvider" implementationClass="com.xdl.provider.XHttpLineMarkerProvider" />-->
