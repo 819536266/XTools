@@ -2,18 +2,19 @@
   <id>com.xdl</id>
   <name>XHttpPlugin</name>
   <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+  <vendor email="819536266@qq.com" url="https://gitee.com/axz123/Xhttp">Xhttp</vendor>
 
   <description><![CDATA[
-      Enter short description for your plugin here.<br>
+     运行基于SpringBoot,SpringMvc开发的接口,支持PostMapping、GetMapping、DeleteMapping、PutMapping、PatchMapping.<br>
       <em>most HTML tags may be used</em>
     ]]></description>
 
   <change-notes><![CDATA[
-      Add change notes here.<br>
+      修改窗口适配问题,完善接口参数缓存.<br>
       <em>most HTML tags may be used</em>
     ]]>
   </change-notes>
+
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
   <idea-version since-build="173.0"/>

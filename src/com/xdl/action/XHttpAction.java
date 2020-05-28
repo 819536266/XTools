@@ -23,6 +23,8 @@ import java.util.Map;
 
 public class XHttpAction extends AnAction {
 
+    private static Map<String,XHttpModel> modelMap=new HashMap<>();
+
     private PsiMethod psiMethod;
 
     private SpringRequestMethodAnnotation methodType;
@@ -50,11 +52,17 @@ public class XHttpAction extends AnAction {
      * @return
      */
     private  XHttpModel createXHttpModel(){
-        XHttpModel xHttpModel = new XHttpModel();
         PsiClass psiClass=(PsiClass) psiMethod.getParent();
+        String id = psiClass.getQualifiedName() + "." + psiMethod.getName();
+        XHttpModel xHttpModel1 = modelMap.get(id);
+        if(ObjectUtil.isNotEmpty(xHttpModel1)){
+            return xHttpModel1;
+        }
+        XHttpModel xHttpModel = new XHttpModel();
         xHttpModel.setMethodType(methodType.getMethod());
         xHttpModel.setParamList(getParamList(psiMethod));
         xHttpModel.setPath(getPath(psiClass,psiMethod));
+        modelMap.put(id, xHttpModel);
         return xHttpModel;
     }
 

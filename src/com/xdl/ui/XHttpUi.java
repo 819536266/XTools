@@ -60,6 +60,8 @@ public class XHttpUi {
     private JTextArea textArea3;
     private JButton closeButton;
     private JTextField pathPrefix;
+    private JButton emptyResponseButton;
+    private JButton emptyButton;
     private JLabel methodType;
 
     public static XHttpModel xHttpModel;
@@ -78,6 +80,7 @@ public class XHttpUi {
 
 
     }
+
     private void init() {
         //返回数据 自动换行
         responseContent.setLineWrap(true);
@@ -110,7 +113,7 @@ public class XHttpUi {
             List<String[]> strings1 = JSONUtil.parseArray(JSONUtil.toJsonStr(dataVector1))
                     .toList(String[].class);
             for (String[] o : strings1) {
-                map.put(o[1],o[2] );
+                map.put(o[1], o[2]);
             }
             Vector dataVector = paramTableModel.getDataVector();
             List<XHttpParam> paramList = xHttpModel.getParamList();
@@ -128,7 +131,7 @@ public class XHttpUi {
             Map<String, String> header = xHttpModel.getHeader();
             header.forEach(request::header);
             paramList.forEach(xHttpParam -> {
-                if(xHttpParam.getIsCheck())request.form(xHttpParam.getName(), xHttpParam.getValue());
+                if (xHttpParam.getIsCheck()) request.form(xHttpParam.getName(), xHttpParam.getValue());
             });
             HttpResponse execute = null;
             try {
@@ -139,7 +142,19 @@ public class XHttpUi {
             responseContent.setText(execute.body());
         });
 
-        closeButton.addActionListener(e ->toolWindow.hide(null));
+        closeButton.addActionListener(e -> toolWindow.hide(null));
+
+
+        emptyButton.addActionListener(e -> {
+            path.setText("");
+            paramTableModel.setDataVector(null, paramTitle);
+            //设置参数 第一列为复选框
+            TableColumn column = paramTable.getColumnModel()
+                    .getColumn(0);
+            column.setCellEditor(paramTable.getDefaultEditor(Boolean.class));
+            column.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
+        });
+        emptyResponseButton.addActionListener(e -> responseContent.setText(""));
     }
 
 
@@ -162,7 +177,6 @@ public class XHttpUi {
                 .forEach(xHttpParam -> {
                     paramTableModel.addRow(new Object[]{xHttpParam.getIsCheck(), xHttpParam.getName(), xHttpParam.getType(), xHttpParam.getValue()});
                 });
-
         headerTableModel.addRow(new Object[]{true, "token", ""});
         path.setText(pathPrefix.getText() + xHttpModel.getPath());
 //        methodType.setIcon(Icons.getMethodIcon(xHttpModel.getMethodType()));
