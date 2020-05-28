@@ -23,12 +23,9 @@
   <!-- uncomment to enable plugin in all products
   <depends>com.intellij.modules.lang</depends>
   -->
-  <depends>com.intellij.spring</depends>
-  <depends>com.intellij.modules.platform</depends>
-  <depends>com.intellij.java</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <!--<codeInsight.lineMarkerProvider  id="XHttpLineMarkerProvider" implementationClass="com.xdl.provider.XHttpLineMarkerProvider" />-->
+    <codeInsight.lineMarkerProvider  language="JAVA"  implementationClass="com.xdl.provider.XHttpLineMarkerProvider" id="XHttpLineMarkerProvider"   />
     <!-- Add your extensions here -->
     <toolWindow id="XHttp"  anchor="right" factoryClass="com.xdl.ui.XHttpWindowFactory"  secondary="true"/>
   </extensions>

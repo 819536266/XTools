@@ -10,11 +10,11 @@
  */
 package com.xdl.util;
 
-import com.intellij.ui.IconManager;
-import com.xdl.model.RequestMethod;
+import cn.hutool.http.Method;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.net.URL;
 
 /**
  * @author hbx
@@ -34,7 +34,8 @@ public class Icons {
 
     @NotNull
     public static Icon load(@NotNull String path) {
-        return IconManager.getInstance().getIcon(path, Icons.class);
+        URL resource = Icons.class.getResource(path);
+        return new ImageIcon(resource);
     }
 
     /**
@@ -44,7 +45,7 @@ public class Icons {
      * @return icon
      */
     @NotNull
-    public static Icon getMethodIcon(RequestMethod method) {
+    public static Icon getMethodIcon(Method method) {
         if (method == null) {
             return Icons.METHOD_UNDEFINED;
         }
@@ -58,6 +59,34 @@ public class Icons {
             case PUT:
                 return Icons.METHOD_PUT;
             case PATCH:
+                return Icons.METHOD_PATCH;
+            default:
+                return Icons.METHOD_UNDEFINED;
+        }
+    }
+
+
+    /**
+     * 获取方法对应的图标
+     *
+     * @param method 请求类型
+     * @return icon
+     */
+    @NotNull
+    public static Icon getMethodIcon(String method) {
+        if (method == null) {
+            return Icons.METHOD_UNDEFINED;
+        }
+        switch (method) {
+            case SpringUtils.GET_MAPPING:
+                return Icons.METHOD_GET;
+            case SpringUtils.POST_MAPPING:
+                return Icons.METHOD_POST;
+            case SpringUtils.DELETE_MAPPING:
+                return Icons.METHOD_DELETE;
+            case SpringUtils.PUT_MAPPING:
+                return Icons.METHOD_PUT;
+            case SpringUtils.PATCH_MAPPING:
                 return Icons.METHOD_PATCH;
             default:
                 return Icons.METHOD_UNDEFINED;

@@ -1,5 +1,6 @@
 package com.xdl.model;
 
+import cn.hutool.http.Method;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,37 +17,66 @@ public enum SpringRequestMethodAnnotation {
     /**
      * GetMapping
      */
-    GET_MAPPING("org.springframework.web.bind.annotation.GetMapping", RequestMethod.GET),
+    GET_MAPPING("org.springframework.web.bind.annotation.GetMapping", Method.GET),
+
+    /**
+     * GetMapping
+     */
+    GET_MAPPING_NAME("@GetMapping", Method.GET),
 
     /**
      * PostMapping
      */
-    POST_MAPPING("org.springframework.web.bind.annotation.PostMapping", RequestMethod.POST),
+    POST_MAPPING("org.springframework.web.bind.annotation.PostMapping", Method.POST),
 
+    /**
+     * GetMapping
+     */
+    POST_MAPPING_NAME("@PostMapping", Method.POST),
     /**
      * PutMapping
      */
-    PUT_MAPPING("org.springframework.web.bind.annotation.PutMapping", RequestMethod.PUT),
+    PUT_MAPPING("org.springframework.web.bind.annotation.PutMapping", Method.PUT),
 
+    /**
+     * GetMapping
+     */
+    PUT_MAPPING_NAME("@PutMapping", Method.PUT),
     /**
      * DeleteMapping
      */
-    DELETE_MAPPING("org.springframework.web.bind.annotation.DeleteMapping", RequestMethod.DELETE),
+    DELETE_MAPPING("org.springframework.web.bind.annotation.DeleteMapping", Method.DELETE),
+
+    /**
+     * GetMapping
+     */
+    DELETE_MAPPING_NAME("@DeleteMapping", Method.DELETE),
 
     /**
      * PatchMapping
      */
-    PATCH_MAPPING("org.springframework.web.bind.annotation.PatchMapping", RequestMethod.PATCH),
+    PATCH_MAPPING("org.springframework.web.bind.annotation.PatchMapping", Method.PATCH),
 
+
+    /**
+     * GetMapping
+     */
+    PATCH_MAPPING_NAME("@PatchMapping", Method.PATCH),
     /**
      * RequestParam
      */
-    REQUEST_PARAM("org.springframework.web.bind.annotation.RequestParam", null);
+    REQUEST_PARAM("org.springframework.web.bind.annotation.RequestParam", null),
+
+    /**
+     * GetMapping
+     */
+    REQUEST_PARAM_NAME("@GetMapping",null);
+
 
     private final String qualifiedName;
-    private final RequestMethod method;
+    private final Method method;
 
-    SpringRequestMethodAnnotation(String qualifiedName, RequestMethod method) {
+    SpringRequestMethodAnnotation(String qualifiedName, Method method) {
         this.qualifiedName = qualifiedName;
         this.method = method;
     }
@@ -71,7 +101,7 @@ public enum SpringRequestMethodAnnotation {
         return null;
     }
 
-    public RequestMethod getMethod() {
+    public Method getMethod() {
         return this.method;
     }
 

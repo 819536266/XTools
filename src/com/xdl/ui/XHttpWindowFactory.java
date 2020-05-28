@@ -18,7 +18,7 @@ public class XHttpWindowFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         //创建出NoteListWindow对象
-        XHttpUi xHttpUi = new XHttpUi();
+        XHttpUi xHttpUi = new XHttpUi(project,toolWindow);
         //获取内容工厂的实例
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         //获取用于toolWindow显示的内容
