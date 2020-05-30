@@ -70,7 +70,7 @@ public enum SpringRequestMethodAnnotation {
     /**
      * GetMapping
      */
-    REQUEST_PARAM_NAME("@GetMapping",null);
+    REQUEST_PARAM_NAME("@RequestMapping",null);
 
 
     private final String qualifiedName;

@@ -1,34 +1,25 @@
 package com.xdl.ui;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.http.Method;
 import cn.hutool.json.JSONUtil;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.wm.ToolWindow;
 import com.xdl.model.XHttpModel;
 import com.xdl.model.XHttpParam;
 import com.xdl.util.Icons;
 import com.xdl.util.SpringUtils;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.stream.Stream;
 
 /**
  * @author huboxin
@@ -39,6 +30,8 @@ import java.util.stream.Stream;
  */
 @Data
 public class XHttpUi {
+
+
     private JPanel parentPanel;
     private JTabbedPane tabbedPane1;
     private JTabbedPane request;
@@ -70,11 +63,13 @@ public class XHttpUi {
 
     public static XHttpUi xHttpUi;
 
-    private static String[] paramTitle = {"选中", "参数名称", "类型", "参数值"};
-    private static String[] headerTitle = {"选中", "请求头", "内容"};
+    private static final String[] paramTitle = {"选中", "参数名称", "类型", "参数值"};
+    private static final String[] headerTitle = {"选中", "请求头", "内容"};
 
     private static DefaultTableModel paramTableModel = new DefaultTableModel(null, paramTitle);
-    private static DefaultTableModel headerTableModel = new DefaultTableModel(null, headerTitle);
+    private static  DefaultTableModel headerTableModel = new DefaultTableModel(null, headerTitle);
+
+    private static  Map<String,String> herder= CollUtil.newHashMap(1);
 
     public XHttpUi() {
 
@@ -91,11 +86,6 @@ public class XHttpUi {
 
         headerTable.setModel(headerTableModel);
         headerTable.setEnabled(true);
-        //设置参数 第一列为复选框
-        TableColumn column = paramTable.getColumnModel()
-                .getColumn(0);
-        column.setCellEditor(paramTable.getDefaultEditor(Boolean.class));
-        column.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
     }
 
     public XHttpUi(Project project, ToolWindow toolWindow) {
@@ -104,6 +94,7 @@ public class XHttpUi {
         XHttpUi.xHttpUi = this;
 
         send.addActionListener(e -> {
+            System.out.println("开始发送请求");
             //重新封装参数
             Vector dataVector1 = headerTableModel.getDataVector();
             xHttpModel.getHeader()
@@ -128,6 +119,7 @@ public class XHttpUi {
                 paramList.add(xHttpParam);
             }
             HttpRequest request = HttpUtil.createRequest(xHttpModel.getMethodType(), SpringUtils.restful(path.getText(), paramList));
+            request.setReadTimeout(2000).timeout(2000);
             Map<String, String> header = xHttpModel.getHeader();
             header.forEach(request::header);
             paramList.forEach(xHttpParam -> {
@@ -135,9 +127,11 @@ public class XHttpUi {
             });
             HttpResponse execute = null;
             try {
+                System.out.println("开始发请求");
                 execute = request.execute(true);
             } catch (Exception e1) {
                 responseContent.setText("请求超时!!!!!");
+                System.out.println("请求超时!!!!!");
             }
             responseContent.setText(execute.body());
         });
@@ -165,6 +159,15 @@ public class XHttpUi {
         //设置参数 第一列为复选框
         TableColumn column = paramTable.getColumnModel()
                 .getColumn(0);
+//        EditorComboBox editorComboBox = new EditorComboBox("文本");
+//        editorComboBox.addItem("文件");
+//        editorComboBox.addActionListener(e -> {
+//            System.out.println(editorComboBox.getSelectedItem());
+//        });
+//        TableColumn column2 = paramTable.getColumnModel()
+//                .getColumn(2);
+//        column2.setCellEditor(new DefaultCellEditor(editorComboBox));
+        column.setCellRenderer(paramTable.getDefaultRenderer(List.class));
         column.setCellEditor(paramTable.getDefaultEditor(Boolean.class));
         column.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
         TableColumn column1 = headerTable.getColumnModel()
@@ -175,11 +178,14 @@ public class XHttpUi {
         //添加对应参数
         xHttpModel.getParamList()
                 .forEach(xHttpParam -> {
-                    paramTableModel.addRow(new Object[]{xHttpParam.getIsCheck(), xHttpParam.getName(), xHttpParam.getType(), xHttpParam.getValue()});
+                    paramTableModel.addRow(new Object[]{xHttpParam.getIsCheck(), xHttpParam.getName(), "文本", xHttpParam.getValue()});
                 });
-        headerTableModel.addRow(new Object[]{true, "token", ""});
+        if(ObjectUtil.isNotEmpty(herder.get("token"))) herder.put("token","");
+        herder.forEach((k,v)->{
+            headerTableModel.addRow(new Object[]{true,k,v});
+        });
         path.setText(pathPrefix.getText() + xHttpModel.getPath());
-//        methodType.setIcon(Icons.getMethodIcon(xHttpModel.getMethodType()));
+        methodType.setIcon(Icons.getMethodIcon(xHttpModel.getMethodType()));
         //打开
         XHttpUi.toolWindow.show(null);
     }

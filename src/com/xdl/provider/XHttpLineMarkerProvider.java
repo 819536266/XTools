@@ -3,6 +3,8 @@ package com.xdl.provider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.Method;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProviderDescriptor;
 import com.intellij.execution.ExecutionBundle;
@@ -47,15 +49,37 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
         // System.out.println("类内容  :"+psiMethod.getBody().getText()); //方法内容 不带方法名
         List<XHttpAction> list = CollUtil.newArrayList();
         for (SpringRequestMethodAnnotation methodType : SpringUtils.METHOD_TYPE) {
+            //获取方法上的Mapping注解
             PsiAnnotation annotation = psiMethod.getAnnotation(methodType.getQualifiedName());
-            if(ObjectUtil.isNotEmpty(annotation)){
-                XHttpAction xHttpAction = new XHttpAction(psiMethod, methodType, SpringUtils.getMethodText(methodType.getMethod()),"发个请求吧!", Icons.getMethodIcon(methodType.getMethod()));
-                list.add(xHttpAction);
+            if (ObjectUtil.isEmpty(annotation)) {
+                continue;
             }
+            //判断是否是RequestMapping
+            if (SpringRequestMethodAnnotation.REQUEST_MAPPING.equals(methodType)) {
+                PsiAnnotationMemberValue method = annotation.findAttributeValue("method");
+                //是RequestMapping并且无method参数值
+                if (ObjectUtil.isEmpty(method) || ObjectUtil.isEmpty(method.getText()) || ObjectUtil.isEmpty(SpringUtils.getMethodParamMapping(method.getText()))) {
+                    for (SpringRequestMethodAnnotation springRequestMethodAnnotation : SpringUtils.NO_REQUEST_METHOD_TYPE) {
+                        XHttpAction xHttpAction = new XHttpAction(psiMethod, springRequestMethodAnnotation
+                                , SpringUtils.getMethodText(springRequestMethodAnnotation.getMethod())
+                                , "发个请求吧!", Icons.getMethodIcon(springRequestMethodAnnotation.getMethod()));
+                        list.add(xHttpAction);
+                    }
+                    break;
+                }
+                //根据对应参数值获取对应 SpringRequestMethodAnnotation
+                methodType = SpringUtils.getMethodParamMapping(method.getText());
+            }
+            XHttpAction xHttpAction = new XHttpAction(psiMethod, methodType
+                    , SpringUtils.getMethodText(methodType.getMethod()), "发个请求吧!"
+                    , Icons.getMethodIcon(methodType.getMethod()));
+            list.add(xHttpAction);
+            break;
         }
-        if(CollUtil.isEmpty(list)){
+        if (CollUtil.isEmpty(list)) {
             return null;
         }
+
         DefaultActionGroup actionGroup = new DefaultActionGroup();
         actionGroup.addAll(list);
         // System.out.println("+++"+getMapping.getText());  +++@PostMapping("resetCompeting/{materialId}")
@@ -63,9 +87,11 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
         // parameterList.getText(); System.out.println("+++"+text);  +++("resetCompeting/{materialId}")
         // System.out.println(value.getText()); //"resetCompeting/{materialId}"
 //            JvmAnnotationConstantValue attributeValue = (JvmAnnotationConstantValue) attribute.getAttributeValue();
-            //System.out.println("----"+attribute.getAttributeName()+"--"+attributeValue.getConstantValue());  // ----value--resetCompeting/{materialId}
-        return new RunLineMarkerInfo(psiMethod.getIdentifyingElement(), AllIcons.RunConfigurations.TestState.Run, t->"发送请求", actionGroup);
+        //System.out.println("----"+attribute.getAttributeName()+"--"+attributeValue.getConstantValue());  // ----value--resetCompeting/{materialId}
+        return new RunLineMarkerInfo(psiMethod.getNameIdentifier(), AllIcons.RunConfigurations.TestState.Run, t -> "发送请求", actionGroup);
     }
+
+
 
     @Override
     public void collectSlowLineMarkers(@NotNull List<PsiElement> list, @NotNull Collection<LineMarkerInfo> collection) {
@@ -77,7 +103,7 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
 
         RunLineMarkerInfo(PsiElement element, Icon icon, Function<PsiElement, String> tooltipProvider,
                           DefaultActionGroup actionGroup) {
-            super(element, element.getTextRange(), icon, 0,tooltipProvider, null, GutterIconRenderer.Alignment.CENTER);
+            super(element, element.getTextRange(), icon, 0, tooltipProvider, null, GutterIconRenderer.Alignment.CENTER);
             myActionGroup = actionGroup;
         }
 
@@ -106,6 +132,7 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
         public MarkupEditorFilter getEditorFilter() {
             return MarkupEditorFilterFactory.createIsNotDiffFilter();
         }
+
     }
 
     @NotNull

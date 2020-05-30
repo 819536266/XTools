@@ -23,9 +23,9 @@ import java.util.Map;
 @Accessors(chain = true)
 public class XHttpModel implements Serializable {
 
-    private static String HTTP="http://";
+    private static final String HTTP="http://";
 
-    private static String HTTPS="https://";
+    private static final String HTTPS="https://";
 
     /**
      * 域名
@@ -50,7 +50,7 @@ public class XHttpModel implements Serializable {
     /**
      * 请求头
      */
-    private Map<String,String>  header=new HashMap<>(1);
+    private final Map<String,String>  header=new HashMap<>(1);
 
     /**
      * httpRequest

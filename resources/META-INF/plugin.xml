@@ -1,29 +1,39 @@
 <idea-plugin>
   <id>com.xdl</id>
-  <name>XHttpPlugin</name>
-  <version>1.0</version>
-  <vendor email="819536266@qq.com" url="https://gitee.com/axz123/Xhttp">Xhttp</vendor>
+  <name>XHttp</name>
+  <version>1.1.2</version>
+  <vendor email="819536266@qq.com" url="https://github.com/819536266/XhttpPlugin.git">Xhttp</vendor>
 
   <description><![CDATA[
-     运行基于SpringBoot,SpringMvc开发的接口,支持PostMapping、GetMapping、DeleteMapping、PutMapping、PatchMapping.<br>
-      <em>most HTML tags may be used</em>
+     Run the interface developed based on SpringBoot and SpringMvc, and support PostMapping, GetMapping, DeleteMapping, PutMapping and PatchMapping.<br>
     ]]></description>
 
   <change-notes><![CDATA[
-      修改窗口适配问题,完善接口参数缓存.<br>
-      <em>most HTML tags may be used</em>
+      Based on the interface of SpringBoot and SpringMvc, it supports one-key generation of corresponding interface testing tools.<br>
+      Modify the window adaptation problem, improve the interface parameter cache.<br>
+    ]]>
+  </change-notes>
+  <change-notes><![CDATA[
+      Add English remarks.<br>
+    ]]>
+  </change-notes>
+  <change-notes><![CDATA[
+      Plugin.xml adds JAVA dependencies.<br>
+      Add support for RequestMapping.<br>
+      Add automatic exclusion parameter,HttpSession,HttpServletResponse,HttpServletRequest.<br>
     ]]>
   </change-notes>
 
-
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="173.0"/>
+  <idea-version since-build="182.0"/>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
   <!-- uncomment to enable plugin in all products
   <depends>com.intellij.modules.lang</depends>
   -->
+  <depends>com.intellij.modules.java</depends>
+  <depends>com.intellij.spring</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <codeInsight.lineMarkerProvider  language="JAVA"  implementationClass="com.xdl.provider.XHttpLineMarkerProvider" id="XHttpLineMarkerProvider"   />
@@ -33,7 +43,7 @@
 
   <actions>
     <action id="XHttpAction" class="com.xdl.action.XHttpAction" text="XHttpAction" description="XHttpAction">
-      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+<!--      <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
     </action>
   </actions>
 

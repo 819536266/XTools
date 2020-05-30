@@ -14,14 +14,14 @@ import lombok.Data;
 @Data
 public class Row {
 
-    private String title;
-    private String comment;
+    private final String title;
+    private final String comment;
 
-    private String fileName;
+    private final String fileName;
 
-    private String fileType;
+    private final String fileType;
 
-    private String content;
+    private final String content;
 
 
     public Row(String title, String comment, String fileName, String fileType, String content) {

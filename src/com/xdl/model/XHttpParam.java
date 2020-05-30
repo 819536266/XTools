@@ -21,7 +21,7 @@ public class XHttpParam {
     /**
      * 是否选中
      */
-    private Boolean isCheck=true;
+    private Boolean isCheck = true;
 
     /**
      * 属性
@@ -31,7 +31,7 @@ public class XHttpParam {
     /**
      * 参数
      */
-    private String value="";
+    private String value = "";
 
     /**
      * 文件
@@ -41,7 +41,7 @@ public class XHttpParam {
     /**
      * 类型 1 文字 2文件 3 json
      */
-    private Integer type=1;
+    private Integer type = 1;
 
     /**
      * 参数类型

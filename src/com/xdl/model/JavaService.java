@@ -18,9 +18,9 @@ import java.util.Arrays;
  */
 public class JavaService {
 
-    private Project project;
+    private final Project project;
 
-    private JavaPsiFacade javaPsiFacade;
+    private final JavaPsiFacade javaPsiFacade;
 
 
     public JavaService(Project project) {
