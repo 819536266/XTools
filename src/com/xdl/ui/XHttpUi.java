@@ -10,12 +10,14 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindow;
 import com.xdl.action.XHttpAction;
 import com.xdl.model.Settings;
 import com.xdl.model.XHttpModel;
 import com.xdl.model.XHttpParam;
 import com.xdl.util.Icons;
+import com.xdl.util.KillServer;
 import com.xdl.util.SpringUtils;
 import com.xdl.util.XHttpButtonCellEditor;
 import lombok.Data;
@@ -28,6 +30,8 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -41,7 +45,7 @@ import java.util.List;
  * @date 2020/5/2613:36
  */
 @Data
-public class XHttpUi   {
+public class XHttpUi {
 
 
     private JPanel parentPanel;
@@ -65,9 +69,9 @@ public class XHttpUi   {
     private JButton emptyResponseButton;
     private JButton emptyButton;
     private JLabel methodType;
-    private JTextField postText;
+    private JTextField portText;
     private JButton closePostButton;
-    private JPanel postPanel;
+    private JPanel portPanel;
     private JSplitPane bodySplit;
     private JTextArea jsonBody;
     private JTable jsonParamTable;
@@ -77,6 +81,8 @@ public class XHttpUi   {
     private JButton deleteHeaderButton;
     private JButton addHeaderButton;
     private JScrollPane jsonParamScroll;
+    private JTextArea portContent;
+    private JButton clearPortButton;
 
     public XHttpModel xHttpModel;
 
@@ -84,25 +90,28 @@ public class XHttpUi   {
 
     public Project project;
 
-    public  XHttpUi xHttpUi;
+    public XHttpUi xHttpUi;
 
-    public  XHttpParam xHttpParamBody;
-
-    //路径 Document
-    public  Document pathDocument = new DefaultStyledDocument();
+    public XHttpParam xHttpParamBody;
 
     //路径 Document
-    public  Icon methodTypeIcon = Icons.load("/icons/x.png");
+    public Document pathDocument = new DefaultStyledDocument();
+
+    private static KillServer killServer = new KillServer();
+
+    //路径 Document
+    public Icon methodTypeIcon = Icons.load("/icons/x.png");
 
     private static final String[] paramTitle = {"选中", "参数名称", "类型", "参数值", "操作"};
     private static final String[] headerTitle = {"选中", "请求头", "内容"};
 
-    public  DefaultTableModel paramTableModel = new DefaultTableModel(null, paramTitle);
-    public  DefaultTableModel headerTableModel = new DefaultTableModel(null, headerTitle);
+    public DefaultTableModel paramTableModel = new DefaultTableModel(null, paramTitle);
+    public DefaultTableModel headerTableModel = new DefaultTableModel(null, headerTitle);
 
-    private  Map<String, String> herder = CollUtil.newHashMap(1);
+    private Map<String, String> herder = CollUtil.newHashMap(1);
 
     public XHttpUi() {
+
     }
 
     /**
@@ -122,7 +131,8 @@ public class XHttpUi   {
 
         headerTable.setModel(headerTableModel);
         headerTable.setEnabled(true);
-        pathPrefix.setText(Settings.getInstance().getDoMain());
+        pathPrefix.setText(Settings.getInstance()
+                .getDoMain());
     }
 
     /**
@@ -133,8 +143,8 @@ public class XHttpUi   {
      */
     public XHttpUi(Project project, ToolWindow toolWindow) {
         init();
-        this.project=project;
-        this.toolWindow=toolWindow;
+        this.project = project;
+        this.toolWindow = toolWindow;
         //发送请求监听事件
         send.addActionListener(e -> sendHttp());
         //关闭窗口
@@ -154,17 +164,19 @@ public class XHttpUi   {
             column.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
             XHttpAction.modelMap.remove(ObjectUtil.isEmpty(xHttpModel) ? "" : xHttpModel.getKey());
         });
+
+        //执行关闭端口
         closePostButton.addActionListener(e -> {
-         /*   URL resource = XHttpUi.class.getResource("close.bat");
-            String s = RuntimeUtil.execForStr("set port=" + postText.getText() + "\n" +
-                            "for /f \"tokens=1-5\" %%i in ('netstat -ano^|findstr \":%port%\"') do taskkill -f /pid %%m");
-            System.out.println(s);*/
+            int i = Messages.showOkCancelDialog("请确定是否关闭端口!!", "关闭端口", "确认关闭", "取消", null);
+            if (0 == i) killServer.kill(portText.getText(), portContent);
         });
-
-        addHeaderButton.addActionListener(e -> {
-            headerTableModel.addRow(new Object[]{true, "", ""});
-        });
-
+//        //执行关闭端口
+//        closePostButton.addActionListener(e -> killServer.kill(portText.getText(), portContent));
+        //清空关闭端口回执
+        clearPortButton.addActionListener(e -> portContent.setText(""));
+        //添加请求头
+        addHeaderButton.addActionListener(e -> headerTableModel.addRow(new Object[]{true, "", ""}));
+        //删除请求头
         deleteHeaderButton.addActionListener(e -> {
             int selectedRow = headerTable.getSelectedRow();
             headerTableModel.removeRow(selectedRow);
@@ -188,7 +200,7 @@ public class XHttpUi   {
         }
         List<XHttpParam> paramList = xHttpModel.getParamList();
         paramList.clear();
-        if (!ObjectUtil.isEmpty(xHttpParamBody))  paramList.add(xHttpParamBody);
+        if (!ObjectUtil.isEmpty(xHttpParamBody)) paramList.add(xHttpParamBody);
         Vector<Vector> vector = paramTableModel.getDataVector();
         HashSet<String> resType = CollUtil.newHashSet();
         for (Vector param : vector) {
@@ -207,7 +219,7 @@ public class XHttpUi   {
             return;
         }
         HttpRequest request = HttpUtil.createRequest(xHttpModel.getMethodType()
-                , SpringUtils.restful(StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/") +path.getText(), paramList));
+                , SpringUtils.restful(StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/") + path.getText(), paramList));
 
         //设置超时时间,不设置会DeBug时,发请求IDEA会挂掉
         request.setReadTimeout(1000)
@@ -258,7 +270,7 @@ public class XHttpUi   {
      * 打开窗口
      */
     public void open(XHttpModel xHttpModel) {
-        this.xHttpModel=xHttpModel;
+        this.xHttpModel = xHttpModel;
         //打开列表重置表信息
         paramTableModel.setDataVector(null, paramTitle);
         headerTableModel.setDataVector(null, headerTitle);
@@ -279,7 +291,7 @@ public class XHttpUi   {
             } else {
                 windowType = 1;
                 jsonBody.setText((String) xHttpParam.getValue());
-                xHttpParamBody=xHttpParam;
+                xHttpParamBody = xHttpParam;
             }
         }
 
@@ -292,7 +304,7 @@ public class XHttpUi   {
         //设置路径 ,不使用 path.setText(localPath); 多个窗口会出现设置不统一
         try {
             ((AbstractDocument) pathDocument).replace(0, pathDocument.getLength()
-                    ,   "/"+ xHttpModel.getPath(), null);
+                    , "/" + xHttpModel.getPath(), null);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -303,14 +315,15 @@ public class XHttpUi   {
 
         tabbedPane3.setSelectedIndex(windowType);
         //打开
-       toolWindow.show(null);
+        toolWindow.show(null);
 
     }
 
 
     public void setParamTableStyle(JTable paramTable) {
-        if(paramTable.getColumnModel().getColumnCount()<5){
-            return ;
+        if (paramTable.getColumnModel()
+                .getColumnCount() < 5) {
+            return;
         }
         JComboBox editorComboBox = new JXComboBox(new String[]{XHttpParam.TEXT_TYPE, XHttpParam.FILE_TYPE});
         editorComboBox.addPropertyChangeListener(e -> {
@@ -334,5 +347,6 @@ public class XHttpUi   {
         column.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
 
     }
+
 
 }
