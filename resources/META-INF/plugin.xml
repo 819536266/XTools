@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.xdl</id>
   <name>XHttp</name>
-  <version>1.1.2</version>
+  <version>1.2.0</version>
   <vendor email="819536266@qq.com" url="https://github.com/819536266/XhttpPlugin.git">Xhttp</vendor>
 
   <description><![CDATA[
@@ -23,6 +23,18 @@
       Add automatic exclusion parameter,HttpSession,HttpServletResponse,HttpServletRequest.<br>
     ]]>
   </change-notes>
+  <change-notes><![CDATA[
+      <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+        <li>The return information is automatically JSON formatted</li>
+        <li>Supports file upload requests</li>
+        <li>RequestBody requests are supported<br/></li>
+        <li>Request headers are dynamically added and removed</li>
+        <li>When you click Clear, clear the single request cache </li>
+        <li>Sets the add exclude parameter configuration </li>
+        <li>The request parameters box can be dragged</li>
+      </ul>
+    ]]>
+  </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
   <idea-version since-build="182.0"/>
@@ -35,10 +47,18 @@
   <depends>com.intellij.modules.java</depends>
   <depends>com.intellij.spring</depends>
 
+
   <extensions defaultExtensionNs="com.intellij">
+    <!--实例化配置信息服务-->
+    <applicationService serviceImplementation="com.xdl.model.Settings"/>
+
+    <applicationConfigurable instance="com.xdl.ui.XHttpSetting"  dynamic="true"/>
+
     <codeInsight.lineMarkerProvider  language="JAVA"  implementationClass="com.xdl.provider.XHttpLineMarkerProvider" id="XHttpLineMarkerProvider"   />
     <!-- Add your extensions here -->
-    <toolWindow id="XHttp"  anchor="right" factoryClass="com.xdl.ui.XHttpWindowFactory"  secondary="true"/>
+    <toolWindow id="XHttp" anchor="bottom" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png" />
+    <projectService serviceInterface="com.xdl.components.XHttpUiService"
+                    serviceImplementation="com.xdl.components.impl.XHttpUiServiceImpl"/>
   </extensions>
 
   <actions>

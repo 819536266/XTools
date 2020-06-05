@@ -27,6 +27,11 @@ public class XHttpModel implements Serializable {
 
     private static final String HTTPS="https://";
 
+
+    /**
+     * 域名
+     */
+    private String key;
     /**
      * 域名
      */

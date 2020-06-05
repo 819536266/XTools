@@ -42,6 +42,17 @@ public class SpringUtils {
     public static final String REQUEST_MAPPING_METHOD_PATCH = "RequestMethod.PATCH";
 
     /**
+     * 文件上传类型
+     */
+    public static final String MULTIPART_FILE_CLASS_PATH = "org.springframework.web.multipart.MultipartFile";
+    public static final String MULTIPART_FILES_CLASS_PATH = "org.springframework.web.multipart.MultipartFile[]";
+    /**
+     * RequestBody
+     */
+    public static final String REQUEST_BODY_CLASS_PATH = "org.springframework.web.bind.annotation.RequestBody";
+
+
+    /**
      * 包含RequestMapping数组
      */
     public static final SpringRequestMethodAnnotation[] METHOD_TYPE = {
@@ -134,11 +145,11 @@ public class SpringUtils {
      */
     public static String restful(String url, List<XHttpParam> xHttpParams) {
         if (ObjectUtil.isEmpty(url) || CollUtil.isEmpty(xHttpParams)) {
-            return "";
+            return url;
         }
         for (XHttpParam xHttpParam : xHttpParams) {
-            if (xHttpParam.getIsCheck()) {
-                url = url.replace("{" + xHttpParam.getName() + "}", xHttpParam.getValue());
+            if (xHttpParam.getIsCheck() && xHttpParam.getValue() instanceof String) {
+                url = url.replace("{" + xHttpParam.getName() + "}", (String)xHttpParam.getValue());
             }
         }
         return url;

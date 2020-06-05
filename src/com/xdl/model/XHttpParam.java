@@ -18,6 +18,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class XHttpParam {
 
+    public static final String FILE_TYPE = "文件";
+
+    public static final String TEXT_TYPE = "文本";
+
+    public static final String BODY_TYPE = "Body";
+
     /**
      * 是否选中
      */
@@ -31,7 +37,7 @@ public class XHttpParam {
     /**
      * 参数
      */
-    private String value = "";
+    private Object value = "";
 
     /**
      * 文件
@@ -41,7 +47,7 @@ public class XHttpParam {
     /**
      * 类型 1 文字 2文件 3 json
      */
-    private Integer type = 1;
+    private String  type = TEXT_TYPE;
 
     /**
      * 参数类型

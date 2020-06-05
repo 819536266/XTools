@@ -1,25 +1,37 @@
 package com.xdl.ui;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
+import com.xdl.action.XHttpAction;
+import com.xdl.model.Settings;
 import com.xdl.model.XHttpModel;
 import com.xdl.model.XHttpParam;
 import com.xdl.util.Icons;
 import com.xdl.util.SpringUtils;
+import com.xdl.util.XHttpButtonCellEditor;
 import lombok.Data;
+import org.jdesktop.swingx.JXComboBox;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
+import java.io.File;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 /**
  * @author huboxin
@@ -29,7 +41,7 @@ import java.util.Vector;
  * @date 2020/5/2613:36
  */
 @Data
-public class XHttpUi {
+public class XHttpUi   {
 
 
     private JPanel parentPanel;
@@ -47,35 +59,55 @@ public class XHttpUi {
     private JPanel formData;
     private JPanel formTable;
     private JPanel json;
-    private JPanel raw;
     private JTextArea responseContent;
-    private JTextArea textArea2;
-    private JTextArea textArea3;
     private JButton closeButton;
     private JTextField pathPrefix;
     private JButton emptyResponseButton;
     private JButton emptyButton;
     private JLabel methodType;
+    private JTextField postText;
+    private JButton closePostButton;
+    private JPanel postPanel;
+    private JSplitPane bodySplit;
+    private JTextArea jsonBody;
+    private JTable jsonParamTable;
+    private JTextArea jsonResponseContent;
+    private JSplitPane jsonBdoySplit;
+    private JSplitPane formPplit;
+    private JButton deleteHeaderButton;
+    private JButton addHeaderButton;
+    private JScrollPane jsonParamScroll;
 
-    public static XHttpModel xHttpModel;
+    public XHttpModel xHttpModel;
 
-    public static ToolWindow toolWindow;
+    public ToolWindow toolWindow;
 
-    public static XHttpUi xHttpUi;
+    public Project project;
 
-    private static final String[] paramTitle = {"选中", "参数名称", "类型", "参数值"};
+    public  XHttpUi xHttpUi;
+
+    public  XHttpParam xHttpParamBody;
+
+    //路径 Document
+    public  Document pathDocument = new DefaultStyledDocument();
+
+    //路径 Document
+    public  Icon methodTypeIcon = Icons.load("/icons/x.png");
+
+    private static final String[] paramTitle = {"选中", "参数名称", "类型", "参数值", "操作"};
     private static final String[] headerTitle = {"选中", "请求头", "内容"};
 
-    private static DefaultTableModel paramTableModel = new DefaultTableModel(null, paramTitle);
-    private static  DefaultTableModel headerTableModel = new DefaultTableModel(null, headerTitle);
+    public  DefaultTableModel paramTableModel = new DefaultTableModel(null, paramTitle);
+    public  DefaultTableModel headerTableModel = new DefaultTableModel(null, headerTitle);
 
-    private static  Map<String,String> herder= CollUtil.newHashMap(1);
+    private  Map<String, String> herder = CollUtil.newHashMap(1);
 
     public XHttpUi() {
-
-
     }
 
+    /**
+     * 初始化
+     */
     private void init() {
         //返回数据 自动换行
         responseContent.setLineWrap(true);
@@ -84,61 +116,34 @@ public class XHttpUi {
         paramTable.setModel(paramTableModel);
         paramTable.setEnabled(true);
 
+        //设置参数表头
+        jsonParamTable.setModel(paramTableModel);
+        jsonParamTable.setEnabled(true);
+
         headerTable.setModel(headerTableModel);
         headerTable.setEnabled(true);
+        pathPrefix.setText(Settings.getInstance().getDoMain());
     }
 
+    /**
+     * 构造方法
+     *
+     * @param project    project
+     * @param toolWindow toolWindow
+     */
     public XHttpUi(Project project, ToolWindow toolWindow) {
         init();
-        XHttpUi.toolWindow = toolWindow;
-        XHttpUi.xHttpUi = this;
-
-        send.addActionListener(e -> {
-            System.out.println("开始发送请求");
-            //重新封装参数
-            Vector dataVector1 = headerTableModel.getDataVector();
-            xHttpModel.getHeader()
-                    .clear();
-            Map<String, String> map = xHttpModel.getHeader();
-            map.clear();
-            List<String[]> strings1 = JSONUtil.parseArray(JSONUtil.toJsonStr(dataVector1))
-                    .toList(String[].class);
-            for (String[] o : strings1) {
-                map.put(o[1], o[2]);
-            }
-            Vector dataVector = paramTableModel.getDataVector();
-            List<XHttpParam> paramList = xHttpModel.getParamList();
-            paramList.clear();
-            List<String[]> strings = JSONUtil.parseArray(JSONUtil.toJsonStr(dataVector))
-                    .toList(String[].class);
-            for (String[] o : strings) {
-                XHttpParam xHttpParam = new XHttpParam();
-                xHttpParam.setIsCheck(Boolean.valueOf(o[0]));
-                xHttpParam.setName(o[1]);
-                xHttpParam.setValue(o[3]);
-                paramList.add(xHttpParam);
-            }
-            HttpRequest request = HttpUtil.createRequest(xHttpModel.getMethodType(), SpringUtils.restful(path.getText(), paramList));
-            request.setReadTimeout(2000).timeout(2000);
-            Map<String, String> header = xHttpModel.getHeader();
-            header.forEach(request::header);
-            paramList.forEach(xHttpParam -> {
-                if (xHttpParam.getIsCheck()) request.form(xHttpParam.getName(), xHttpParam.getValue());
-            });
-            HttpResponse execute = null;
-            try {
-                System.out.println("开始发请求");
-                execute = request.execute(true);
-            } catch (Exception e1) {
-                responseContent.setText("请求超时!!!!!");
-                System.out.println("请求超时!!!!!");
-            }
-            responseContent.setText(execute.body());
-        });
-
+        this.project=project;
+        this.toolWindow=toolWindow;
+        //发送请求监听事件
+        send.addActionListener(e -> sendHttp());
+        //关闭窗口
         closeButton.addActionListener(e -> toolWindow.hide(null));
 
+        //清空返回值
+        emptyResponseButton.addActionListener(e -> responseContent.setText(""));
 
+        //清空全部
         emptyButton.addActionListener(e -> {
             path.setText("");
             paramTableModel.setDataVector(null, paramTitle);
@@ -147,48 +152,187 @@ public class XHttpUi {
                     .getColumn(0);
             column.setCellEditor(paramTable.getDefaultEditor(Boolean.class));
             column.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
+            XHttpAction.modelMap.remove(ObjectUtil.isEmpty(xHttpModel) ? "" : xHttpModel.getKey());
         });
-        emptyResponseButton.addActionListener(e -> responseContent.setText(""));
+        closePostButton.addActionListener(e -> {
+         /*   URL resource = XHttpUi.class.getResource("close.bat");
+            String s = RuntimeUtil.execForStr("set port=" + postText.getText() + "\n" +
+                            "for /f \"tokens=1-5\" %%i in ('netstat -ano^|findstr \":%port%\"') do taskkill -f /pid %%m");
+            System.out.println(s);*/
+        });
+
+        addHeaderButton.addActionListener(e -> {
+            headerTableModel.addRow(new Object[]{true, "", ""});
+        });
+
+        deleteHeaderButton.addActionListener(e -> {
+            int selectedRow = headerTable.getSelectedRow();
+            headerTableModel.removeRow(selectedRow);
+        });
     }
 
 
-    public void open() {
+    /**
+     * 发送请求
+     */
+    private void sendHttp() {
+        //重新封装参数
+        xHttpModel.getHeader()
+                .clear();
+        Map<String, String> map = xHttpModel.getHeader();
+        map.clear();
+        List<String[]> strings1 = JSONUtil.parseArray(JSONUtil.toJsonStr(headerTableModel.getDataVector()))
+                .toList(String[].class);
+        for (String[] o : strings1) {
+            map.put(o[1], o[2]);
+        }
+        List<XHttpParam> paramList = xHttpModel.getParamList();
+        paramList.clear();
+        if (!ObjectUtil.isEmpty(xHttpParamBody))  paramList.add(xHttpParamBody);
+        Vector<Vector> vector = paramTableModel.getDataVector();
+        HashSet<String> resType = CollUtil.newHashSet();
+        for (Vector param : vector) {
+            XHttpParam xHttpParam = new XHttpParam();
+            xHttpParam.setIsCheck((Boolean) param.get(0));
+            xHttpParam.setName((String) param.get(1));
+            if (XHttpParam.FILE_TYPE.equals(param.get(2))) {
+                resType.add(XHttpParam.FILE_TYPE);
+            }
+            xHttpParam.setType((String) param.get(2));
+            xHttpParam.setValue(param.get(3));
+            paramList.add(xHttpParam);
+        }
+        if (ObjectUtil.isEmpty(path.getText())) {
+            responseContent.setText("路径错误");
+            return;
+        }
+        HttpRequest request = HttpUtil.createRequest(xHttpModel.getMethodType()
+                , SpringUtils.restful(StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/") +path.getText(), paramList));
+
+        //设置超时时间,不设置会DeBug时,发请求IDEA会挂掉
+        request.setReadTimeout(1000)
+                .timeout(1000);
+        //设置请求头
+        Map<String, String> header = xHttpModel.getHeader();
+        header.forEach(request::header);
+        //设置选中的参数
+        paramList.forEach(xHttpParam -> {
+            if (!xHttpParam.getIsCheck()) return;
+            if (xHttpParam.getValue() instanceof List || xHttpParam.getValue() instanceof Array) {
+                List<Object> paramValues = (List<Object>) xHttpParam.getValue();
+
+                paramValues.forEach(paramValue -> request.form(xHttpParam.getName(), paramValue));
+            } else if (XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) {
+                xHttpParam.setValue(jsonBody.getText());
+                resType.add(XHttpParam.BODY_TYPE);
+                request.body((String) xHttpParam.getValue());
+            } else {
+                request.form(xHttpParam.getName(), xHttpParam.getValue());
+            }
+        });
+        //设置文件上传类型
+        request.contentType(resType.contains(XHttpParam.BODY_TYPE) ?
+                ContentType.JSON.toString() : (resType.contains(XHttpParam.FILE_TYPE) ?
+                ContentType.MULTIPART.toString() : ContentType.FORM_URLENCODED.toString()));
+
+        HttpResponse execute = null;
+        try {
+            execute = request.execute(true);
+        } catch (Exception e1) {
+            responseContent.setText("请求超时!!!");
+            jsonResponseContent.setText("请求超时!!!");
+        }
+        String body = "";
+        if (ObjectUtil.isEmpty(execute)) {
+            body = "响应失败!!!"; responseContent.setText(body); jsonResponseContent.setText(body); return;
+        }
+        body = execute.body();
+        if (!ObjectUtil.isEmpty(body) && JSONUtil.isJson(body)) body = JSONUtil.formatJsonStr(body);
+
+        responseContent.setText(body);
+        jsonResponseContent.setText(body);
+    }
+
+
+    /**
+     * 打开窗口
+     */
+    public void open(XHttpModel xHttpModel) {
+        this.xHttpModel=xHttpModel;
         //打开列表重置表信息
         paramTableModel.setDataVector(null, paramTitle);
         headerTableModel.setDataVector(null, headerTitle);
+        setParamTableStyle(paramTable);
+        setParamTableStyle(jsonParamTable);
+
+        TableColumn column1 = headerTable.getColumnModel()
+                .getColumn(0);
+        column1.setCellEditor(headerTable.getDefaultEditor(Boolean.class));
+        column1.setCellRenderer(headerTable.getDefaultRenderer(Boolean.class));
+
+        jsonBody.setText("no body!");
+        //添加对应参数
+        int windowType = 0;
+        for (XHttpParam xHttpParam : xHttpModel.getParamList()) {
+            if (!XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) {
+                paramTableModel.addRow(new Object[]{xHttpParam.getIsCheck(), xHttpParam.getName(), xHttpParam.getType(), xHttpParam.getValue()});
+            } else {
+                windowType = 1;
+                jsonBody.setText((String) xHttpParam.getValue());
+                xHttpParamBody=xHttpParam;
+            }
+        }
+
+//        if (ObjectUtil.isEmpty(herder.get("token"))) herder.put("token", "");
+        Map<String, String> header = xHttpModel.getHeader();
+        //设置请求头
+        header.forEach((k, v) -> {
+            headerTableModel.addRow(new Object[]{true, k, v});
+        });
+        //设置路径 ,不使用 path.setText(localPath); 多个窗口会出现设置不统一
+        try {
+            ((AbstractDocument) pathDocument).replace(0, pathDocument.getLength()
+                    ,   "/"+ xHttpModel.getPath(), null);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+        path.setDocument(pathDocument);
+        //设置图标
+        methodTypeIcon = Icons.getMethodIcon(xHttpModel.getMethodType());
+        methodType.setIcon(methodTypeIcon);
+
+        tabbedPane3.setSelectedIndex(windowType);
+        //打开
+       toolWindow.show(null);
+
+    }
+
+
+    public void setParamTableStyle(JTable paramTable) {
+        if(paramTable.getColumnModel().getColumnCount()<5){
+            return ;
+        }
+        JComboBox editorComboBox = new JXComboBox(new String[]{XHttpParam.TEXT_TYPE, XHttpParam.FILE_TYPE});
+        editorComboBox.addPropertyChangeListener(e -> {
+            TableColumn column4 = paramTable.getColumnModel()
+                    .getColumn(4);
+            column4.setCellEditor(new XHttpButtonCellEditor(this));
+        });
+        //设置三列为下拉
+        TableColumn column2 = paramTable.getColumnModel()
+                .getColumn(2);
+        column2.setCellEditor(new DefaultCellEditor(editorComboBox));
+        //第四列不可编辑
+        TableColumn column4 = paramTable.getColumnModel()
+                .getColumn(4);
+        column4.setCellEditor(new XHttpButtonCellEditor(this));
         //设置参数 第一列为复选框
         TableColumn column = paramTable.getColumnModel()
                 .getColumn(0);
-//        EditorComboBox editorComboBox = new EditorComboBox("文本");
-//        editorComboBox.addItem("文件");
-//        editorComboBox.addActionListener(e -> {
-//            System.out.println(editorComboBox.getSelectedItem());
-//        });
-//        TableColumn column2 = paramTable.getColumnModel()
-//                .getColumn(2);
-//        column2.setCellEditor(new DefaultCellEditor(editorComboBox));
         column.setCellRenderer(paramTable.getDefaultRenderer(List.class));
         column.setCellEditor(paramTable.getDefaultEditor(Boolean.class));
         column.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
-        TableColumn column1 = headerTable.getColumnModel()
-                .getColumn(0);
-        column1.setCellEditor(paramTable.getDefaultEditor(Boolean.class));
-        column1.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
 
-        //添加对应参数
-        xHttpModel.getParamList()
-                .forEach(xHttpParam -> {
-                    paramTableModel.addRow(new Object[]{xHttpParam.getIsCheck(), xHttpParam.getName(), "文本", xHttpParam.getValue()});
-                });
-        if(ObjectUtil.isNotEmpty(herder.get("token"))) herder.put("token","");
-        herder.forEach((k,v)->{
-            headerTableModel.addRow(new Object[]{true,k,v});
-        });
-        path.setText(pathPrefix.getText() + xHttpModel.getPath());
-        methodType.setIcon(Icons.getMethodIcon(xHttpModel.getMethodType()));
-        //打开
-        XHttpUi.toolWindow.show(null);
     }
-
 
 }

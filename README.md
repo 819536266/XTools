@@ -14,5 +14,5 @@ IntelliJ IDEA版（182+)
 4.  过滤参数中携带HttpSession,HttpServletRequest,HttpServletResponse参数
 
 ## 使用截图
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0530/115232_04a6b145_4832857.jpeg "1590810532(1).jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0530/115251_38f38b40_4832857.jpeg "1590810589(1).jpg")
+![方法截图](https://images.gitee.com/uploads/images/2020/0530/115232_04a6b145_4832857.jpeg "1590810532(1).jpg")
+![请求截图](https://images.gitee.com/uploads/images/2020/0530/115251_38f38b40_4832857.jpeg "1590810589(1).jpg")
