@@ -1,7 +1,10 @@
 package com.xdl.ui;
 
+import com.intellij.openapi.editor.ex.util.EditorScrollingPositionKeeper;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.EditorTextField;
+import com.xdl.action.XHttpAction;
 import com.xdl.model.DataCenter;
 import com.xdl.model.Row;
 import org.jetbrains.annotations.Nullable;
@@ -9,27 +12,32 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 /**
- *@program:Mark
- *
- *@description:创建内容
- *
- *@author:胡博欣
- *
- *@create:2020-05-23-51
+ * @program:Mark
+ * @description:创建内容
+ * @author:胡博欣
+ * @create:2020-05-23-51
  */
 public class OutContent extends DialogWrapper {
+
 
     private EditorTextField title;
 
     private EditorTextField content;
 
-    public OutContent() {
+    private Project project;
+
+    public OutContent(Project project) {
         super(true);
         setTitle("创建标题");
         init();
+        this.project = project;
+
+
     }
+
 
     @Nullable
     @Override
@@ -40,8 +48,10 @@ public class OutContent extends DialogWrapper {
         JLabel contentLabel = new JLabel("笔记内容");
         title = new EditorTextField("笔记标题");
         content = new EditorTextField("笔记内容");
-        title.setPreferredSize(new Dimension(200, 30));
+        title.setPreferredSize(new Dimension(200, 70));
         content.setPreferredSize(new Dimension(200, 100));
+        title.setOneLineMode(false);
+        content.setOneLineMode(false);
         JPanel jPanel1 = new JPanel();
         jPanel1.add(titleLabel);
         jPanel1.add(title);
@@ -49,7 +59,7 @@ public class OutContent extends DialogWrapper {
         jPanel2.add(contentLabel);
         jPanel2.add(content);
         GridLayout gridLayout = new GridLayout();
-        gridLayout.setRows(3);
+        gridLayout.setRows(2);
         jPanel.add(jPanel1);
         jPanel.add(jPanel2);
         jPanel.setLayout(gridLayout);
@@ -69,12 +79,13 @@ public class OutContent extends DialogWrapper {
             List<Row> list = DataCenter.LIST;
             list.add(java);
             DataCenter.tableModel.addRow(DataCenter.convert(java));
+            XHttpUi xHttpUi = XHttpAction.xHttpUiMap.get(project);
+            xHttpUi.openParent(3);
             this.close(1);
         });
         jPanel.add(jButton);
         return jPanel;
     }
-
 
 
 }

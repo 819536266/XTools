@@ -1,18 +1,32 @@
 package com.xdl.ui;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.template.Template;
+import cn.hutool.extra.template.TemplateEngine;
+import cn.hutool.extra.template.TemplateUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import com.intellij.ide.fileTemplates.impl.UrlUtil;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationDisplayType;
+import com.intellij.notification.NotificationGroup;
+import com.intellij.notification.Notifications;
+import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.xdl.action.XHttpAction;
+import com.xdl.model.DataCenter;
 import com.xdl.model.Settings;
 import com.xdl.model.XHttpModel;
 import com.xdl.model.XHttpParam;
@@ -30,9 +44,8 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
@@ -83,6 +96,12 @@ public class XHttpUi {
     private JScrollPane jsonParamScroll;
     private JTextArea portContent;
     private JButton clearPortButton;
+    private JScrollPane parentJScroll;
+    private JTable table1;
+    private JButton createButton;
+    private JButton clearButton;
+    private JButton clearRowButton;
+    private JTextField titleMDName;
 
     public XHttpModel xHttpModel;
 
@@ -121,6 +140,16 @@ public class XHttpUi {
         //返回数据 自动换行
         responseContent.setLineWrap(true);
         responseContent.setWrapStyleWord(true);
+
+        jsonBody.setLineWrap(true);
+        jsonBody.setWrapStyleWord(true);
+
+        jsonResponseContent.setLineWrap(true);
+        jsonResponseContent.setWrapStyleWord(true);
+
+
+        portContent.setLineWrap(true);
+        portContent.setWrapStyleWord(true);
         //设置参数表头
         paramTable.setModel(paramTableModel);
         paramTable.setEnabled(true);
@@ -133,6 +162,9 @@ public class XHttpUi {
         headerTable.setEnabled(true);
         pathPrefix.setText(Settings.getInstance()
                 .getDoMain());
+
+        table1.setModel(DataCenter.tableModel);
+        table1.setEnabled(true);
     }
 
     /**
@@ -180,6 +212,18 @@ public class XHttpUi {
         deleteHeaderButton.addActionListener(e -> {
             int selectedRow = headerTable.getSelectedRow();
             headerTableModel.removeRow(selectedRow);
+        });
+
+        //创建文档
+        createButton.addActionListener(e -> createMD());
+        //清空文档
+        clearButton.addActionListener(e -> DataCenter.clear());
+
+        //刪除一行
+        clearRowButton.addActionListener(e -> {
+            int selectedRow = table1.getSelectedRow();
+            DataCenter.tableModel.removeRow(selectedRow);
+            DataCenter.LIST.remove(selectedRow);
         });
     }
 
@@ -312,14 +356,27 @@ public class XHttpUi {
         //设置图标
         methodTypeIcon = Icons.getMethodIcon(xHttpModel.getMethodType());
         methodType.setIcon(methodTypeIcon);
-
+        tabbedPane1.setSelectedIndex(0);
         tabbedPane3.setSelectedIndex(windowType);
         //打开
         toolWindow.show(null);
 
     }
 
+    /**
+     * 打开对应窗口
+     * @param parentIndex 窗口下标
+     */
+    public void openParent(int parentIndex) {
+        tabbedPane1.setSelectedIndex(parentIndex);
+        //打开
+        toolWindow.show(null);
+    }
 
+    /**
+     * 封装table值
+     * @param paramTable  JTable
+     */
     public void setParamTableStyle(JTable paramTable) {
         if (paramTable.getColumnModel()
                 .getColumnCount() < 5) {
@@ -349,4 +406,45 @@ public class XHttpUi {
     }
 
 
+    /**
+     * 創建MD文檔
+     */
+    public void createMD() {
+        String text = titleMDName.getText();
+        String fileName = text + ".md";
+        NotificationGroup notificationGroup = new NotificationGroup("MarkBootNotification", NotificationDisplayType.BALLOON, false);
+        if (ObjectUtil.isEmpty(text)) {
+            Notification notification = notificationGroup.createNotification("请输入文档标题!", MessageType.WARNING);
+            Notifications.Bus.notify(notification,this.project);
+            return ;
+        }
+        VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), project, project.getProjectFile());
+        if (!ObjectUtil.isEmpty(virtualFile)) {
+            String path = virtualFile.getPath() + "/" + fileName;
+            TemplateEngine engine = TemplateUtil.createEngine();
+            String template1 = getTemplate();
+            Template template = engine.getTemplate(template1);
+            Dict dict = Dict.create();
+            dict.set("parentTitle", text);
+            dict.set("rowList", DataCenter.LIST);
+            String result = template.render(dict);
+            File file = FileUtil.writeUtf8String(result, path);
+            if(ObjectUtil.isEmpty(file)){
+                Notification notification = notificationGroup.createNotification("生成文档失败", MessageType.ERROR);
+                Notifications.Bus.notify(notification,this.project);
+            }
+            Notification notification = notificationGroup.createNotification("文档生成成功", MessageType.INFO);
+            Notifications.Bus.notify(notification,this.project);
+        }
+    }
+
+    private static String getTemplate() {
+        String loadText = null;
+        try {
+            loadText = UrlUtil.loadText(XHttpUi.class.getResource("/templates/markBoot.ftl"));
+        } catch (IOException e) {
+            return null;
+        }
+        return loadText;
+    }
 }

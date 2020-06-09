@@ -39,9 +39,8 @@ public class XHttpAction extends AnAction {
 
     public  XHttpModel xHttpModel ;
 
-//    public static XHttpUi xHttpUi ;
-
     public static Map<Project,XHttpUi> xHttpUiMap =  new HashMap<>();
+
     private PsiMethod psiMethod;
 
     private SpringRequestMethodAnnotation methodType;
