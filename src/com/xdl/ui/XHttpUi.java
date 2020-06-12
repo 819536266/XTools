@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
@@ -262,8 +263,10 @@ public class XHttpUi {
             responseContent.setText("路径错误");
             return;
         }
+        String contentPath = StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/") + path.getText();
+        String restful = SpringUtils.restful(contentPath, paramList);
         HttpRequest request = HttpUtil.createRequest(xHttpModel.getMethodType()
-                , SpringUtils.restful(StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/") + path.getText(), paramList));
+                , restful);
 
         //设置超时时间,不设置会DeBug时,发请求IDEA会挂掉
         request.setReadTimeout(1000)
@@ -271,18 +274,29 @@ public class XHttpUi {
         //设置请求头
         Map<String, String> header = xHttpModel.getHeader();
         header.forEach(request::header);
-        //设置选中的参数
+        //设置body
         paramList.forEach(xHttpParam -> {
-            if (!xHttpParam.getIsCheck()) return;
-            if (xHttpParam.getValue() instanceof List || xHttpParam.getValue() instanceof Array) {
-                List<Object> paramValues = (List<Object>) xHttpParam.getValue();
-
-                paramValues.forEach(paramValue -> request.form(xHttpParam.getName(), paramValue));
-            } else if (XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) {
+            if (XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) {
                 xHttpParam.setValue(jsonBody.getText());
                 resType.add(XHttpParam.BODY_TYPE);
                 request.body((String) xHttpParam.getValue());
-            } else {
+            }
+        });
+        //设置选中的参数
+        paramList.forEach(xHttpParam -> {
+            if (!xHttpParam.getIsCheck()) return;
+            if (contentPath.contains("{"+xHttpParam.getName()+"}")) return;
+            if (XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) return;
+
+            if(resType.contains(XHttpParam.BODY_TYPE)){
+                Map<String, Object> hashMap = CollUtil.newHashMap();
+                hashMap.put(xHttpParam.getName(),xHttpParam.getValue());
+                HttpUtil.toParams(hashMap);
+            }
+            if (xHttpParam.getValue() instanceof List || xHttpParam.getValue() instanceof Array) {
+                List<Object> paramValues = (List<Object>) xHttpParam.getValue();
+                paramValues.forEach(paramValue -> request.form(xHttpParam.getName(), paramValue));
+            }  else {
                 request.form(xHttpParam.getName(), xHttpParam.getValue());
             }
         });

@@ -11,18 +11,6 @@
     </ul>
     ]]>
     </description>
-
-    <!--    <change-notes><![CDATA[-->
-    <!--      Based on the interface of SpringBoot and SpringMvc, it supports one-key generation of corresponding interface testing tools.<br>-->
-    <!--      Modify the window adaptation problem, improve the interface parameter cache.<br>-->
-    <!--    ]]>-->
-    <!--    </change-notes>-->
-    <!--    <change-notes>-->
-    <!--        <![CDATA[-->
-    <!--    <strong>1.1.2</strong>-->
-    <!--      Add English remarks.<br>-->
-    <!--    ]]>-->
-    <!--    </change-notes>-->
     <change-notes><![CDATA[
       <strong>1.1.1</strong></br>
       <ul class=" list-paddingleft-2" style="list-style-type: disc;">
@@ -51,24 +39,7 @@
       </ul>
     ]]>
     </change-notes>
-    <!--    <change-notes><![CDATA[-->
-    <!--      <ul class=" list-paddingleft-2" style="list-style-type: disc;">-->
-    <!--        <li>The return information is automatically JSON formatted</li>-->
-    <!--        <li>Supports file upload requests</li>-->
-    <!--        <li>RequestBody requests are supported<br/></li>-->
-    <!--        <li>Request headers are dynamically added and removed</li>-->
-    <!--        <li>When you click Clear, clear the single request cache </li>-->
-    <!--        <li>Sets the add exclude parameter configuration </li>-->
-    <!--        <li>The request parameters box can be dragged</li>-->
-    <!--      </ul>-->
-    <!--    ]]>-->
-    <!--    </change-notes>-->
-    <!--    <change-notes><![CDATA[-->
-    <!--      <ul class=" list-paddingleft-2" style="list-style-type: disc;">-->
-    <!--        <li>Add port close widget</li>-->
-    <!--      </ul>-->
-    <!--    ]]>-->
-    <!--    </change-notes>-->
+
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
     <idea-version since-build="182.0"/>

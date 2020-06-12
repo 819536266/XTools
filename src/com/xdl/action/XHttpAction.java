@@ -37,14 +37,13 @@ public class XHttpAction extends AnAction {
 
     public static Map<String, XHttpModel> modelMap = new HashMap<>();
 
-    public  XHttpModel xHttpModel ;
+    public XHttpModel xHttpModel;
 
-    public static Map<Project,XHttpUi> xHttpUiMap =  new HashMap<>();
+    public static Map<Project, XHttpUi> xHttpUiMap = new HashMap<>();
 
     private PsiMethod psiMethod;
 
     private SpringRequestMethodAnnotation methodType;
-
 
 
     public XHttpAction() {
@@ -111,7 +110,8 @@ public class XHttpAction extends AnAction {
         List<XHttpParam> paramList = CollUtil.newArrayList();
         for (PsiParameter parameter : parameters) {
             //排除参数
-            boolean contains = ArrayUtil.contains(Settings.getInstance().getExclude(), parameter.getType()
+            boolean contains = ArrayUtil.contains(Settings.getInstance()
+                    .getExclude(), parameter.getType()
                     .getCanonicalText());
             if (contains) continue;
             String canonicalText = parameter.getType()
@@ -121,7 +121,7 @@ public class XHttpAction extends AnAction {
             XHttpParam xHttpParam = new XHttpParam();
             xHttpParam.setName(parameter.getName());
             xHttpParam.setClassType(canonicalText);
-            xHttpParam.setType(!ObjectUtil.isEmpty(annotation)?XHttpParam.BODY_TYPE:SpringUtils.MULTIPART_FILE_CLASS_PATH.equals(canonicalText)
+            xHttpParam.setType(!ObjectUtil.isEmpty(annotation) ? XHttpParam.BODY_TYPE : SpringUtils.MULTIPART_FILE_CLASS_PATH.equals(canonicalText)
                     || SpringUtils.MULTIPART_FILES_CLASS_PATH.equals(canonicalText) ? XHttpParam.FILE_TYPE : XHttpParam.TEXT_TYPE);
             paramList.add(xHttpParam);
         }
@@ -139,18 +139,23 @@ public class XHttpAction extends AnAction {
     private String getPath(PsiClass psiClass, PsiMethod psiMethod) {
         String path = "";
         PsiAnnotation annotation = psiClass.getAnnotation(SpringRequestMethodAnnotation.REQUEST_MAPPING.getQualifiedName());
-        if(!ObjectUtil.isEmpty(annotation)){
+        if (!ObjectUtil.isEmpty(annotation)) {
             PsiAnnotationMemberValue value = annotation.findAttributeValue(SpringUtils.MAPPING_PARAM_VALUE);
-            path += StrUtil.stripIgnoreCase(value.getText()
-                    .replace("\"", ""),"/","/");
+            if (!ObjectUtil.isEmpty(value))
+                path += StrUtil.stripIgnoreCase(value.getText()
+                        .replace("\"", ""), "/", "/");
         }
         PsiAnnotation methodAnnotation = psiMethod.getAnnotation(methodType.getQualifiedName());
         if (ObjectUtil.isEmpty(methodAnnotation)) {
             methodAnnotation = psiMethod.getAnnotation(SpringRequestMethodAnnotation.REQUEST_MAPPING.getQualifiedName());
         }
+
+        if (ObjectUtil.isEmpty(methodAnnotation)) return path;
         PsiAnnotationMemberValue attributeValue = methodAnnotation.findAttributeValue(SpringUtils.MAPPING_PARAM_VALUE);
-        path += "/"+StrUtil.stripIgnoreCase(attributeValue.getText()
-                .replace("\"", ""),"/","/");
+
+        if (ObjectUtil.isEmpty(attributeValue)) return path;
+        path += "/" + StrUtil.stripIgnoreCase(attributeValue.getText()
+                .replace("\"", ""), "/", "/");
         return path;
     }
 
