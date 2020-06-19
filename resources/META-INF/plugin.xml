@@ -1,14 +1,27 @@
 <idea-plugin>
     <id>com.xdl</id>
     <name>XHttp</name>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <vendor email="819536266@qq.com" url="https://github.com/819536266/XhttpPlugin.git">Xhttp</vendor>
 
     <description><![CDATA[
-     Run the interface developed based on SpringBoot and SpringMvc, and support PostMapping, GetMapping, DeleteMapping, PutMapping and PatchMapping.<br>
+      <strong>English</strong></br>
       <ul>
-        <li>view on <a href="https://gitee.com/BeALaity/Xhttp">https://gitee.com/BeALaity/Xhttp</a></li>
-    </ul>
+         <li>Run tests based on SpringBoot and SpringMvc developed interfaces.</li>
+         <li>Integration port closed, quickly generate Markdown file small function.</li>
+         <li>Post requests are not supported using the split JSON object receive method.</li>
+         <li>If you have any Suggestions or bugs during continuous optimization, please email to 819536266@qq.com.</li>
+         <li>thank you.</li>
+          <li>view on <a href="https://gitee.com/BeALaity/Xhttp">https://gitee.com/BeALaity/Xhttp</a></li>
+      </ul>
+     <strong>中文</strong></br>
+     <ul>
+         <li>运行基于SpringBoot和SpringMvc开发的接口的测试.</li>
+         <li>集成端口关闭，快速生成Markdown文件小功能.</li>
+         <li>暂不支持Post请求使用非JSON对象接收方法的测试.</li>
+         <li>在持续优化过程中,如有任何建议或bug，请发邮件至819536266@qq.com,谢谢.</li>
+         <li>Git地址 <a href="https://gitee.com/BeALaity/Xhttp">https://gitee.com/BeALaity/Xhttp</a></li>
+      </ul>
     ]]>
     </description>
     <change-notes><![CDATA[
@@ -16,13 +29,22 @@
       <ul class=" list-paddingleft-2" style="list-style-type: disc;">
             <li>Based on the interface of SpringBoot and SpringMvc, it supports one-key generation of corresponding interface testing tools</li>
             <li>Modify the window adaptation problem, improve the interface parameter cache</li>
-      </ul>
+      </ul><br/>
+      <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+            <li>基于SpringBoot和SpringMvc的接口，支持一键生成相应的接口测试工具</li>
+            <li>修改窗口适配问题，请求接口参数缓存</li>
+      </ul><br/>
       <strong>1.1.2</strong></br>
       <ul class=" list-paddingleft-2" style="list-style-type: disc;">
             <li>Plugin.xml adds JAVA dependencies</li>
             <li>Add support for RequestMapping</li>
             <li>Add automatic exclusion parameter,HttpSession,HttpServletResponse,HttpServletRequest</li>
-      </ul>
+      </ul><br/>
+      <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+            <li>xml添加了JAVA依赖关系</li>
+            <li>添加对RequestMapping的支持</li>
+            <li>添加自动排除参数，HttpSession,HttpServletResponse,HttpServletRequest</li>
+      </ul><br/>
       <strong>1.2.0</strong></br>
       <ul class=" list-paddingleft-2" style="list-style-type: disc;">
             <li>The return information is automatically JSON formatted</li>
@@ -33,13 +55,39 @@
             <li>Sets the add exclude parameter configuration </li>
             <li>The request parameters box can be dragged</li>
       </ul>
+      <br/>
+      <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+            <li>返回Body自动JSON格式化</li>
+            <li>支持文件上传请求</li>
+            <li>支持RequestBody请求<br/></li>
+            <li>请求头可以动态添加和删除,重启客户端清除</li>
+            <li>当您单击清除时，清除单个请求缓存 </li>
+            <li>设置添加排除参数配置 </li>
+            <li>可以拖动“请求参数”框</li>
+      </ul><br/>
       <strong>1.2.1</strong></br>
       <ul class=" list-paddingleft-2" style="list-style-type: disc;">
             <li>Add port close widget</li>
+      </ul><br/>
+      <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+            <li>添加端口关闭小部件</li>
+      </ul><br/>
+      <strong>1.2.2</strong></br>
+      <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+            <li>Fix some bugs</li>
+            <li>Fix global configuration, restart client automatic reset problem</li>
+            <li>Add return TAB.ResponseBody automatic JSON formatting bar,Response bar,URL bar,Header bar</li>
+            <li>There are three types of sending requests: address bar, form, and Body</li>
+            <li>Continuous optimization</li>
+      </ul><br/>
+       <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+            <li>修复一些BUG</li>
+            <li>修复全局配置，重启客户端自动重置的问题</li>
+            <li>添加返回选项卡。自动JSON格式化栏，响应栏，URL栏，标题栏</li>
+            <li>发送请求有三种类型:地址栏、表单和正文</li>
       </ul>
     ]]>
     </change-notes>
-
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
     <idea-version since-build="182.0"/>
@@ -71,7 +119,8 @@
         <action id="XHttpAction" class="com.xdl.action.XHttpAction" text="XHttpAction" description="XHttpAction">
             <!--      <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
         </action>
-        <action id="MarkBookAction" class="com.xdl.action.MarkBookAction" text="MarkBook" description="创建MD笔记" icon="/icons/x.png">
+        <action id="MarkBookAction" class="com.xdl.action.MarkBookAction" text="MarkBook" description="创建MD笔记"
+                icon="/icons/x.png">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
     </actions>

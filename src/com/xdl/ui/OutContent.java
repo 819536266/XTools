@@ -31,7 +31,7 @@ public class OutContent extends DialogWrapper {
 
     public OutContent(Project project) {
         super(true);
-        setTitle("创建标题");
+        setTitle("Create");
         init();
         this.project = project;
 
@@ -43,11 +43,11 @@ public class OutContent extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         JPanel jPanel = new JPanel();
-        title = new EditorTextField("笔记标题");
-        JLabel titleLabel = new JLabel("笔记标题");
-        JLabel contentLabel = new JLabel("笔记内容");
-        title = new EditorTextField("笔记标题");
-        content = new EditorTextField("笔记内容");
+        title = new EditorTextField("  Title  ");
+        JLabel titleLabel = new JLabel("  Title  ");
+        JLabel contentLabel = new JLabel("Content");
+        title = new EditorTextField("  Title  ");
+        content = new EditorTextField("Content");
         title.setPreferredSize(new Dimension(200, 70));
         content.setPreferredSize(new Dimension(200, 100));
         title.setOneLineMode(false);
@@ -69,7 +69,7 @@ public class OutContent extends DialogWrapper {
     @Override
     protected JComponent createSouthPanel() {
         JPanel jPanel = new JPanel();
-        JButton jButton = new JButton("添加笔记");
+        JButton jButton = new JButton("Add");
         jButton.addActionListener(e -> {
             String title1 = title.getText();
             String comment = content.getText();

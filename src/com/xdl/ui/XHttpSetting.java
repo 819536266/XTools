@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.xdl.action.XHttpAction;
 import com.xdl.model.Settings;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,7 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
     private JButton deleteExcludeButton;
     private JTable excludeTable;
     private JButton restartButton;
+    private JButton clear;
 
     private static DefaultTableModel defaultTableModel = new DefaultTableModel(null, new String[]{"排除参数类路径"});
 
@@ -65,6 +67,8 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
             Arrays.stream(settings.getExclude())
                     .forEach(e1 -> defaultTableModel.addRow(new String[]{e1}));
         });
+        //清除全部缓存
+        clear.addActionListener(e -> XHttpAction.modelMap.clear());
     }
 
     /**
