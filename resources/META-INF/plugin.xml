@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.xdl</id>
     <name>XHttp</name>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
     <vendor email="819536266@qq.com" url="https://github.com/819536266/XhttpPlugin.git">Xhttp</vendor>
 
     <description><![CDATA[
@@ -86,6 +86,13 @@
             <li>添加返回选项卡。自动JSON格式化栏，响应栏，URL栏，标题栏</li>
             <li>发送请求有三种类型:地址栏、表单和正文</li>
       </ul>
+       <strong>1.2.3</strong></br>
+      <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+            <li>Add a window toggle button for vertical or horizontal</li>
+      </ul><br/>
+       <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+            <li>添加窗口切换按钮,用于竖状或横状</li>
+      </ul>
     ]]>
     </change-notes>
 
@@ -110,7 +117,7 @@
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.xdl.provider.XHttpLineMarkerProvider"
                                         id="XHttpLineMarkerProvider"/>
         <!-- Add your extensions here -->
-        <toolWindow id="XHttp" anchor="bottom" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png"/>
+        <toolWindow id="XHttp" anchor="top" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png" />
         <projectService serviceInterface="com.xdl.components.XHttpUiService"
                         serviceImplementation="com.xdl.components.impl.XHttpUiServiceImpl"/>
     </extensions>

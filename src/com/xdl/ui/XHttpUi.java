@@ -26,6 +26,8 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.ui.content.ContentManagerEvent;
+import com.intellij.ui.content.ContentManagerListener;
 import com.xdl.action.XHttpAction;
 import com.xdl.model.*;
 import com.xdl.util.Icons;
@@ -34,6 +36,7 @@ import com.xdl.util.SpringUtils;
 import com.xdl.util.XHttpButtonCellEditor;
 import lombok.Data;
 import org.jdesktop.swingx.JXComboBox;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -42,6 +45,7 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -101,6 +105,7 @@ public class XHttpUi {
     private JTextArea rowContent;
     private JPanel rowPanel;
     private JTable rowParamTable;
+    private JSplitPane paramPane;
     private JTabbedPane tabbedPane4;
 
     public XHttpModel xHttpModel;
@@ -169,11 +174,25 @@ public class XHttpUi {
         this.toolWindow = toolWindow;
         //发送请求监听事件
         send.addActionListener(e -> sendHttp());
-        //关闭窗口
-        closeButton.addActionListener(e -> toolWindow.hide(null));
-
+//        //关闭窗口
+//        closeButton.addActionListener(e -> toolWindow.hide(null));
+        //切换窗口模式
+        closeButton.addActionListener(e -> {
+            if (paramPane.getOrientation() == JSplitPane.VERTICAL_SPLIT) {
+                paramPane.setDividerLocation(300);
+                paramPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+            } else {
+                paramPane.setDividerLocation(280);
+                paramPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+            }
+        });
         //清空返回值
-        emptyResponseButton.addActionListener(e -> responseContent.setText(""));
+        emptyResponseButton.addActionListener(e -> {
+            responseContent.setText("");
+            rowContent.setText("");
+            urlContent.setText("");
+            headerContent.setText("");
+        });
 
         //清空全部
         emptyButton.addActionListener(e -> {
@@ -198,8 +217,12 @@ public class XHttpUi {
         addHeaderButton.addActionListener(e -> headerTableModel.addRow(new Object[]{true, "", ""}));
         //删除请求头
         deleteHeaderButton.addActionListener(e -> {
-            int selectedRow = headerTable.getSelectedRow();
-            headerTableModel.removeRow(selectedRow);
+            try {
+                int selectedRow = headerTable.getSelectedRow();
+                headerTableModel.removeRow(selectedRow);
+            } catch (Exception exception) {
+
+            }
         });
 
         //创建文档
@@ -220,7 +243,7 @@ public class XHttpUi {
      * 发送请求
      */
     private void sendHttp() {
-        if (ObjectUtil.isEmpty(path) || (ObjectUtil.isEmpty(headerTableModel) &&  ObjectUtil.isEmpty(paramTableModel) ) || ObjectUtil.isEmpty(xHttpModel)) {
+        if (ObjectUtil.isEmpty(path) || (ObjectUtil.isEmpty(headerTableModel) && ObjectUtil.isEmpty(paramTableModel)) || ObjectUtil.isEmpty(xHttpModel)) {
             responseContent.setText("请输入正确的请求"); return;
         }
         //重新封装参数
@@ -364,7 +387,8 @@ public class XHttpUi {
         methodTypeIcon = Icons.getMethodIcon(xHttpModel.getMethodType());
         methodType.setIcon(methodTypeIcon);
         tabbedPane1.setSelectedIndex(0);
-        tabbedPane3.setSelectedIndex(windowType==2?2: SpringRequestMethodAnnotation.POST_MAPPING.getMethod().equals(xHttpModel.getMethodType())?1:0);
+        tabbedPane3.setSelectedIndex(windowType == 2 ? 2 : SpringRequestMethodAnnotation.POST_MAPPING.getMethod()
+                .equals(xHttpModel.getMethodType()) ? 1 : 0);
         //打开
         toolWindow.show(null);
 
@@ -456,4 +480,6 @@ public class XHttpUi {
         }
         return loadText;
     }
+
+
 }
