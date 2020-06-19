@@ -103,7 +103,7 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
 
         RunLineMarkerInfo(PsiElement element, Icon icon, Function<PsiElement, String> tooltipProvider,
                           DefaultActionGroup actionGroup) {
-            super(element, element.getTextRange(), icon, 0, tooltipProvider, null, GutterIconRenderer.Alignment.CENTER);
+            super(element, element.getTextRange(), icon, 0, tooltipProvider, null, GutterIconRenderer.Alignment.RIGHT);
             myActionGroup = actionGroup;
         }
 

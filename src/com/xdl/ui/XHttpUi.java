@@ -27,10 +27,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.xdl.action.XHttpAction;
-import com.xdl.model.DataCenter;
-import com.xdl.model.Settings;
-import com.xdl.model.XHttpModel;
-import com.xdl.model.XHttpParam;
+import com.xdl.model.*;
 import com.xdl.util.Icons;
 import com.xdl.util.KillServer;
 import com.xdl.util.SpringUtils;
@@ -86,12 +83,8 @@ public class XHttpUi {
     private JTextField portText;
     private JButton closePostButton;
     private JPanel portPanel;
-    private JSplitPane bodySplit;
     private JTextArea jsonBody;
     private JTable jsonParamTable;
-    private JTextArea jsonResponseContent;
-    private JSplitPane jsonBdoySplit;
-    private JSplitPane formPplit;
     private JButton deleteHeaderButton;
     private JButton addHeaderButton;
     private JScrollPane jsonParamScroll;
@@ -103,6 +96,12 @@ public class XHttpUi {
     private JButton clearButton;
     private JButton clearRowButton;
     private JTextField titleMDName;
+    private JTextArea headerContent;
+    private JTextArea urlContent;
+    private JTextArea rowContent;
+    private JPanel rowPanel;
+    private JTable rowParamTable;
+    private JTabbedPane tabbedPane4;
 
     public XHttpModel xHttpModel;
 
@@ -138,19 +137,6 @@ public class XHttpUi {
      * 初始化
      */
     private void init() {
-        //返回数据 自动换行
-        responseContent.setLineWrap(true);
-        responseContent.setWrapStyleWord(true);
-
-        jsonBody.setLineWrap(true);
-        jsonBody.setWrapStyleWord(true);
-
-        jsonResponseContent.setLineWrap(true);
-        jsonResponseContent.setWrapStyleWord(true);
-
-
-        portContent.setLineWrap(true);
-        portContent.setWrapStyleWord(true);
         //设置参数表头
         paramTable.setModel(paramTableModel);
         paramTable.setEnabled(true);
@@ -158,6 +144,9 @@ public class XHttpUi {
         //设置参数表头
         jsonParamTable.setModel(paramTableModel);
         jsonParamTable.setEnabled(true);
+        //设置参数表头
+        rowParamTable.setModel(paramTableModel);
+        rowParamTable.setEnabled(true);
 
         headerTable.setModel(headerTableModel);
         headerTable.setEnabled(true);
@@ -203,8 +192,6 @@ public class XHttpUi {
             int i = Messages.showOkCancelDialog("请确定是否关闭端口!!", "关闭端口", "确认关闭", "取消", null);
             if (0 == i) killServer.kill(portText.getText(), portContent);
         });
-//        //执行关闭端口
-//        closePostButton.addActionListener(e -> killServer.kill(portText.getText(), portContent));
         //清空关闭端口回执
         clearPortButton.addActionListener(e -> portContent.setText(""));
         //添加请求头
@@ -233,6 +220,9 @@ public class XHttpUi {
      * 发送请求
      */
     private void sendHttp() {
+        if (ObjectUtil.isEmpty(path) || (ObjectUtil.isEmpty(headerTableModel) &&  ObjectUtil.isEmpty(paramTableModel) ) || ObjectUtil.isEmpty(xHttpModel)) {
+            responseContent.setText("请输入正确的请求"); return;
+        }
         //重新封装参数
         xHttpModel.getHeader()
                 .clear();
@@ -245,6 +235,7 @@ public class XHttpUi {
         }
         List<XHttpParam> paramList = xHttpModel.getParamList();
         paramList.clear();
+
         if (!ObjectUtil.isEmpty(xHttpParamBody)) paramList.add(xHttpParamBody);
         Vector<Vector> vector = paramTableModel.getDataVector();
         HashSet<String> resType = CollUtil.newHashSet();
@@ -263,6 +254,7 @@ public class XHttpUi {
             responseContent.setText("路径错误");
             return;
         }
+
         String contentPath = StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/") + path.getText();
         String restful = SpringUtils.restful(contentPath, paramList);
         HttpRequest request = HttpUtil.createRequest(xHttpModel.getMethodType()
@@ -285,18 +277,18 @@ public class XHttpUi {
         //设置选中的参数
         paramList.forEach(xHttpParam -> {
             if (!xHttpParam.getIsCheck()) return;
-            if (contentPath.contains("{"+xHttpParam.getName()+"}")) return;
+            if (contentPath.contains("{" + xHttpParam.getName() + "}")) return;
             if (XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) return;
 
-            if(resType.contains(XHttpParam.BODY_TYPE)){
+            if (resType.contains(XHttpParam.BODY_TYPE)) {
                 Map<String, Object> hashMap = CollUtil.newHashMap();
-                hashMap.put(xHttpParam.getName(),xHttpParam.getValue());
+                hashMap.put(xHttpParam.getName(), xHttpParam.getValue());
                 HttpUtil.toParams(hashMap);
             }
             if (xHttpParam.getValue() instanceof List || xHttpParam.getValue() instanceof Array) {
                 List<Object> paramValues = (List<Object>) xHttpParam.getValue();
                 paramValues.forEach(paramValue -> request.form(xHttpParam.getName(), paramValue));
-            }  else {
+            } else {
                 request.form(xHttpParam.getName(), xHttpParam.getValue());
             }
         });
@@ -304,23 +296,23 @@ public class XHttpUi {
         request.contentType(resType.contains(XHttpParam.BODY_TYPE) ?
                 ContentType.JSON.toString() : (resType.contains(XHttpParam.FILE_TYPE) ?
                 ContentType.MULTIPART.toString() : ContentType.FORM_URLENCODED.toString()));
-
+        urlContent.setText(restful);
+        headerContent.setText(JSONUtil.formatJsonStr(JSONUtil.toJsonStr(request.headers())));
         HttpResponse execute = null;
         try {
             execute = request.execute(true);
         } catch (Exception e1) {
             responseContent.setText("请求超时!!!");
-            jsonResponseContent.setText("请求超时!!!");
+//            jsonResponseContent.setText("请求超时!!!");
         }
         String body = "";
         if (ObjectUtil.isEmpty(execute)) {
-            body = "响应失败!!!"; responseContent.setText(body); jsonResponseContent.setText(body); return;
+            body = "响应失败!!!"; responseContent.setText(body); return;
         }
         body = execute.body();
+        rowContent.setText(body);
         if (!ObjectUtil.isEmpty(body) && JSONUtil.isJson(body)) body = JSONUtil.formatJsonStr(body);
-
         responseContent.setText(body);
-        jsonResponseContent.setText(body);
     }
 
 
@@ -334,6 +326,7 @@ public class XHttpUi {
         headerTableModel.setDataVector(null, headerTitle);
         setParamTableStyle(paramTable);
         setParamTableStyle(jsonParamTable);
+        setParamTableStyle(rowParamTable);
 
         TableColumn column1 = headerTable.getColumnModel()
                 .getColumn(0);
@@ -347,7 +340,7 @@ public class XHttpUi {
             if (!XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) {
                 paramTableModel.addRow(new Object[]{xHttpParam.getIsCheck(), xHttpParam.getName(), xHttpParam.getType(), xHttpParam.getValue()});
             } else {
-                windowType = 1;
+                windowType = 2;
                 jsonBody.setText((String) xHttpParam.getValue());
                 xHttpParamBody = xHttpParam;
             }
@@ -371,7 +364,7 @@ public class XHttpUi {
         methodTypeIcon = Icons.getMethodIcon(xHttpModel.getMethodType());
         methodType.setIcon(methodTypeIcon);
         tabbedPane1.setSelectedIndex(0);
-        tabbedPane3.setSelectedIndex(windowType);
+        tabbedPane3.setSelectedIndex(windowType==2?2: SpringRequestMethodAnnotation.POST_MAPPING.getMethod().equals(xHttpModel.getMethodType())?1:0);
         //打开
         toolWindow.show(null);
 
@@ -379,6 +372,7 @@ public class XHttpUi {
 
     /**
      * 打开对应窗口
+     *
      * @param parentIndex 窗口下标
      */
     public void openParent(int parentIndex) {
@@ -389,7 +383,8 @@ public class XHttpUi {
 
     /**
      * 封装table值
-     * @param paramTable  JTable
+     *
+     * @param paramTable JTable
      */
     public void setParamTableStyle(JTable paramTable) {
         if (paramTable.getColumnModel()
@@ -429,8 +424,8 @@ public class XHttpUi {
         NotificationGroup notificationGroup = new NotificationGroup("MarkBootNotification", NotificationDisplayType.BALLOON, false);
         if (ObjectUtil.isEmpty(text)) {
             Notification notification = notificationGroup.createNotification("请输入文档标题!", MessageType.WARNING);
-            Notifications.Bus.notify(notification,this.project);
-            return ;
+            Notifications.Bus.notify(notification, this.project);
+            return;
         }
         VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), project, project.getProjectFile());
         if (!ObjectUtil.isEmpty(virtualFile)) {
@@ -443,12 +438,12 @@ public class XHttpUi {
             dict.set("rowList", DataCenter.LIST);
             String result = template.render(dict);
             File file = FileUtil.writeUtf8String(result, path);
-            if(ObjectUtil.isEmpty(file)){
+            if (ObjectUtil.isEmpty(file)) {
                 Notification notification = notificationGroup.createNotification("生成文档失败", MessageType.ERROR);
-                Notifications.Bus.notify(notification,this.project);
+                Notifications.Bus.notify(notification, this.project);
             }
             Notification notification = notificationGroup.createNotification("文档生成成功", MessageType.INFO);
-            Notifications.Bus.notify(notification,this.project);
+            Notifications.Bus.notify(notification, this.project);
         }
     }
 

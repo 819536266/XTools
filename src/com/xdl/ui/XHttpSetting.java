@@ -1,5 +1,6 @@
 package com.xdl.ui;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -12,9 +13,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author huboxin
@@ -32,7 +32,7 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
     private JTable excludeTable;
     private JButton restartButton;
 
-    private static DefaultTableModel defaultTableModel=new DefaultTableModel(null,new String[]{"排除参数类路径"});
+    private static DefaultTableModel defaultTableModel = new DefaultTableModel(null, new String[]{"排除参数类路径"});
 
 
     /**
@@ -43,18 +43,28 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
     public XHttpSetting() {
         doMain.setText(settings.getDoMain());
         String[] exclude = settings.getExclude();
-        defaultTableModel.setDataVector(null,new String[]{"排除参数类路径"});
-        Arrays.stream(exclude).forEach(e->defaultTableModel.addRow(new String[]{e}));
+        defaultTableModel.setDataVector(null, new String[]{"排除参数类路径"});
+        Arrays.stream(exclude)
+                .forEach(e -> defaultTableModel.addRow(new String[]{e}));
         excludeTable.setModel(defaultTableModel);
         excludeTable.setEnabled(true);
-        addExcludeButton.addActionListener(e->{
+        //添加一行
+        addExcludeButton.addActionListener(e -> {
             defaultTableModel.addRow(new String[]{""});
         });
-        deleteExcludeButton.addActionListener(e->{
+        //删除一行
+        deleteExcludeButton.addActionListener(e -> {
             int selectedRow = excludeTable.getSelectedRow();
             defaultTableModel.removeRow(selectedRow);
         });
-        restartButton.addActionListener(e->settings.restart());
+        //重置
+        restartButton.addActionListener(e -> {
+            settings.restart();
+            doMain.setText(settings.getDoMain());
+            defaultTableModel.setDataVector(null, new String[]{"排除参数类路径"});
+            Arrays.stream(settings.getExclude())
+                    .forEach(e1 -> defaultTableModel.addRow(new String[]{e1}));
+        });
     }
 
     /**
@@ -67,6 +77,7 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
     public String getDisplayName() {
         return "XHttp";
     }
+
     /**
      * 获取主面板信息
      *
@@ -85,7 +96,15 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
      */
     @Override
     public boolean isModified() {
-        return true;
+        Vector<Vector> vector = defaultTableModel.getDataVector();
+        Set<Object> collect = vector.stream()
+                .map(vector1 -> vector1.get(0))
+                .collect(Collectors.toSet());
+        int size = collect.size();
+        Arrays.stream(settings.getExclude())
+                .forEach(e -> collect.add(e));
+        return !settings.getDoMain()
+                .equals(doMain.getText()) || collect.size() != size;
     }
 
 
@@ -93,16 +112,17 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
      * 应用修改
      */
     @Override
-    public void apply()  {
+    public void apply() {
         settings.setDoMain(doMain.getText());
         List<String[]> strings1 = JSONUtil.parseArray(JSONUtil.toJsonStr(defaultTableModel.getDataVector()))
                 .toList(String[].class);
-        String[] string=new String[strings1.size()];
+        String[] string = new String[strings1.size()];
         for (int i = 0; i < strings1.size(); i++) {
-            string[i]=strings1.get(i)[0];
+            string[i] = strings1.get(i)[0];
         }
         settings.setExclude(string);
     }
+
     /**
      * 更多配置
      *

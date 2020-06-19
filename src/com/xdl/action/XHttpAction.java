@@ -4,27 +4,17 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
-import com.xdl.components.XHttpUiService;
 import com.xdl.model.*;
-import com.xdl.provider.XHttpLineMarkerProvider;
-import com.xdl.ui.OutContent;
 import com.xdl.ui.XHttpUi;
-import com.xdl.ui.XHttpWindowFactory;
-import com.xdl.util.MethodExcludeParam;
 import com.xdl.util.SpringUtils;
 
 import javax.swing.*;
@@ -103,7 +93,7 @@ public class XHttpAction extends AnAction {
      * @param psiMethod psiMethod
      * @return List<XHttpParam>
      */
-    private List<XHttpParam> getParamList(PsiMethod psiMethod) {
+    private List<XHttpParam> getParamList(PsiMethod psiMethod)  {
         PsiParameterList parameterList = psiMethod.getParameterList();
         //获取参数集合
         PsiParameter[] parameters = parameterList.getParameters();
@@ -117,7 +107,6 @@ public class XHttpAction extends AnAction {
             String canonicalText = parameter.getType()
                     .getCanonicalText();
             PsiAnnotation annotation = parameter.getAnnotation(SpringUtils.REQUEST_BODY_CLASS_PATH);
-
             XHttpParam xHttpParam = new XHttpParam();
             xHttpParam.setName(parameter.getName());
             xHttpParam.setClassType(canonicalText);
