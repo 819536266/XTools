@@ -3,6 +3,11 @@
 ## Xhttp能做什么？
 IDEA自动检测Spring注解，生成测试简易PostMan，快速测试接口；快捷关闭端口，避免端口被占用；选择代码可编辑为MarkDown代码片段，快速生成MarkDown文档
 
+##参考项目
+
+[RestfulTool](https://gitee.com/zys981029/RestfulTool)
+[Knife4j（一款非常好用的Swagger文档）](https://doc.xiaominfo.com/)
+
 ## 使用环境
 IntelliJ IDEA版（182+)
 
