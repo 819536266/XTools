@@ -32,6 +32,7 @@ IntelliJ IDEA版（182+)
 ## 使用说明
 
 在拥有注解的方法左侧点击线性标签，选择对应请求发送方式即可。注：（首次打开IDEA需要先打开XHttp窗口）。
+
 可在IDEA中设置默认前缀以及自动过滤的参数类型。file -> settings -> Other Settings -> XHttp。
 
 ## 使用截图
