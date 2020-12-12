@@ -3,7 +3,9 @@ package com.xdl.action;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
@@ -18,6 +20,7 @@ import com.xdl.ui.XHttpUi;
 import com.xdl.util.SpringUtils;
 
 import javax.swing.*;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,8 +107,15 @@ public class XHttpAction extends AnAction {
                     .getExclude(), parameter.getType()
                     .getCanonicalText());
             if (contains) continue;
+            System.out.println(parameter.getType().toString());
             String canonicalText = parameter.getType()
                     .getCanonicalText();
+//            try {
+//                Class<?> aClass = Class.forName("com.xd.user.controller.DepartmentController");
+//                System.out.println(JSONUtil.toJsonStr(aClass.getMethods()));
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//            }
             PsiAnnotation annotation = parameter.getAnnotation(SpringUtils.REQUEST_BODY_CLASS_PATH);
             XHttpParam xHttpParam = new XHttpParam();
             xHttpParam.setName(parameter.getName());
@@ -116,6 +126,7 @@ public class XHttpAction extends AnAction {
         }
         return paramList;
     }
+
 
 
     /**

@@ -93,10 +93,10 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
 
 
 
-    @Override
-    public void collectSlowLineMarkers(@NotNull List<PsiElement> list, @NotNull Collection<LineMarkerInfo> collection) {
-
-    }
+//    @Override
+//    public void collectSlowLineMarkers(@NotNull List<PsiElement> list, @NotNull Collection<LineMarkerInfo> collection) {
+//
+//    }
 
     static class RunLineMarkerInfo extends LineMarkerInfo<PsiElement> {
         private final DefaultActionGroup myActionGroup;

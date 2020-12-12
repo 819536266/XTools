@@ -24,7 +24,9 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.ui.content.ContentManagerListener;
@@ -86,7 +88,9 @@ public class XHttpUi {
     private JLabel methodType;
     private JTextField portText;
     private JButton closePostButton;
+
     private JPanel portPanel;
+
     private JTextArea jsonBody;
     private JTable jsonParamTable;
     private JButton deleteHeaderButton;
@@ -107,6 +111,11 @@ public class XHttpUi {
     private JTable rowParamTable;
     private JSplitPane paramPane;
     private JTabbedPane tabbedPane4;
+    private JTabbedPane tabbedPane2;
+    public static JButton proToYml;
+    public static JButton ymlToPro;
+    public static JButton clean ;
+    public static JProgressBar progressBar1;
 
     public XHttpModel xHttpModel;
 
@@ -188,7 +197,12 @@ public class XHttpUi {
         });
         //清空返回值
         emptyResponseButton.addActionListener(e -> {
-            responseContent.setText("");
+            VirtualFile fileByIoFile = LocalFileSystem.getInstance().findFileByIoFile(new File("D:/"));
+            try {
+                VirtualFile file = fileByIoFile.createChildData(null, "文件");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
             rowContent.setText("");
             urlContent.setText("");
             headerContent.setText("");
@@ -244,7 +258,8 @@ public class XHttpUi {
      */
     private void sendHttp() {
         if (ObjectUtil.isEmpty(path) || (ObjectUtil.isEmpty(headerTableModel) && ObjectUtil.isEmpty(paramTableModel)) || ObjectUtil.isEmpty(xHttpModel)) {
-            responseContent.setText("请输入正确的请求"); return;
+            responseContent.setText("请输入正确的请求");
+            return;
         }
         //重新封装参数
         xHttpModel.getHeader()
@@ -330,7 +345,9 @@ public class XHttpUi {
         }
         String body = "";
         if (ObjectUtil.isEmpty(execute)) {
-            body = "响应失败!!!"; responseContent.setText(body); return;
+            body = "响应失败!!!";
+            responseContent.setText(body);
+            return;
         }
         body = execute.body();
         rowContent.setText(body);

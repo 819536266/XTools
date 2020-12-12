@@ -1,4 +1,4 @@
-<idea-plugin>
+<idea-plugin url="https://github.com/819536266/XhttpPlugin/tree/master/XHttp">
     <id>com.xdl</id>
     <name>XHttp</name>
     <version>1.2.3</version>
@@ -97,7 +97,7 @@
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="182.0"/>
+    <idea-version since-build="201.00" />
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -105,7 +105,7 @@
     <depends>com.intellij.modules.lang</depends>
     -->
     <depends>com.intellij.modules.java</depends>
-    <depends>com.intellij.spring</depends>
+<!--    <depends>com.intellij.spring</depends>-->
 
 
     <extensions defaultExtensionNs="com.intellij">
@@ -129,6 +129,15 @@
         <action id="MarkBookAction" class="com.xdl.action.MarkBookAction" text="MarkBook" description="创建MD笔记"
                 icon="/icons/x.png">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+        <!-- Add your actions here -->
+        <action id="com.github.chencn.yamlandprops" class="com.xdl.action.ConvertAction"
+                text="Convert YAML and Properties File"
+                description="You can quickly convert Properties files to YAML files, or YAML files to Properties files">
+            <!--在ide左边编辑栏菜单文件右击中显示-->
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <!--在ide右边项目打开的文件中右击显示-->
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
         </action>
     </actions>
 
