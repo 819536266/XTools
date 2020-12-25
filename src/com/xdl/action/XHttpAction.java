@@ -141,7 +141,7 @@ public class XHttpAction extends AnAction {
         PsiAnnotation annotation = psiClass.getAnnotation(SpringRequestMethodAnnotation.REQUEST_MAPPING.getQualifiedName());
         if (!ObjectUtil.isEmpty(annotation)) {
             PsiAnnotationMemberValue value = annotation.findAttributeValue(SpringUtils.MAPPING_PARAM_VALUE);
-            if (!ObjectUtil.isEmpty(value))
+            if (!ObjectUtil.isEmpty(value) && !"{}".equals(value.getText()))
                 path += StrUtil.stripIgnoreCase(value.getText()
                         .replace("\"", ""), "/", "/");
         }
@@ -153,7 +153,8 @@ public class XHttpAction extends AnAction {
         if (ObjectUtil.isEmpty(methodAnnotation)) return path;
         PsiAnnotationMemberValue attributeValue = methodAnnotation.findAttributeValue(SpringUtils.MAPPING_PARAM_VALUE);
 
-        if (ObjectUtil.isEmpty(attributeValue)) return path;
+        if (ObjectUtil.isEmpty(attributeValue) || attributeValue.getText().equals("{}")) return path;
+
         path += "/" + StrUtil.stripIgnoreCase(attributeValue.getText()
                 .replace("\"", ""), "/", "/");
         return path;

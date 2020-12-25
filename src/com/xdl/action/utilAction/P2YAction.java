@@ -23,12 +23,14 @@ public class P2YAction extends AnAction {
         Editor requiredData = e.getRequiredData(LangDataKeys.EDITOR);
         SelectionModel selectionModel = requiredData.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-        if(!ObjectUtil.isEmpty(selectedText)){
+        if (!ObjectUtil.isEmpty(selectedText)) {
+            String convert = Props2Yaml.fromContent(selectedText).convert();
             int selectionStart = selectionModel.getSelectionStart();
             int selectionEnd = selectionModel.getSelectionEnd();
+
             Document document = selectionModel.getEditor().getDocument();
-            Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd, Props2Yaml.fromContent(selectedText).convert());
-            WriteCommandAction.runWriteCommandAction(project,runnable);
+            Runnable runnable = () -> document.replaceString(selectionStart, convert.length() != selectedText.length() ? selectionEnd + convert.length() : selectionEnd, convert);
+            WriteCommandAction.runWriteCommandAction(project, runnable);
             selectionModel.removeSelection();
         }
     }

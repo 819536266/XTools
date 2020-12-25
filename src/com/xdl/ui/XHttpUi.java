@@ -288,7 +288,7 @@ public class XHttpUi {
             return;
         }
 
-        String contentPath = StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/") + path.getText();
+        String contentPath = StrUtil.addSuffixIfNot(StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/"),"/") + StrUtil.removePrefix(path.getText(),"/");
         String restful = SpringUtils.restful(contentPath, paramList);
         HttpRequest request = HttpUtil.createRequest(xHttpModel.getMethodType()
                 , restful);
@@ -341,6 +341,7 @@ public class XHttpUi {
         String body = "";
         if (ObjectUtil.isEmpty(execute)) {
             body = "响应失败!!!";
+            rowContent.setText(body);
             responseContent.setText(body);
             return;
         }
@@ -387,7 +388,7 @@ public class XHttpUi {
         //设置路径 ,不使用 path.setText(localPath); 多个窗口会出现设置不统一
         try {
             ((AbstractDocument) pathDocument).replace(0, pathDocument.getLength()
-                    , "/" + xHttpModel.getPath(), null);
+                    ,  xHttpModel.getPath(), null);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }

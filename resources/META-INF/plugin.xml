@@ -93,6 +93,39 @@
        <ul class=" list-paddingleft-2" style="list-style-type: disc;">
             <li>添加窗口切换按钮,用于竖状或横状</li>
       </ul>
+      <strong>1.5.0</strong></br>
+      <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+            <li>Fixed an error in the request URL because the annotation did not define parameters</li>
+            <li>Remove Spring dependency</li>
+            <li>Add open source YML and Properties exchange tool-address:<a href="https://github.com/chencn/ConvertYamlAndProperties">https://github.com/chencn/ConvertYamlAndProperties</a></li>
+            <li>Add right - click function set -XTools</li>
+            <li>Transfer the create Markdown document functionality to XTools</li>
+            <li>Added XTool functionality :UnderlineCase - humped named strings converted to underscore</li>
+            <li>Added XTool functionality: Transform a CamelCase - underscore named string into a CamelCase</li>
+            <li>UpperCase - String UpperCase</li>
+            <li>Add XTool functionality :LowerCase - string LowerCase</li>
+            <li>Added XTool function: SwapCase-change the case of a given string. Uppercase to lowercase, lowercase to uppercase</li>
+            <li>Added XTool function: UpperFirst-uppercase first letter</li>
+            <li>Added XTool function: LowerFirst-lowercase first letter</li>
+            <li>Added XTool function: QuotesCast-single quote to double quote, double quote to single quote</li>
+            <li>Added XTool function: QuotesChange-remove double quotes and add double quotes</li>
+      </ul><br/>
+       <ul class=" list-paddingleft-2" style="list-style-type: disc;">
+            <li>修复请求URL因为注解未定义参数引起的错误</li>
+            <li>去除Spring依赖</li>
+            <li>增加开源YML与Properties互转工具--地址:<a href="https://github.com/chencn/ConvertYamlAndProperties">https://github.com/chencn/ConvertYamlAndProperties</a></li>
+            <li>添加右键功能集合-XTools</li>
+            <li>转移创建Markdown文档功能到XTools</li>
+            <li>增加XTool功能:UnderlineCase - 驼峰式命名的字符串转换为下划线方式</li>
+            <li>增加XTool功能:CamelCase - 下划线方式命名的字符串转换为驼峰式</li>
+            <li>增加XTool功能:UpperCase - 字符串转大写</li>
+            <li>增加XTool功能:LowerCase - 字符串转小写</li>
+            <li>增加XTool功能:SwapCase - 换给定字符串中的大小写。大写转小写，小写转大写</li>
+            <li>增加XTool功能:UpperFirst - 大写首字母</li>
+            <li>增加XTool功能:LowerFirst - 小写首字母</li>
+            <li>增加XTool功能:QuotesCast - 单引号转双引号,双引号转单引号</li>
+            <li>增加XTool功能:QuotesChange - 去双引号 加 双引号</li>
+      </ul>
 
     ]]>
     </change-notes>
@@ -106,7 +139,6 @@
     <depends>com.intellij.modules.lang</depends>
     -->
     <depends>com.intellij.modules.java</depends>
-    <!--    <depends>com.intellij.spring</depends>-->
 
 
     <extensions defaultExtensionNs="com.intellij">
@@ -131,14 +163,14 @@
         <action id="XHttpAction" class="com.xdl.action.XHttpAction" text="XHttpAction" description="XHttpAction">
             <!--      <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
         </action>
-        <group id="XTools" text="XHttp" description="X_Http" popup="true">
+        <group id="XTools" text="XTools" description="XTools" popup="true">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
 
             <!-- yml转properties -->
-            <action id="Y2P" class="com.xdl.action.utilAction.Y2PAction" text="Y2P" description="yml转properties"
-                    keymap="$default"/>
+<!--            <action id="Y2P" class="com.xdl.action.utilAction.Y2PAction" text="Y2P" description="yml转properties"-->
+<!--                    keymap="$default"/>-->
             <!-- properties转yml -->
-            <action id="P2Y" class="com.xdl.action.utilAction.P2YAction" text="P2Y" description="properties转yml"/>
+<!--            <action id="P2Y" class="com.xdl.action.utilAction.P2YAction" text="P2Y" description="properties转yml"/>-->
             <action id="MarkBookAction" class="com.xdl.action.MarkBookAction" text="CreateMarkdown"
                     description="创建MD笔记">
 
@@ -174,17 +206,15 @@
             <!-- 换给定字符串中的大小写。大写转小写，小写转大写 -->
             <action id="LowerFirst" class="com.xdl.action.utilAction.LowerFirstAction" text="LowerFirst"
                     description="换给定字符串中的大小写。大写转小写，小写转大写"/>
-
-            <!-- 去双引号 加 双引号 -->
-            <action id="QuotesChange" class="com.xdl.action.utilAction.QuotesChangeAction" text="QuotesChange"
-                    description="去双引号 加 双引号">
-                <keyboard-shortcut first-keystroke="alt shift 引号" keymap="$default"/>
-            </action>
-
             <!-- 单引号转双引号,双引号转单引号 -->
             <action id="QuotesCast" class="com.xdl.action.utilAction.QuotesCastAction" text="QuotesCast"
                     description="单引号转双引号,双引号转单引号">
                 <keyboard-shortcut first-keystroke="alt 引号" keymap="$default"/>
+            </action>
+            <!-- 去双引号 加 双引号 -->
+            <action id="QuotesChange" class="com.xdl.action.utilAction.QuotesChangeAction" text="QuotesChange"
+                    description="去双引号 加 双引号">
+                <keyboard-shortcut first-keystroke="alt shift 引号" keymap="$default"/>
             </action>
 
         </group>

@@ -13,6 +13,7 @@ import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.project.Project;
 import com.xdl.model.DataCenter;
 import com.xdl.ui.OutContent;
+import com.xdl.util.props2yaml.Props2Yaml;
 import com.xdl.util.yaml2props.Yaml2Props;
 
 import javax.swing.*;
@@ -26,10 +27,11 @@ public class Y2PAction extends AnAction {
         SelectionModel selectionModel = requiredData.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
         if(!ObjectUtil.isEmpty(selectedText)){
+            String convert = Yaml2Props.fromContent(selectedText).convert();
             int selectionStart = selectionModel.getSelectionStart();
             int selectionEnd = selectionModel.getSelectionEnd();
             Document document = selectionModel.getEditor().getDocument();
-            Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd, Yaml2Props.fromContent(selectedText).convert());
+            Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd, convert);
             WriteCommandAction.runWriteCommandAction(project,runnable);
             selectionModel.removeSelection();
         }
