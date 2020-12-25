@@ -1,5 +1,6 @@
 package com.xdl.action;
 
+import cn.hutool.core.util.StrUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -36,7 +37,6 @@ public class ConvertAction extends AnAction {
         } else {
             event.getPresentation().setEnabledAndVisible(false);
         }
-
     }
 
     @Override

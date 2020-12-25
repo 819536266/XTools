@@ -48,6 +48,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -89,8 +90,6 @@ public class XHttpUi {
     private JTextField portText;
     private JButton closePostButton;
 
-    private JPanel portPanel;
-
     private JTextArea jsonBody;
     private JTable jsonParamTable;
     private JButton deleteHeaderButton;
@@ -112,6 +111,9 @@ public class XHttpUi {
     private JSplitPane paramPane;
     private JTabbedPane tabbedPane4;
     private JTabbedPane tabbedPane2;
+    private JPanel portPanel;
+    private JButton p2YButton;
+    private JTable table2;
     public static JButton proToYml;
     public static JButton ymlToPro;
     public static JButton clean ;
@@ -230,14 +232,7 @@ public class XHttpUi {
         //添加请求头
         addHeaderButton.addActionListener(e -> headerTableModel.addRow(new Object[]{true, "", ""}));
         //删除请求头
-        deleteHeaderButton.addActionListener(e -> {
-            try {
-                int selectedRow = headerTable.getSelectedRow();
-                headerTableModel.removeRow(selectedRow);
-            } catch (Exception exception) {
-
-            }
-        });
+        deleteHeaderButton.addActionListener(this::actionPerformed);
 
         //创建文档
         createButton.addActionListener(e -> createMD());
@@ -349,7 +344,6 @@ public class XHttpUi {
             responseContent.setText(body);
             return;
         }
-        body = execute.body();
         rowContent.setText(body);
         if (!ObjectUtil.isEmpty(body) && JSONUtil.isJson(body)) body = JSONUtil.formatJsonStr(body);
         responseContent.setText(body);
@@ -389,9 +383,7 @@ public class XHttpUi {
 //        if (ObjectUtil.isEmpty(herder.get("token"))) herder.put("token", "");
         Map<String, String> header = xHttpModel.getHeader();
         //设置请求头
-        header.forEach((k, v) -> {
-            headerTableModel.addRow(new Object[]{true, k, v});
-        });
+        header.forEach((k, v) -> headerTableModel.addRow(new Object[]{true, k, v}));
         //设置路径 ,不使用 path.setText(localPath); 多个窗口会出现设置不统一
         try {
             ((AbstractDocument) pathDocument).replace(0, pathDocument.getLength()
@@ -432,7 +424,7 @@ public class XHttpUi {
                 .getColumnCount() < 5) {
             return;
         }
-        JComboBox editorComboBox = new JXComboBox(new String[]{XHttpParam.TEXT_TYPE, XHttpParam.FILE_TYPE});
+        JXComboBox editorComboBox = new JXComboBox(new String[]{XHttpParam.TEXT_TYPE, XHttpParam.FILE_TYPE});
         editorComboBox.addPropertyChangeListener(e -> {
             TableColumn column4 = paramTable.getColumnModel()
                     .getColumn(4);
@@ -470,6 +462,7 @@ public class XHttpUi {
         }
         VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), project, project.getProjectFile());
         if (!ObjectUtil.isEmpty(virtualFile)) {
+            assert virtualFile != null;
             String path = virtualFile.getPath() + "/" + fileName;
             TemplateEngine engine = TemplateUtil.createEngine();
             String template1 = getTemplate();
@@ -489,7 +482,7 @@ public class XHttpUi {
     }
 
     private static String getTemplate() {
-        String loadText = null;
+        String loadText ;
         try {
             loadText = UrlUtil.loadText(XHttpUi.class.getResource("/templates/markBoot.ftl"));
         } catch (IOException e) {
@@ -499,4 +492,12 @@ public class XHttpUi {
     }
 
 
+    private void actionPerformed(ActionEvent e) {
+        try {
+            int selectedRow = headerTable.getSelectedRow();
+            headerTableModel.removeRow(selectedRow);
+        } catch (Exception ignored) {
+
+        }
+    }
 }

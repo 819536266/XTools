@@ -34,7 +34,7 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
     private JButton restartButton;
     private JButton clear;
 
-    private static DefaultTableModel defaultTableModel = new DefaultTableModel(null, new String[]{"排除参数类路径"});
+    private static final DefaultTableModel defaultTableModel = new DefaultTableModel(null, new String[]{"排除参数类路径"});
 
 
     /**
@@ -51,9 +51,7 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
         excludeTable.setModel(defaultTableModel);
         excludeTable.setEnabled(true);
         //添加一行
-        addExcludeButton.addActionListener(e -> {
-            defaultTableModel.addRow(new String[]{""});
-        });
+        addExcludeButton.addActionListener(e -> defaultTableModel.addRow(new String[]{""}));
         //删除一行
         deleteExcludeButton.addActionListener(e -> {
             int selectedRow = excludeTable.getSelectedRow();

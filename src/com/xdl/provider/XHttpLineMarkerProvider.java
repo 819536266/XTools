@@ -2,20 +2,12 @@ package com.xdl.provider;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.http.Method;
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONUtil;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProviderDescriptor;
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.lineMarker.RunLineMarkerContributor.Info;
 import com.intellij.icons.AllIcons;
-import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
-import com.intellij.lang.jvm.annotation.JvmAnnotationConstantValue;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.editor.markup.MarkupEditorFilter;
 import com.intellij.openapi.editor.markup.MarkupEditorFilterFactory;
@@ -28,8 +20,6 @@ import com.xdl.util.SpringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -56,6 +46,7 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
             }
             //判断是否是RequestMapping
             if (SpringRequestMethodAnnotation.REQUEST_MAPPING.equals(methodType)) {
+                assert annotation != null;
                 PsiAnnotationMemberValue method = annotation.findAttributeValue("method");
                 //是RequestMapping并且无method参数值
                 if (ObjectUtil.isEmpty(method) || ObjectUtil.isEmpty(method.getText()) || ObjectUtil.isEmpty(SpringUtils.getMethodParamMapping(method.getText()))) {

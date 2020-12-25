@@ -93,11 +93,12 @@
        <ul class=" list-paddingleft-2" style="list-style-type: disc;">
             <li>添加窗口切换按钮,用于竖状或横状</li>
       </ul>
+
     ]]>
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="201.00" />
+    <idea-version since-build="201.00"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -105,7 +106,7 @@
     <depends>com.intellij.modules.lang</depends>
     -->
     <depends>com.intellij.modules.java</depends>
-<!--    <depends>com.intellij.spring</depends>-->
+    <!--    <depends>com.intellij.spring</depends>-->
 
 
     <extensions defaultExtensionNs="com.intellij">
@@ -117,19 +118,77 @@
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.xdl.provider.XHttpLineMarkerProvider"
                                         id="XHttpLineMarkerProvider"/>
         <!-- Add your extensions here -->
-        <toolWindow id="XHttp" anchor="top" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png" />
+        <toolWindow id="XHttp" anchor="right" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png"
+                    secondary="true"/>
+
         <projectService serviceInterface="com.xdl.components.XHttpUiService"
                         serviceImplementation="com.xdl.components.impl.XHttpUiServiceImpl"/>
     </extensions>
 
+
     <actions>
+
         <action id="XHttpAction" class="com.xdl.action.XHttpAction" text="XHttpAction" description="XHttpAction">
             <!--      <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
         </action>
-        <action id="MarkBookAction" class="com.xdl.action.MarkBookAction" text="MarkBook" description="创建MD笔记"
-                icon="/icons/x.png">
+        <group id="XTools" text="XHttp" description="X_Http" popup="true">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-        </action>
+
+            <!-- yml转properties -->
+            <action id="Y2P" class="com.xdl.action.utilAction.Y2PAction" text="Y2P" description="yml转properties"
+                    keymap="$default"/>
+            <!-- properties转yml -->
+            <action id="P2Y" class="com.xdl.action.utilAction.P2YAction" text="P2Y" description="properties转yml"/>
+            <action id="MarkBookAction" class="com.xdl.action.MarkBookAction" text="CreateMarkdown"
+                    description="创建MD笔记">
+
+            </action>
+            <!-- 随机生成UUID -->
+            <!--            <action id="Uuid" class="com.xdl.action.utilAction.UuidAction" text="UUID" description="随机生成UUID"/>-->
+            <!-- 驼峰式命名的字符串转换为下划线方式 -->
+            <action id="UnderlineCase" class="com.xdl.action.utilAction.UnderlineCaseAction" text="UnderlineCase"
+                    description="驼峰式命名的字符串转换为下划线方式">
+                <keyboard-shortcut first-keystroke="alt -" keymap="$default"/>
+            </action>
+            <!-- 下划线方式命名的字符串转换为驼峰式 -->
+            <action id="CamelCase" class="com.xdl.action.utilAction.CamelCaseAction" text="CamelCase"
+                    description="下划线方式命名的字符串转换为驼峰式">
+                <keyboard-shortcut first-keystroke="alt 逗号" keymap="$default"/>
+            </action>
+            <!-- 字符串转大写 -->
+            <action id="UpperCase" class="com.xdl.action.utilAction.UpperCaseAction" text="UpperCase"
+                    description="字符串转大写">
+                <keyboard-shortcut first-keystroke="alt u"  keymap="$default"/>
+            </action>
+            <!-- 字符串转小写 -->
+            <action id="LowerCase" class="com.xdl.action.utilAction.LowerCaseAction" text="LowerCase"
+                    description="字符串转小写">
+                <keyboard-shortcut first-keystroke="alt l"  keymap="$default"/>
+            </action>
+            <!-- 换给定字符串中的大小写。大写转小写，小写转大写 -->
+            <action id="SwapCase" class="com.xdl.action.utilAction.SwapCaseAction" text="SwapCase"
+                    description="换给定字符串中的大小写。大写转小写，小写转大写"/>
+            <!-- 下划线方式命名的字符串转换为驼峰式 -->
+            <action id="UpperFirst" class="com.xdl.action.utilAction.UpperFirstAction" text="UpperFirst"
+                    description="下划线方式命名的字符串转换为驼峰式"/>
+            <!-- 换给定字符串中的大小写。大写转小写，小写转大写 -->
+            <action id="LowerFirst" class="com.xdl.action.utilAction.LowerFirstAction" text="LowerFirst"
+                    description="换给定字符串中的大小写。大写转小写，小写转大写"/>
+
+            <!-- 去双引号 加 双引号 -->
+            <action id="QuotesChange" class="com.xdl.action.utilAction.QuotesChangeAction" text="QuotesChange"
+                    description="去双引号 加 双引号">
+                <keyboard-shortcut first-keystroke="alt shift 引号" keymap="$default"/>
+            </action>
+
+            <!-- 单引号转双引号,双引号转单引号 -->
+            <action id="QuotesCast" class="com.xdl.action.utilAction.QuotesCastAction" text="QuotesCast"
+                    description="单引号转双引号,双引号转单引号">
+                <keyboard-shortcut first-keystroke="alt 引号" keymap="$default"/>
+            </action>
+
+        </group>
+
         <!-- Add your actions here -->
         <action id="com.github.chencn.yamlandprops" class="com.xdl.action.ConvertAction"
                 text="Convert YAML and Properties File"
