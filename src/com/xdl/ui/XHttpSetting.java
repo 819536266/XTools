@@ -73,7 +73,7 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return "XHttp";
+        return "XTools";
     }
 
     /**

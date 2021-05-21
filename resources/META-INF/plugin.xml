@@ -1,13 +1,13 @@
-<idea-plugin url="https://github.com/819536266/XhttpPlugin/tree/master/XHttp">
+<idea-plugin url="https://github.com/819536266/XTools">
     <id>com.xdl</id>
     <name>XTools</name>
     <version>2.0.0</version>
-    <vendor email="819536266@qq.com" url="https://gitee.com/BeALaity/XTools.git">XTools</vendor>
+    <vendor email="819536266@qq.com" url="https://github.com/819536266/XTools">XTools</vendor>
 
     <description><![CDATA[
         <h1>XTools plugin</h1>
         </br></br></br>
-        <p><a href="https://github.com/819536266/XhttpPlugin/tree/master/XHttp">GitHub</a> |  <a href="https://gitee.com/BeALaity/Xhttp">Gitee</a></p>
+        <p><a href="https://github.com/819536266/XTools">GitHub</a> |  <a href="https://gitee.com/BeALaity/XTools">Gitee</a></p>
         <p> <strong>  </strong></br></p>
         <strong>  </strong>
       <strong>  </strong></br>
