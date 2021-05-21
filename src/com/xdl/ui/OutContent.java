@@ -3,7 +3,7 @@ package com.xdl.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.EditorTextField;
-import com.xdl.action.XHttpAction;
+import com.xdl.action.XToolsAction;
 import com.xdl.model.DataCenter;
 import com.xdl.model.Row;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @program:Mark
@@ -33,8 +32,6 @@ public class OutContent extends DialogWrapper {
         setTitle("Create");
         init();
         this.project = project;
-
-
     }
 
 
@@ -78,8 +75,8 @@ public class OutContent extends DialogWrapper {
             List<Row> list = DataCenter.LIST;
             list.add(java);
             DataCenter.tableModel.addRow(DataCenter.convert(java));
-            XHttpUi xHttpUi = XHttpAction.xHttpUiMap.get(project);
-            xHttpUi.openParent(3);
+            XTools ui = XToolsAction.getUi(project, XTools.class);
+            ui.openParent(1);
             this.close(1);
         });
         jPanel.add(jButton);

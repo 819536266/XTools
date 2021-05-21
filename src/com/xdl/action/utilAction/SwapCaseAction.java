@@ -24,13 +24,14 @@ public class SwapCaseAction extends AnAction {
         Editor requiredData = e.getRequiredData(LangDataKeys.EDITOR);
         SelectionModel selectionModel = requiredData.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-        if(!ObjectUtil.isEmpty(selectedText)){
+        if (!ObjectUtil.isEmpty(selectedText)) {
             int selectionStart = selectionModel.getSelectionStart();
             int selectionEnd = selectionModel.getSelectionEnd();
             Document document = selectionModel.getEditor().getDocument();
-            Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd, StrUtil.swapCase(selectedText));
-            WriteCommandAction.runWriteCommandAction(project,runnable);
+            Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd, StrUtil.isUpperCase(selectedText) ? selectedText.toLowerCase() : selectedText.toUpperCase());
+            WriteCommandAction.runWriteCommandAction(project, runnable);
             selectionModel.removeSelection();
         }
     }
+
 }

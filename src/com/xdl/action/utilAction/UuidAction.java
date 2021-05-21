@@ -1,5 +1,6 @@
 package com.xdl.action.utilAction;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -18,14 +19,11 @@ public class UuidAction extends AnAction {
         Project project = e.getProject();
         Editor requiredData = e.getRequiredData(LangDataKeys.EDITOR);
         SelectionModel selectionModel = requiredData.getSelectionModel();
-        String selectedText = selectionModel.getSelectedText();
-        if(!ObjectUtil.isEmpty(selectedText)){
-            int selectionStart = selectionModel.getSelectionStart();
-            int selectionEnd = selectionModel.getSelectionEnd();
-            Document document = selectionModel.getEditor().getDocument();
-            Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd, StrUtil.toCamelCase(selectedText));
-            WriteCommandAction.runWriteCommandAction(project,runnable);
-            selectionModel.removeSelection();
-        }
+        String uuid = IdUtil.fastSimpleUUID();
+        int selectionStart = selectionModel.getSelectionStart();
+        Document document = selectionModel.getEditor().getDocument();
+        Runnable runnable = () -> document.insertString(selectionStart , uuid);
+        WriteCommandAction.runWriteCommandAction(project, runnable);
+        selectionModel.removeSelection();
     }
 }

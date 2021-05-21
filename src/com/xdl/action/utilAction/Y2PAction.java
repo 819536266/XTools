@@ -26,14 +26,19 @@ public class Y2PAction extends AnAction {
         Editor requiredData = e.getRequiredData(LangDataKeys.EDITOR);
         SelectionModel selectionModel = requiredData.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-        if(!ObjectUtil.isEmpty(selectedText)){
-            String convert = Yaml2Props.fromContent(selectedText).convert();
-            int selectionStart = selectionModel.getSelectionStart();
-            int selectionEnd = selectionModel.getSelectionEnd();
-            Document document = selectionModel.getEditor().getDocument();
-            Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd, convert);
-            WriteCommandAction.runWriteCommandAction(project,runnable);
-            selectionModel.removeSelection();
+        if (!ObjectUtil.isEmpty(selectedText)) {
+            try {
+                String convert = Yaml2Props.fromContent(selectedText).convert();
+                int selectionStart = selectionModel.getSelectionStart();
+                int selectionEnd = selectionModel.getSelectionEnd();
+                String replace = convert.replace("\r\n", "\n");
+                Document document = selectionModel.getEditor().getDocument();
+                Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd, replace);
+                WriteCommandAction.runWriteCommandAction(project, runnable);
+                selectionModel.removeSelection();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
     }
 }

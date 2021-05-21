@@ -5,7 +5,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
@@ -26,11 +25,9 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.content.ContentManagerEvent;
-import com.intellij.ui.content.ContentManagerListener;
-import com.xdl.action.XHttpAction;
+import com.intellij.ui.content.Content;
+import com.xdl.action.XToolsAction;
 import com.xdl.model.*;
 import com.xdl.util.Icons;
 import com.xdl.util.KillServer;
@@ -38,7 +35,6 @@ import com.xdl.util.SpringUtils;
 import com.xdl.util.XHttpButtonCellEditor;
 import lombok.Data;
 import org.jdesktop.swingx.JXComboBox;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -47,8 +43,8 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
-import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -66,73 +62,56 @@ import java.util.List;
 public class XHttpUi {
 
 
-    private JPanel parentPanel;
-    private JTabbedPane tabbedPane1;
-    private JTabbedPane request;
     private JTable headerTable;
     private JTabbedPane tabbedPane3;
     private JTable paramTable;
-    private JPanel debugPanel;
-    private JPanel requestHeader;
-    private JPanel parameter;
-    private JPanel tt;
     private JTextField path;
     private JButton send;
-    private JPanel formData;
-    private JPanel formTable;
-    private JPanel json;
     private JTextArea responseContent;
     private JButton closeButton;
     private JTextField pathPrefix;
     private JButton emptyResponseButton;
     private JButton emptyButton;
     private JLabel methodType;
-    private JTextField portText;
-    private JButton closePostButton;
 
     private JTextArea jsonBody;
     private JTable jsonParamTable;
     private JButton deleteHeaderButton;
     private JButton addHeaderButton;
-    private JScrollPane jsonParamScroll;
-    private JTextArea portContent;
-    private JButton clearPortButton;
-    private JScrollPane parentJScroll;
-    private JTable table1;
-    private JButton createButton;
-    private JButton clearButton;
-    private JButton clearRowButton;
-    private JTextField titleMDName;
     private JTextArea headerContent;
     private JTextArea urlContent;
     private JTextArea rowContent;
-    private JPanel rowPanel;
     private JTable rowParamTable;
     private JSplitPane paramPane;
+    private JPanel parentPanel;
+    private JPanel debugPanel;
     private JTabbedPane tabbedPane4;
-    private JTabbedPane tabbedPane2;
-    private JPanel portPanel;
-    private JButton p2YButton;
-    private JTable table2;
-    public static JButton proToYml;
-    public static JButton ymlToPro;
-    public static JButton clean ;
-    public static JProgressBar progressBar1;
+    private JTabbedPane request;
+    private JPanel parameter;
+    private JPanel requestHeader;
+    private JPanel formData;
+    private JPanel rowPanel;
+    private JScrollPane jsonParamScroll;
+    private JPanel json;
+    private JPanel formTable;
+
+    private JButton formAddButton;
+    private JButton formDeleteButton;
+    private JButton formAddButton1;
+    private JButton formDeleteButton1;
+
+    private JScrollPane parentJScroll;
 
     public XHttpModel xHttpModel;
 
-    public ToolWindow toolWindow;
+    public ToolWindow toolWindow = XHttpWindowFactory.toolWindow;
 
     public Project project;
-
-    public XHttpUi xHttpUi;
 
     public XHttpParam xHttpParamBody;
 
     //路径 Document
     public Document pathDocument = new DefaultStyledDocument();
-
-    private static KillServer killServer = new KillServer();
 
     //路径 Document
     public Icon methodTypeIcon = Icons.load("/icons/x.png");
@@ -146,6 +125,7 @@ public class XHttpUi {
     private Map<String, String> herder = CollUtil.newHashMap(1);
 
     public XHttpUi() {
+        super();
 
     }
 
@@ -153,6 +133,7 @@ public class XHttpUi {
      * 初始化
      */
     private void init() {
+
         //设置参数表头
         paramTable.setModel(paramTableModel);
         paramTable.setEnabled(true);
@@ -164,25 +145,25 @@ public class XHttpUi {
         rowParamTable.setModel(paramTableModel);
         rowParamTable.setEnabled(true);
 
+        setCheckBox();
+
         headerTable.setModel(headerTableModel);
         headerTable.setEnabled(true);
         pathPrefix.setText(Settings.getInstance()
                 .getDoMain());
-
-        table1.setModel(DataCenter.tableModel);
-        table1.setEnabled(true);
     }
+
+
 
     /**
      * 构造方法
      *
-     * @param project    project
-     * @param toolWindow toolWindow
+     * @param project project
      */
-    public XHttpUi(Project project, ToolWindow toolWindow) {
+    public XHttpUi(Project project) {
+
         init();
         this.project = project;
-        this.toolWindow = toolWindow;
         //发送请求监听事件
         send.addActionListener(e -> sendHttp());
 //        //关闭窗口
@@ -214,37 +195,21 @@ public class XHttpUi {
         emptyButton.addActionListener(e -> {
             path.setText("");
             paramTableModel.setDataVector(null, paramTitle);
-            //设置参数 第一列为复选框
-            TableColumn column = paramTable.getColumnModel()
-                    .getColumn(0);
-            column.setCellEditor(paramTable.getDefaultEditor(Boolean.class));
-            column.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
-            XHttpAction.modelMap.remove(ObjectUtil.isEmpty(xHttpModel) ? "" : xHttpModel.getKey());
+            setCheckBox();
+            XToolsAction.modelMap.remove(ObjectUtil.isEmpty(xHttpModel) ? "" : xHttpModel.getKey());
         });
 
-        //执行关闭端口
-        closePostButton.addActionListener(e -> {
-            int i = Messages.showOkCancelDialog("请确定是否关闭端口!!", "关闭端口", "确认关闭", "取消", null);
-            if (0 == i) killServer.kill(portText.getText(), portContent);
-        });
-        //清空关闭端口回执
-        clearPortButton.addActionListener(e -> portContent.setText(""));
         //添加请求头
         addHeaderButton.addActionListener(e -> headerTableModel.addRow(new Object[]{true, "", ""}));
         //删除请求头
         deleteHeaderButton.addActionListener(this::actionPerformed);
 
-        //创建文档
-        createButton.addActionListener(e -> createMD());
-        //清空文档
-        clearButton.addActionListener(e -> DataCenter.clear());
-
-        //刪除一行
-        clearRowButton.addActionListener(e -> {
-            int selectedRow = table1.getSelectedRow();
-            DataCenter.tableModel.removeRow(selectedRow);
-            DataCenter.LIST.remove(selectedRow);
-        });
+        //添加参数
+//        formAddButton.addActionListener(e-> paramTableModel.addRow(new Object[]{true, "", ""}));
+//        formAddButton1.addActionListener(e-> paramTableModel.addRow(new Object[]{true, "", ""}));
+        //删除删除
+//        formDeleteButton.addActionListener(this::deleteParamRow);
+//        formDeleteButton1.addActionListener(this::deleteParamRow1);
     }
 
 
@@ -288,7 +253,7 @@ public class XHttpUi {
             return;
         }
 
-        String contentPath = StrUtil.addSuffixIfNot(StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/"),"/") + StrUtil.removePrefix(path.getText(),"/");
+        String contentPath = StrUtil.addSuffixIfNot(StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/"), "/") + StrUtil.removePrefix(path.getText(), "/");
         String restful = SpringUtils.restful(contentPath, paramList);
         HttpRequest request = HttpUtil.createRequest(xHttpModel.getMethodType()
                 , restful);
@@ -388,7 +353,7 @@ public class XHttpUi {
         //设置路径 ,不使用 path.setText(localPath); 多个窗口会出现设置不统一
         try {
             ((AbstractDocument) pathDocument).replace(0, pathDocument.getLength()
-                    ,  xHttpModel.getPath(), null);
+                    , xHttpModel.getPath(), null);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -396,7 +361,6 @@ public class XHttpUi {
         //设置图标
         methodTypeIcon = Icons.getMethodIcon(xHttpModel.getMethodType());
         methodType.setIcon(methodTypeIcon);
-        tabbedPane1.setSelectedIndex(0);
         tabbedPane3.setSelectedIndex(windowType == 2 ? 2 : SpringRequestMethodAnnotation.POST_MAPPING.getMethod()
                 .equals(xHttpModel.getMethodType()) ? 1 : 0);
         //打开
@@ -406,14 +370,13 @@ public class XHttpUi {
 
     /**
      * 打开对应窗口
-     *
-     * @param parentIndex 窗口下标
      */
-    public void openParent(int parentIndex) {
-        tabbedPane1.setSelectedIndex(parentIndex);
-        //打开
-        toolWindow.show(null);
+    public void openParent() {
+        XHttpWindowFactory.toolWindow.show(null);
+        Content content = XHttpWindowFactory.toolWindow.getContentManager().getContent(0);
+        XHttpWindowFactory.toolWindow.getContentManager().setSelectedContent(content);
     }
+
 
     /**
      * 封装table值
@@ -449,56 +412,51 @@ public class XHttpUi {
     }
 
 
-    /**
-     * 創建MD文檔
-     */
-    public void createMD() {
-        String text = titleMDName.getText();
-        String fileName = text + ".md";
-        NotificationGroup notificationGroup = new NotificationGroup("MarkBootNotification", NotificationDisplayType.BALLOON, false);
-        if (ObjectUtil.isEmpty(text)) {
-            Notification notification = notificationGroup.createNotification("请输入文档标题!", MessageType.WARNING);
-            Notifications.Bus.notify(notification, this.project);
-            return;
-        }
-        VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), project, project.getProjectFile());
-        if (!ObjectUtil.isEmpty(virtualFile)) {
-            assert virtualFile != null;
-            String path = virtualFile.getPath() + "/" + fileName;
-            TemplateEngine engine = TemplateUtil.createEngine();
-            String template1 = getTemplate();
-            Template template = engine.getTemplate(template1);
-            Dict dict = Dict.create();
-            dict.set("parentTitle", text);
-            dict.set("rowList", DataCenter.LIST);
-            String result = template.render(dict);
-            File file = FileUtil.writeUtf8String(result, path);
-            if (ObjectUtil.isEmpty(file)) {
-                Notification notification = notificationGroup.createNotification("生成文档失败", MessageType.ERROR);
-                Notifications.Bus.notify(notification, this.project);
-            }
-            Notification notification = notificationGroup.createNotification("文档生成成功", MessageType.INFO);
-            Notifications.Bus.notify(notification, this.project);
-        }
-    }
-
-    private static String getTemplate() {
-        String loadText ;
-        try {
-            loadText = UrlUtil.loadText(XHttpUi.class.getResource("/templates/markBoot.ftl"));
-        } catch (IOException e) {
-            return null;
-        }
-        return loadText;
-    }
-
 
     private void actionPerformed(ActionEvent e) {
         try {
             int selectedRow = headerTable.getSelectedRow();
             headerTableModel.removeRow(selectedRow);
         } catch (Exception ignored) {
-
         }
     }
+
+    private void deleteParamRow(ActionEvent e) {
+        try {
+            int selectedRow = paramTable.getSelectedRow();
+            paramTableModel.removeRow(selectedRow);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void deleteParamRow1(ActionEvent e) {
+        try {
+            int selectedRow = jsonParamTable.getSelectedRow();
+            paramTableModel.removeRow(selectedRow);
+        } catch (Exception ignored) {
+        }
+    }
+
+    /**
+     * 设置复选框
+     */
+    private void setCheckBox() {
+        //设置参数 第一列为复选框
+        TableColumn column = paramTable.getColumnModel()
+                .getColumn(0);
+        column.setCellEditor(paramTable.getDefaultEditor(Boolean.class));
+        column.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
+
+        //设置参数 第一列为复选框
+        TableColumn column1 = jsonParamTable.getColumnModel()
+                .getColumn(0);
+        column1.setCellEditor(jsonParamTable.getDefaultEditor(Boolean.class));
+        column1.setCellRenderer(jsonParamTable.getDefaultRenderer(Boolean.class));
+        //设置参数 第一列为复选框
+        TableColumn column2 = rowParamTable.getColumnModel()
+                .getColumn(0);
+        column2.setCellEditor(rowParamTable.getDefaultEditor(Boolean.class));
+        column2.setCellRenderer(rowParamTable.getDefaultRenderer(Boolean.class));
+    }
+
 }
