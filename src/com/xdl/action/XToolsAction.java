@@ -3,70 +3,123 @@ package com.xdl.action;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.psi.*;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentFactory;
+import com.intellij.ui.content.ContentManager;
 import com.xdl.model.*;
-import com.xdl.ui.XHttpUi;
+import com.xdl.ui.*;
 import com.xdl.util.SpringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class XHttpAction extends AnAction {
+public class XToolsAction extends AnAction {
 
     public static Map<String, XHttpModel> modelMap = new HashMap<>();
 
     public XHttpModel xHttpModel;
 
-    public static Map<Project, XHttpUi> xHttpUiMap = new HashMap<>();
+    public static Map<Project, Map<Class<?>, Object>> xHttpUiMap = new HashMap<>();
 
     private PsiMethod psiMethod;
 
     private SpringRequestMethodAnnotation methodType;
 
 
-    public XHttpAction() {
+    public XToolsAction() {
         super();
     }
 
-    public XHttpAction(PsiMethod psiMethod, SpringRequestMethodAnnotation methodType, String text, String description,
-                       Icon icon) {
+    public XToolsAction(PsiMethod psiMethod, SpringRequestMethodAnnotation methodType, String text, String description,
+                        Icon icon) {
         super(text, description, icon);
         this.psiMethod = psiMethod;
         this.methodType = methodType;
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         xHttpModel = createXHttpModel();
-        XHttpUi xHttpUi = xHttpUiMap.get(project);
-        if (ObjectUtil.isEmpty(xHttpUi)) {
-            NotificationGroup notificationGroup = new NotificationGroup("XHttpNotification", NotificationDisplayType.BALLOON, false);
-            //  content :  通知内容 type  ：通知的类型，warning,info,error
-            Notification notification = notificationGroup.createNotification("请初始化窗口!", MessageType.WARNING);
-            Notifications.Bus.notify(notification);
-        } else {
-            if (ObjectUtil.isNotEmpty(xHttpUi)) {
-                xHttpUi.open(xHttpModel);
-            }
-        }
-        // TODO: insert action logic here
+        XHttpUi xHttpUi = getUi(project, XHttpUi.class);
+
+        xHttpUi.open(xHttpModel);
     }
+
+
+    /**
+     * 初始化工具窗口
+     *
+     * @param project project
+     */
+    public static void init(Project project) {
+        //创建出NoteListWindow对象
+        XHttpUi xHttpUi = new XHttpUi(project);
+        XTools xtools = new XTools(project);
+        register(xHttpUi.getDebugPanel(), "XHttp", 0);
+        register(xtools.getToolTabbedPane(), "XTools", 1);
+        putUi(project, xHttpUi);
+        putUi(project, xtools);
+    }
+
+
+    /**
+     * 获取UI
+     *
+     * @param project project
+     * @param tClass  UI类型
+     * @param <T>     返回的UI类型
+     * @return UI类
+     */
+    public static <T> T getUi(Project project, Class<T> tClass) {
+        Map<Class<?>, Object> classMap = xHttpUiMap.get(project);
+        if(classMap == null ){
+            XHttpWindowFactory.toolWindow.getContentManager();
+            classMap = xHttpUiMap.get(project);
+        }
+        Object o = classMap.get(tClass);
+        return (T) o;
+    }
+
+    /**
+     * 存入UI
+     *
+     * @param project project
+     * @param o       o
+     */
+    public static void putUi(Project project, Object o) {
+        Map<Class<?>, Object> classMap = xHttpUiMap.get(project);
+        if (CollUtil.isEmpty(classMap)) {
+            classMap = new HashMap<>(1);
+        }
+        classMap.put(o.getClass(), o);
+        xHttpUiMap.put(project, classMap);
+    }
+
+    /**
+     * 注册UI
+     *
+     * @param jComponent jTabbedPane
+     * @param name       table名称
+     * @param index      table下标
+     */
+    public static void register(JComponent jComponent, String name, int index) {
+        //获取内容工厂的实例
+        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        //获取用于toolWindow显示的内容
+        Content content = contentFactory.createContent(jComponent, name, false);
+        XHttpWindowFactory.toolWindow.getContentManager().addContent(content, index);
+    }
+
 
     /**
      * 封装请求参数
@@ -96,7 +149,7 @@ public class XHttpAction extends AnAction {
      * @param psiMethod psiMethod
      * @return List<XHttpParam>
      */
-    private List<XHttpParam> getParamList(PsiMethod psiMethod)  {
+    private List<XHttpParam> getParamList(PsiMethod psiMethod) {
         PsiParameterList parameterList = psiMethod.getParameterList();
         //获取参数集合
         PsiParameter[] parameters = parameterList.getParameters();
@@ -126,7 +179,6 @@ public class XHttpAction extends AnAction {
         }
         return paramList;
     }
-
 
 
     /**

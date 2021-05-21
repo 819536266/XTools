@@ -11,6 +11,5 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="hutool-all-5.0.3" level="project" />
     <orderEntry type="library" name="freemarker-2.3.29" level="project" />
-    <orderEntry type="library" name="spring" level="project" />
   </component>
 </module>

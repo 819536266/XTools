@@ -10,13 +10,11 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
-import com.xdl.model.DataCenter;
-import com.xdl.ui.OutContent;
 
 /**
- * 下划线方式命名的字符串转换为驼峰式
+ * 驼峰式命名的字符串转换为下划线方式
  */
-public class UpperFirstAction extends AnAction {
+public class UnderlineUpperCaseAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -28,7 +26,7 @@ public class UpperFirstAction extends AnAction {
             int selectionStart = selectionModel.getSelectionStart();
             int selectionEnd = selectionModel.getSelectionEnd();
             Document document = selectionModel.getEditor().getDocument();
-            Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd, StrUtil.upperFirst(selectedText));
+            Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd, StrUtil.toUnderlineCase(selectedText).toUpperCase());
             WriteCommandAction.runWriteCommandAction(project,runnable);
             selectionModel.removeSelection();
         }

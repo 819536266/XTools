@@ -12,10 +12,11 @@ import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import com.xdl.model.DataCenter;
 import com.xdl.ui.OutContent;
-import com.xdl.util.props2yaml.Props2Yaml;
-import com.xdl.util.yaml2props.Yaml2Props;
 
-public class P2YAction extends AnAction {
+/**
+ * 下划线方式命名的字符串转换为驼峰式
+ */
+public class UpperOrLowerFirstAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -24,18 +25,14 @@ public class P2YAction extends AnAction {
         SelectionModel selectionModel = requiredData.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
         if (!ObjectUtil.isEmpty(selectedText)) {
-            try {
-                String convert = Props2Yaml.fromContent(selectedText).convert();
-                int selectionStart = selectionModel.getSelectionStart();
-                int selectionEnd = selectionModel.getSelectionEnd();
-                Document document = selectionModel.getEditor().getDocument();
-                Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd , convert);
-                WriteCommandAction.runWriteCommandAction(project, runnable);
-                selectionModel.removeSelection();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-
+            String substring = selectedText.substring(0, 1);
+            int selectionStart = selectionModel.getSelectionStart();
+            int selectionEnd = selectionModel.getSelectionEnd();
+            Document document = selectionModel.getEditor().getDocument();
+            Runnable runnable = () -> document.replaceString(selectionStart, selectionEnd,
+                    StrUtil.isUpperCase(substring) ? StrUtil.lowerFirst(selectedText) : StrUtil.upperFirst(selectedText));
+            WriteCommandAction.runWriteCommandAction(project, runnable);
+            selectionModel.removeSelection();
         }
     }
 }

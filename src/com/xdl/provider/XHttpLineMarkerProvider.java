@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.markup.MarkupEditorFilter;
 import com.intellij.openapi.editor.markup.MarkupEditorFilterFactory;
 import com.intellij.psi.*;
 import com.intellij.util.Function;
-import com.xdl.action.XHttpAction;
+import com.xdl.action.XToolsAction;
 import com.xdl.model.SpringRequestMethodAnnotation;
 import com.xdl.util.Icons;
 import com.xdl.util.SpringUtils;
@@ -37,7 +37,7 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
 //         System.out.println("方法全部内容  :"+psiMethod.getOriginalElement().getText()); //方法全部内容
         //System.out.println("内容  :"+psiMethod.getParameterList().getText());  (@PathVariable(value = "materialId") Integer materialId, @RequestBody List<Competing> competingList)
         // System.out.println("类内容  :"+psiMethod.getBody().getText()); //方法内容 不带方法名
-        List<XHttpAction> list = CollUtil.newArrayList();
+        List<XToolsAction> list = CollUtil.newArrayList();
         for (SpringRequestMethodAnnotation methodType : SpringUtils.METHOD_TYPE) {
             //获取方法上的Mapping注解
             PsiAnnotation annotation = psiMethod.getAnnotation(methodType.getQualifiedName());
@@ -51,20 +51,20 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
                 //是RequestMapping并且无method参数值
                 if (ObjectUtil.isEmpty(method) || ObjectUtil.isEmpty(method.getText()) || ObjectUtil.isEmpty(SpringUtils.getMethodParamMapping(method.getText()))) {
                     for (SpringRequestMethodAnnotation springRequestMethodAnnotation : SpringUtils.NO_REQUEST_METHOD_TYPE) {
-                        XHttpAction xHttpAction = new XHttpAction(psiMethod, springRequestMethodAnnotation
+                        XToolsAction xToolsAction = new XToolsAction(psiMethod, springRequestMethodAnnotation
                                 , SpringUtils.getMethodText(springRequestMethodAnnotation.getMethod())
                                 , "发个请求吧!", Icons.getMethodIcon(springRequestMethodAnnotation.getMethod()));
-                        list.add(xHttpAction);
+                        list.add(xToolsAction);
                     }
                     break;
                 }
                 //根据对应参数值获取对应 SpringRequestMethodAnnotation
                 methodType = SpringUtils.getMethodParamMapping(method.getText());
             }
-            XHttpAction xHttpAction = new XHttpAction(psiMethod, methodType
+            XToolsAction xToolsAction = new XToolsAction(psiMethod, methodType
                     , SpringUtils.getMethodText(methodType.getMethod()), "发个请求吧!"
                     , Icons.getMethodIcon(methodType.getMethod()));
-            list.add(xHttpAction);
+            list.add(xToolsAction);
             break;
         }
         if (CollUtil.isEmpty(list)) {

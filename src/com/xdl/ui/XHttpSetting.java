@@ -1,10 +1,8 @@
 package com.xdl.ui;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.xdl.action.XHttpAction;
+import com.xdl.action.XToolsAction;
 import com.xdl.model.Settings;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -12,8 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -66,7 +62,7 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
                     .forEach(e1 -> defaultTableModel.addRow(new String[]{e1}));
         });
         //清除全部缓存
-        clear.addActionListener(e -> XHttpAction.modelMap.clear());
+        clear.addActionListener(e -> XToolsAction.modelMap.clear());
     }
 
     /**
