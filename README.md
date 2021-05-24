@@ -40,6 +40,20 @@ IntelliJ IDEA版（182+)
 在拥有注解的方法左侧点击线性标签，选择对应请求发送方式即可。
 
 可在IDEA中设置默认前缀以及自动过滤的参数类型。file -> settings -> Other Settings -> XTools。
+#### 快捷键
+
+| 功能                           | win快捷键       | 右键点击|
+| ------------------------------ | --------------- | --------------- |
+| yaml转properties              | Alt + Y         | XTools -> Y-TO-P |
+| properties转yaml              | Alt + P      | XTools -> P-TO-Y   |
+| 字符串大小写互转               | Alt + U     |  XTools -> Upper OR Lower Case |
+| 首字母大小写互转              | Alt + Shift + U |  XTools -> Upper OR Lower First |
+| 单引号转双引号,双引号转单引号  | alt + 引号  |  XTools -> Quotes Cast |
+| 去双引号,加双引号              | Alt + Shift + 引号 |  XTools -> Quotes Change |
+| 驼峰命名转下划线并大写         | 无 |  XTools -> Underline And UpperCase |
+| 驼峰命名转下划线              | 无 |  XTools -> Underline Case |
+| 下划线命名转驼峰              | 无 |  XTools -> Camel Case |
+| 创建Markdown笔记              | 无 |  XTools -> Create Markdown |
 
 ## 使用截图
 - RequestMapping
