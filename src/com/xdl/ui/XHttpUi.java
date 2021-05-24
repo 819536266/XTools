@@ -180,15 +180,10 @@ public class XHttpUi {
         });
         //清空返回值
         emptyResponseButton.addActionListener(e -> {
-            VirtualFile fileByIoFile = LocalFileSystem.getInstance().findFileByIoFile(new File("D:/"));
-            try {
-                VirtualFile file = fileByIoFile.createChildData(null, "文件");
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
             rowContent.setText("");
             urlContent.setText("");
             headerContent.setText("");
+            responseContent.setText("");
         });
 
         //清空全部
@@ -296,12 +291,12 @@ public class XHttpUi {
                 ContentType.MULTIPART.toString() : ContentType.FORM_URLENCODED.toString()));
         urlContent.setText(restful);
         headerContent.setText(JSONUtil.formatJsonStr(JSONUtil.toJsonStr(request.headers())));
+
         HttpResponse execute = null;
         try {
             execute = request.execute(true);
         } catch (Exception e1) {
             responseContent.setText("请求超时!!!");
-//            jsonResponseContent.setText("请求超时!!!");
         }
         String body = "";
         if (ObjectUtil.isEmpty(execute)) {
@@ -310,6 +305,7 @@ public class XHttpUi {
             responseContent.setText(body);
             return;
         }
+        body = execute.body();
         rowContent.setText(body);
         if (!ObjectUtil.isEmpty(body) && JSONUtil.isJson(body)) body = JSONUtil.formatJsonStr(body);
         responseContent.setText(body);
