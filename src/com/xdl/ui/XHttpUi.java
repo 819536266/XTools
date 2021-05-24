@@ -104,7 +104,7 @@ public class XHttpUi {
 
     public XHttpModel xHttpModel;
 
-    public ToolWindow toolWindow = XHttpWindowFactory.toolWindow;
+    public ToolWindow toolWindow;
 
     public Project project;
 
@@ -154,7 +154,6 @@ public class XHttpUi {
     }
 
 
-
     /**
      * 构造方法
      *
@@ -163,6 +162,7 @@ public class XHttpUi {
     public XHttpUi(Project project) {
 
         init();
+        toolWindow = XToolsAction.ToolWindows.get(project);
         this.project = project;
         //发送请求监听事件
         send.addActionListener(e -> sendHttp());
@@ -372,9 +372,9 @@ public class XHttpUi {
      * 打开对应窗口
      */
     public void openParent() {
-        XHttpWindowFactory.toolWindow.show(null);
-        Content content = XHttpWindowFactory.toolWindow.getContentManager().getContent(0);
-        XHttpWindowFactory.toolWindow.getContentManager().setSelectedContent(content);
+        toolWindow.show(null);
+        Content content = toolWindow.getContentManager().getContent(0);
+        toolWindow.getContentManager().setSelectedContent(content);
     }
 
 
@@ -410,7 +410,6 @@ public class XHttpUi {
         column.setCellRenderer(paramTable.getDefaultRenderer(Boolean.class));
 
     }
-
 
 
     private void actionPerformed(ActionEvent e) {

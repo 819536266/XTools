@@ -1,6 +1,7 @@
 package com.xdl.ui;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;
 import com.xdl.action.XToolsAction;
 import lombok.Data;
@@ -17,10 +18,12 @@ public class XTools {
     private Markdown markdown;
     private Convert convert;
     private final Project project;
+    private ToolWindow toolWindow;
 
 
     public XTools(Project project) {
         this.project = project;
+        toolWindow = XToolsAction.ToolWindows.get(project);
     }
 
 
@@ -30,9 +33,9 @@ public class XTools {
 
     public void openParent(int i) {
         toolTabbedPane.setSelectedIndex(i);
-        XHttpWindowFactory.toolWindow.show(null);
-        Content content = XHttpWindowFactory.toolWindow.getContentManager().getContent(1);
-        XHttpWindowFactory.toolWindow.getContentManager().setSelectedContent(content);
+        toolWindow.show(null);
+        Content content = toolWindow.getContentManager().getContent(1);
+        toolWindow.getContentManager().setSelectedContent(content);
     }
 
 
