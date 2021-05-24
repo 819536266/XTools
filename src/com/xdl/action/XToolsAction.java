@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindowFactory;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.*;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
@@ -29,6 +29,7 @@ public class XToolsAction extends AnAction {
     public XHttpModel xHttpModel;
 
     public static Map<Project, Map<Class<?>, Object>> xHttpUiMap = new HashMap<>();
+    public static Map<Project, ToolWindow> ToolWindows = new HashMap<>();
 
     private PsiMethod psiMethod;
 
@@ -58,15 +59,15 @@ public class XToolsAction extends AnAction {
 
     /**
      * 初始化工具窗口
-     *
-     * @param project project
+     *  @param project project
+     * @param toolWindow
      */
-    public static void init(Project project) {
+    public static void init(Project project, ContentManager toolWindow) {
         //创建出NoteListWindow对象
         XHttpUi xHttpUi = new XHttpUi(project);
         XTools xtools = new XTools(project);
-        register(xHttpUi.getDebugPanel(), "XHttp", 0);
-        register(xtools.getToolTabbedPane(), "XTools", 1);
+        register(toolWindow,xHttpUi.getDebugPanel(), "XHttp", 0);
+        register(toolWindow,xtools.getToolTabbedPane(), "XTools", 1);
         putUi(project, xHttpUi);
         putUi(project, xtools);
     }
@@ -83,7 +84,9 @@ public class XToolsAction extends AnAction {
     public static <T> T getUi(Project project, Class<T> tClass) {
         Map<Class<?>, Object> classMap = xHttpUiMap.get(project);
         if(classMap == null ){
-            XHttpWindowFactory.toolWindow.getContentManager();
+            XHttpWindowFactory xHttpWindowFactory = new XHttpWindowFactory();
+            ToolWindow toolWindow = ToolWindows.get(project);
+            xHttpWindowFactory.createToolWindowContent(project,toolWindow);
             classMap = xHttpUiMap.get(project);
         }
         Object o = classMap.get(tClass);
@@ -107,17 +110,17 @@ public class XToolsAction extends AnAction {
 
     /**
      * 注册UI
-     *
+     *  @param contentManager
      * @param jComponent jTabbedPane
      * @param name       table名称
      * @param index      table下标
      */
-    public static void register(JComponent jComponent, String name, int index) {
+    public static void register(ContentManager contentManager, JComponent jComponent, String name, int index) {
         //获取内容工厂的实例
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         //获取用于toolWindow显示的内容
         Content content = contentFactory.createContent(jComponent, name, false);
-        XHttpWindowFactory.toolWindow.getContentManager().addContent(content, index);
+        contentManager.addContent(content, index);
     }
 
 
