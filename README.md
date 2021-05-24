@@ -26,7 +26,7 @@ IntelliJ IDEA版（182+)
 6.  自动JSON格式化栏，响应栏，URL栏，标题栏
 7.  窗口切换按钮,用于竖状或横状窗口
 8.  端口关闭工具
-9.  MD文档生成工具
+9.  Markdown文档生成工具
 10. yaml与properties代码互转
 11. 字段转大小写、驼峰、下滑线、加减引号等
 
@@ -42,11 +42,19 @@ IntelliJ IDEA版（182+)
 可在IDEA中设置默认前缀以及自动过滤的参数类型。file -> settings -> Other Settings -> XTools。
 
 ## 使用截图
-![代码转化工具](https://images.gitee.com/uploads/images/2021/0519/153426_055bb29c_4832857.png "屏幕截图.png")
-
-![yaml-TO-pro](https://images.gitee.com/uploads/images/2021/0519/154312_d18af8c0_4832857.png "屏幕截图.png")
-![方法截图](https://images.gitee.com/uploads/images/2020/0810/160353_c3de3bc7_4832857.jpeg "115232_04a6b145_4832857.jpeg")
-
-![请求截图](https://images.gitee.com/uploads/images/2020/0810/161153_6a489557_4832857.jpeg "1597047068(1).jpg")
-![端口关闭](https://images.gitee.com/uploads/images/2020/0810/161216_56328488_4832857.jpeg "1597046970(1).jpg")
-![MD文档生成](https://images.gitee.com/uploads/images/2020/0810/161235_9c9cc1b0_4832857.jpeg "1597047034(1).jpg")
+- RequestMapping
+![RequestMapping](https://images.gitee.com/uploads/images/2021/0524/162324_fe6774c8_4832857.gif "requestmapping.gif")
+- GetMapping
+![GetMapping](https://images.gitee.com/uploads/images/2021/0524/162515_aeadf176_4832857.gif "getmapping.gif")
+- GetMappingJson
+![GetMappingJson](https://images.gitee.com/uploads/images/2021/0524/162526_e6c1b49c_4832857.gif "getmappingjson.gif")
+- PostMapping
+![PostMapping](https://images.gitee.com/uploads/images/2021/0524/162542_1197f1ae_4832857.gif "postmapping.gif")
+- PostMappingBody
+![PostMappingBody](https://images.gitee.com/uploads/images/2021/0524/162552_197413a3_4832857.gif "postmappingbody.gif")
+- 创建Markdown文档
+![创建Markdown文档](https://images.gitee.com/uploads/images/2021/0524/162608_b3171a38_4832857.gif "md.gif")
+- yaml与properties互转
+![yaml与properties互转](https://images.gitee.com/uploads/images/2021/0524/162623_1a19cb3c_4832857.gif "p2y.gif")
+- 关闭端口
+![关闭端口](https://images.gitee.com/uploads/images/2021/0524/162635_2c27e136_4832857.gif "port.gif")
