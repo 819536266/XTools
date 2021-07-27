@@ -31,24 +31,42 @@ public class PreviewAction extends PsiElementBaseIntentionAction {
         if (localVarialbeContainingClass == null) {
             return;
         }
-        PsiElement context = localVarialbeContainingClass.getContext();
-        PreviewContent.text= localVarialbeContainingClass.getText();
+        PreviewContent.text = localVarialbeContainingClass.getText();
         PreviewContent outContent = new PreviewContent();
         outContent.show();
     }
 
     public static PsiClass getLocalVarialbeContainingClass(@NotNull PsiElement element) {
-        PsiElement psiParent = PsiTreeUtil.getContextOfType(element, PsiLocalVariable.class, PsiParameter.class);
-        if (psiParent == null) {
+        PsiElement psiParent = PsiTreeUtil.getContextOfType(element,PsiClass.class, PsiLocalVariable.class, PsiParameter.class);
+        if (psiParent == null ) {
             return null;
         }
         PsiClass psiClass = null;
+        if (element instanceof PsiClass) {
+            psiClass =(PsiClass) element;
+        }
         if (psiParent instanceof PsiLocalVariable) {
             PsiLocalVariable psiLocal = (PsiLocalVariable) psiParent;
             psiClass = PsiTypesUtil.getPsiClass(psiLocal.getType());
         }
         if (psiParent instanceof PsiParameter) {
             PsiParameter psiParameter = (PsiParameter) psiParent;
+            psiClass = PsiTypesUtil.getPsiClass(psiParameter.getType());
+        }
+        return psiClass;
+    }
+
+    public static PsiClass getPsiClass(@NotNull PsiElement element) {
+        PsiClass psiClass = null;
+        if (element instanceof PsiClass) {
+            psiClass =(PsiClass) element;
+        }
+        if (element instanceof PsiLocalVariable) {
+            PsiLocalVariable psiLocal = (PsiLocalVariable) element;
+            psiClass = PsiTypesUtil.getPsiClass(psiLocal.getType());
+        }
+        if (element instanceof PsiParameter) {
+            PsiParameter psiParameter = (PsiParameter) element;
             psiClass = PsiTypesUtil.getPsiClass(psiParameter.getType());
         }
         return psiClass;
@@ -61,13 +79,12 @@ public class PreviewAction extends PsiElementBaseIntentionAction {
     }
 
     @Override
-    public @NotNull
-    @IntentionFamilyName String getFamilyName() {
+    public @NotNull String getFamilyName() {
         return "previewFile1";
     }
 
     @Override
-    public @IntentionName
+    public
     @NotNull
     String getText() {
         return "previewFile";

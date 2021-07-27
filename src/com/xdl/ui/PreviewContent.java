@@ -6,11 +6,9 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
+
 /**
- * @program:Mark
- * @description:创建内容
- * @author:胡博欣
- * @create:2020-05-23-51
+ * @author Bx_Hu
  */
 public class PreviewContent extends DialogWrapper {
 
@@ -33,12 +31,21 @@ public class PreviewContent extends DialogWrapper {
         jPanel1.setPreferredSize(new Dimension(500, 800));
         jPanel1.setMaximumSize(new Dimension(-1, -1));
         jPanel1.setMinimumSize(new Dimension(-1, -1));
+
         JTextArea jTextArea = new JTextArea();
         jTextArea.setFont(new Font("Default", Font.PLAIN, 12));
         jTextArea.setText(text);
+        //设置光标在开始位置
+        jTextArea.setSelectionStart(1);
+        jTextArea.setSelectionEnd(1);
+
         jPanel1.getViewport().add(jTextArea);
         jPanel1.validate();
         jPanel.add(jPanel1);
+
+        //设置滚动条在开始位置
+        JScrollBar verticalScrollBar = jPanel1.getVerticalScrollBar();
+        verticalScrollBar.setValue(verticalScrollBar.getMinimum());
         return jPanel;
     }
 
