@@ -187,7 +187,8 @@
         <group id="XTools" text="XTools" description="XTools" popup="true">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
 
-            <action id="Preview" class="com.xdl.action.utilAction.Preview1Action" text="Preview" description="Preview">
+            <action id="Preview" class="com.xdl.action.utilAction.Preview1Action" text="Preview" description="预览实体类" keymap="$default">
+                <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
             </action>
             <!-- yml转properties -->
             <action id="Y_TO_P" class="com.xdl.action.utilAction.Y2PAction" text="Y-TO-P" description="yml转properties"
