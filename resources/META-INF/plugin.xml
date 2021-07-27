@@ -175,11 +175,12 @@
         <!-- Add your extensions here -->
         <toolWindow id="XTools" anchor="right" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png"
                     secondary="true"/>
+
+        <intentionAction><className>com.xdl.action.utilAction.PreviewAction</className></intentionAction>
     </extensions>
 
 
     <actions>
-
         <action id="XHttpAction" class="com.xdl.action.XToolsAction" text="XHttpAction" description="XHttpAction">
             <!--      <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
         </action>

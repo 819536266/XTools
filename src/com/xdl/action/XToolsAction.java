@@ -9,11 +9,17 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTypesUtil;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
-import com.xdl.model.*;
-import com.xdl.ui.*;
+import com.xdl.model.Settings;
+import com.xdl.model.SpringRequestMethodAnnotation;
+import com.xdl.model.XHttpModel;
+import com.xdl.model.XHttpParam;
+import com.xdl.ui.XHttpUi;
+import com.xdl.ui.XHttpWindowFactory;
+import com.xdl.ui.XTools;
 import com.xdl.util.SpringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -163,15 +169,10 @@ public class XToolsAction extends AnAction {
                     .getExclude(), parameter.getType()
                     .getCanonicalText());
             if (contains) continue;
-            System.out.println(parameter.getType().toString());
+            PsiClass psiClass = PsiTypesUtil.getPsiClass(parameter.getType());
+            //TODO 获取类文件，分析类，生成入参json
             String canonicalText = parameter.getType()
                     .getCanonicalText();
-//            try {
-//                Class<?> aClass = Class.forName("com.xd.user.controller.DepartmentController");
-//                System.out.println(JSONUtil.toJsonStr(aClass.getMethods()));
-//            } catch (ClassNotFoundException e) {
-//                e.printStackTrace();
-//            }
             PsiAnnotation annotation = parameter.getAnnotation(SpringUtils.REQUEST_BODY_CLASS_PATH);
             XHttpParam xHttpParam = new XHttpParam();
             xHttpParam.setName(parameter.getName());

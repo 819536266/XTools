@@ -25,7 +25,7 @@ public class OutContent extends DialogWrapper {
 
     private EditorTextField content;
 
-    private Project project;
+    private final Project project;
 
     public OutContent(Project project) {
         super(true);
