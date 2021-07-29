@@ -2,14 +2,9 @@ package com.xdl.model;
 
 import lombok.Data;
 
-/*
- *@program:Mark
- *
- *@description:列
- *
- *@author:胡博欣
- *
- *@create:2020-05-00-11
+
+/**
+ * @author Bx_Hu
  */
 @Data
 public class Row {

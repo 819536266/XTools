@@ -1,6 +1,5 @@
 package com.xdl.action;
 
-import cn.hutool.core.util.StrUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -20,8 +19,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+
 /**
- * @author xqchen
+ * @author Bx_Hu
  */
 public class ConvertAction extends AnAction {
 

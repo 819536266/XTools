@@ -2,7 +2,6 @@ package com.xdl.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
@@ -10,6 +9,9 @@ import com.intellij.openapi.project.Project;
 import com.xdl.model.DataCenter;
 import com.xdl.ui.OutContent;
 
+/**
+ * @author Bx_Hu
+ */
 public class MarkBookAction extends AnAction {
 
     @Override

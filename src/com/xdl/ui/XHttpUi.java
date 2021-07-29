@@ -1,36 +1,23 @@
 package com.xdl.ui;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.template.Template;
-import cn.hutool.extra.template.TemplateEngine;
-import cn.hutool.extra.template.TemplateUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.intellij.ide.fileTemplates.impl.UrlUtil;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;
 import com.xdl.action.XToolsAction;
-import com.xdl.model.*;
+import com.xdl.model.Settings;
+import com.xdl.model.SpringRequestMethodAnnotation;
+import com.xdl.model.XHttpModel;
+import com.xdl.model.XHttpParam;
 import com.xdl.util.Icons;
-import com.xdl.util.KillServer;
 import com.xdl.util.SpringUtils;
 import com.xdl.util.XHttpButtonCellEditor;
 import lombok.Data;
@@ -44,18 +31,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.List;
 
 /**
  * @author huboxin
- * @title: XHttpUi
- * @projectName XHttp
- * @description:
  * @date 2020/5/2613:36
  */
 @Data
@@ -110,24 +91,18 @@ public class XHttpUi {
 
     public XHttpParam xHttpParamBody;
 
-    //路径 Document
     public Document pathDocument = new DefaultStyledDocument();
 
-    //路径 Document
     public Icon methodTypeIcon = Icons.load("/icons/x.png");
 
-    private static final String[] paramTitle = {"选中", "参数名称", "类型", "参数值", "操作"};
-    private static final String[] headerTitle = {"选中", "请求头", "内容"};
+    private static final String[] PARAM_TITLE = {"选中", "参数名称", "类型", "参数值", "操作"};
+    private static final String[] HEADER_TITLE = {"选中", "请求头", "内容"};
 
-    public DefaultTableModel paramTableModel = new DefaultTableModel(null, paramTitle);
-    public DefaultTableModel headerTableModel = new DefaultTableModel(null, headerTitle);
+    public DefaultTableModel paramTableModel = new DefaultTableModel(null, PARAM_TITLE);
+    public DefaultTableModel headerTableModel = new DefaultTableModel(null, HEADER_TITLE);
 
     private Map<String, String> herder = CollUtil.newHashMap(1);
 
-    public XHttpUi() {
-        super();
-
-    }
 
     /**
      * 初始化
@@ -166,9 +141,8 @@ public class XHttpUi {
         this.project = project;
         //发送请求监听事件
         send.addActionListener(e -> sendHttp());
-//        //关闭窗口
-//        closeButton.addActionListener(e -> toolWindow.hide(null));
-        //切换窗口模式
+
+        ///切换窗口模式
         closeButton.addActionListener(e -> {
             if (paramPane.getOrientation() == JSplitPane.VERTICAL_SPLIT) {
                 paramPane.setDividerLocation(300);
@@ -189,7 +163,7 @@ public class XHttpUi {
         //清空全部
         emptyButton.addActionListener(e -> {
             path.setText("");
-            paramTableModel.setDataVector(null, paramTitle);
+            paramTableModel.setDataVector(null, PARAM_TITLE);
             setCheckBox();
             XToolsAction.modelMap.remove(ObjectUtil.isEmpty(xHttpModel) ? "" : xHttpModel.getKey());
         });
@@ -269,15 +243,25 @@ public class XHttpUi {
         });
         //设置选中的参数
         paramList.forEach(xHttpParam -> {
+            //未选中
             if (!xHttpParam.getIsCheck()) return;
-            if (contentPath.contains("{" + xHttpParam.getName() + "}")) return;
+
+            //restful风格
+            if (contentPath.contains(StrUtil.DELIM_START+ xHttpParam.getName() +StrUtil.DELIM_END)) return;
+
+            //body参数
             if (XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) return;
 
-            if (resType.contains(XHttpParam.BODY_TYPE)) {
-                Map<String, Object> hashMap = CollUtil.newHashMap();
-                hashMap.put(xHttpParam.getName(), xHttpParam.getValue());
-                HttpUtil.toParams(hashMap);
+            //body类型请求,拼接参数到url
+            if (resType.contains(XHttpParam.BODY_TYPE) && !XHttpParam.FILE_TYPE.equals(xHttpParam.getType())) {
+                Map<String, Object> hashMap = MapUtil.of(xHttpParam.getName(), xHttpParam.getValue());
+                String toParams = HttpUtil.toParams(hashMap, StandardCharsets.UTF_8);
+                String urlWithForm = HttpUtil.urlWithForm(request.getUrl(), toParams, StandardCharsets.UTF_8, false);
+                request.setUrl(urlWithForm);
+                return;
             }
+
+            //form请求
             if (xHttpParam.getValue() instanceof List || xHttpParam.getValue() instanceof Array) {
                 List<Object> paramValues = (List<Object>) xHttpParam.getValue();
                 paramValues.forEach(paramValue -> request.form(xHttpParam.getName(), paramValue));
@@ -289,7 +273,7 @@ public class XHttpUi {
         request.contentType(resType.contains(XHttpParam.BODY_TYPE) ?
                 ContentType.JSON.toString() : (resType.contains(XHttpParam.FILE_TYPE) ?
                 ContentType.MULTIPART.toString() : ContentType.FORM_URLENCODED.toString()));
-        urlContent.setText(restful);
+        urlContent.setText(request.getUrl());
         headerContent.setText(JSONUtil.formatJsonStr(JSONUtil.toJsonStr(request.headers())));
 
         HttpResponse execute = null;
@@ -299,7 +283,7 @@ public class XHttpUi {
             responseContent.setText("请求超时!!!");
         }
         String body = "";
-        if (ObjectUtil.isEmpty(execute)) {
+        if (execute == null) {
             body = "响应失败!!!";
             rowContent.setText(body);
             responseContent.setText(body);
@@ -318,8 +302,8 @@ public class XHttpUi {
     public void open(XHttpModel xHttpModel) {
         this.xHttpModel = xHttpModel;
         //打开列表重置表信息
-        paramTableModel.setDataVector(null, paramTitle);
-        headerTableModel.setDataVector(null, headerTitle);
+        paramTableModel.setDataVector(null, PARAM_TITLE);
+        headerTableModel.setDataVector(null, HEADER_TITLE);
         setParamTableStyle(paramTable);
         setParamTableStyle(jsonParamTable);
         setParamTableStyle(rowParamTable);
@@ -342,7 +326,6 @@ public class XHttpUi {
             }
         }
 
-//        if (ObjectUtil.isEmpty(herder.get("token"))) herder.put("token", "");
         Map<String, String> header = xHttpModel.getHeader();
         //设置请求头
         header.forEach((k, v) -> headerTableModel.addRow(new Object[]{true, k, v}));
@@ -369,8 +352,12 @@ public class XHttpUi {
      */
     public void openParent() {
         toolWindow.show(null);
-        Content content = toolWindow.getContentManager().getContent(0);
-        toolWindow.getContentManager().setSelectedContent(content);
+        Content content = toolWindow.getContentManager()
+                .getContent(0);
+        if (content != null) {
+            toolWindow.getContentManager()
+                    .setSelectedContent(content);
+        }
     }
 
 

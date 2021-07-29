@@ -7,8 +7,6 @@ import com.xdl.action.XToolsAction;
 import lombok.Data;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
 @Data
 public class XTools {
@@ -27,7 +25,7 @@ public class XTools {
     }
 
 
-    private void createUIComponents() {
+    private void createUiComponents() {
         this.markdown = new Markdown(project);
     }
 
@@ -35,7 +33,9 @@ public class XTools {
         toolTabbedPane.setSelectedIndex(i);
         toolWindow.show(null);
         Content content = toolWindow.getContentManager().getContent(1);
-        toolWindow.getContentManager().setSelectedContent(content);
+        if (content != null) {
+            toolWindow.getContentManager().setSelectedContent(content);
+        }
     }
 
 

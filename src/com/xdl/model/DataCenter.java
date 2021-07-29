@@ -4,14 +4,9 @@ import javax.swing.table.DefaultTableModel;
 import java.util.LinkedList;
 import java.util.List;
 
-/*
- *@program:Mark
- *
- *@description:
- *
- *@author:胡博欣
- *
- *@create:2020-05-00-19
+
+/**
+ * @author Bx_Hu
  */
 public class DataCenter {
 

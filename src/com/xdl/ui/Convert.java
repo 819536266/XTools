@@ -6,11 +6,10 @@ import com.xdl.util.yaml2props.Yaml2Props;
 import org.eclipse.xtend.lib.annotations.Data;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import static com.intellij.icons.AllIcons.FileTypes.Yaml;
-
+/**
+ * @author Bx_Hu
+ */
 @Data
 public class Convert {
     private JPanel convertPanel;

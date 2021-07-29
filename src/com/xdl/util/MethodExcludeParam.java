@@ -1,5 +1,8 @@
 package com.xdl.util;
 
+/**
+ * @author Bx_Hu
+ */
 public interface MethodExcludeParam {
 
     String HTTP_SESSION = "javax.servlet.http.HttpSession";
@@ -10,7 +13,7 @@ public interface MethodExcludeParam {
 
 
 
-    String[] exclude={
+    String[] EXCLUDE ={
             HTTP_SESSION,
             HTTP_SERVLET_REQUEST,
             HTTP_SERVLET_RESPONSE

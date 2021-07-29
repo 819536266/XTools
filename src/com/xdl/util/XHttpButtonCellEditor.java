@@ -1,12 +1,10 @@
 package com.xdl.util;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.xdl.model.XHttpParam;
 import com.xdl.ui.XHttpUi;
@@ -16,29 +14,26 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * @author huboxin
- * @title: XHttpCellEditor
- * @projectName XHttp
- * @description:
  * @date 2020/6/117:31
  */
 public class XHttpButtonCellEditor  extends AbstractCellEditor implements TableCellEditor{
 
 
-    private JTextField textField=new JTextField();
+    private final JTextField textField=new JTextField();
 
-    private  XHttpUi xHttpUi;
+    private final XHttpUi xHttpUi;
 
     public XHttpButtonCellEditor(XHttpUi xHttpUi) {
         this.xHttpUi = xHttpUi;
     }
 
+    @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         textField.setEditable(false);
         DefaultTableModel paramTableModel = xHttpUi.paramTableModel;
@@ -60,6 +55,7 @@ public class XHttpButtonCellEditor  extends AbstractCellEditor implements TableC
         }
     }
 
+    @Override
     public Object getCellEditorValue() {
         return "";
     }

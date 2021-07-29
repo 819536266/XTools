@@ -1,6 +1,5 @@
 package com.xdl.model;
 
-import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
@@ -44,13 +43,13 @@ public class Settings implements PersistentStateComponent<Settings> {
 
     public Settings() {
         this.doMain = "http://localhost:8080";
-        this.exclude = MethodExcludeParam.exclude;
+        this.exclude = MethodExcludeParam.EXCLUDE;
     }
 
 
     public  void restart(){
         this.doMain = "http://localhost:8080";
-        this.exclude = MethodExcludeParam.exclude;
+        this.exclude = MethodExcludeParam.EXCLUDE;
     }
 
     @Nullable

@@ -6,16 +6,12 @@ import cn.hutool.http.Method;
 import com.xdl.model.SpringRequestMethodAnnotation;
 import com.xdl.model.XHttpParam;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+
 /**
- * @author huboxin
- * @title: SpringMathodUtils
- * @projectName XHttp
- * @description:
- * @date 2020/5/278:55
+ * @author Bx_Hu
  */
 @Data
 public class SpringUtils {
@@ -128,7 +124,7 @@ public class SpringUtils {
             case REQUEST_MAPPING_METHOD_DELETE:
                 return SpringRequestMethodAnnotation.DELETE_MAPPING;
             case REQUEST_MAPPING_METHOD_PUT:
-                return SpringRequestMethodAnnotation.POST_MAPPING;
+                return SpringRequestMethodAnnotation.PUT_MAPPING;
             case REQUEST_MAPPING_METHOD_PATCH:
                 return SpringRequestMethodAnnotation.PATCH_MAPPING;
             default:
