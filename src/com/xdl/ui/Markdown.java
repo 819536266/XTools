@@ -25,7 +25,7 @@ import java.io.IOException;
 @Data
 public class Markdown {
 
-    private JTextField titleMDName;
+    private JTextField titleMdName;
     private JTable table1;
     private JButton createButton;
     private JButton clearButton;
@@ -42,7 +42,7 @@ public class Markdown {
     public Markdown(Project project) {
         this.project = project;
         //创建文档
-        createButton.addActionListener(e -> createMD());
+        createButton.addActionListener(e -> createMd());
         //清空文档
         clearButton.addActionListener(e -> DataCenter.clear());
         //刪除一行
@@ -58,8 +58,8 @@ public class Markdown {
     /**
      * 創建MD文檔
      */
-    public void createMD() {
-        String text = titleMDName.getText();
+    public void createMd() {
+        String text = titleMdName.getText();
         String fileName = text + ".md";
         NotificationGroup notificationGroup = new NotificationGroup("MarkBootNotification", NotificationDisplayType.BALLOON, false);
         if (ObjectUtil.isEmpty(text)) {

@@ -25,7 +25,7 @@ public class XTools {
     }
 
 
-    private void createUiComponents() {
+    private void createUIComponents() {
         this.markdown = new Markdown(project);
     }
 

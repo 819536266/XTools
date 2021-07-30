@@ -1,5 +1,6 @@
 package com.xdl.model;
 
+import com.xdl.enums.ParamTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,12 +18,6 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class XHttpParam {
-
-    public static final String FILE_TYPE = "文件";
-
-    public static final String TEXT_TYPE = "文本";
-
-    public static final String BODY_TYPE = "Body";
 
     /**
      * 是否选中
@@ -45,9 +40,14 @@ public class XHttpParam {
     private String file;
 
     /**
+     * body
+     */
+    private String body;
+
+    /**
      * 类型 1 文字 2文件 3 json
      */
-    private String  type = TEXT_TYPE;
+    private ParamTypeEnum paramTypeEnum = ParamTypeEnum.TEXT;
 
     /**
      * 参数类型

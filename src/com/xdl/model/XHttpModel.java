@@ -23,6 +23,8 @@ import java.util.Map;
 @Accessors(chain = true)
 public class XHttpModel implements Serializable {
 
+
+
     private static final String HTTP="http://";
 
     private static final String HTTPS="https://";

@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
@@ -13,6 +14,7 @@ import com.intellij.psi.util.PsiTypesUtil;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
+import com.xdl.enums.ParamTypeEnum;
 import com.xdl.model.Settings;
 import com.xdl.model.SpringRequestMethodAnnotation;
 import com.xdl.model.XHttpModel;
@@ -24,9 +26,11 @@ import com.xdl.util.SpringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class XToolsAction extends AnAction {
 
@@ -65,15 +69,16 @@ public class XToolsAction extends AnAction {
 
     /**
      * 初始化工具窗口
-     *  @param project project
+     *
+     * @param project    project
      * @param toolWindow
      */
     public static void init(Project project, ContentManager toolWindow) {
         //创建出NoteListWindow对象
         XHttpUi xHttpUi = new XHttpUi(project);
         XTools xtools = new XTools(project);
-        register(toolWindow,xHttpUi.getDebugPanel(), "XHttp", 0);
-        register(toolWindow,xtools.getToolTabbedPane(), "XTools", 1);
+        register(toolWindow, xHttpUi.getDebugPanel(), "XHttp", 0);
+        register(toolWindow, xtools.getToolTabbedPane(), "XTools", 1);
         putUi(project, xHttpUi);
         putUi(project, xtools);
     }
@@ -89,10 +94,10 @@ public class XToolsAction extends AnAction {
      */
     public static <T> T getUi(Project project, Class<T> tClass) {
         Map<Class<?>, Object> classMap = xHttpUiMap.get(project);
-        if(classMap == null ){
+        if (classMap == null) {
             XHttpWindowFactory xHttpWindowFactory = new XHttpWindowFactory();
             ToolWindow toolWindow = ToolWindows.get(project);
-            xHttpWindowFactory.createToolWindowContent(project,toolWindow);
+            xHttpWindowFactory.createToolWindowContent(project, toolWindow);
             classMap = xHttpUiMap.get(project);
         }
         Object o = classMap.get(tClass);
@@ -116,10 +121,11 @@ public class XToolsAction extends AnAction {
 
     /**
      * 注册UI
-     *  @param contentManager
-     * @param jComponent jTabbedPane
-     * @param name       table名称
-     * @param index      table下标
+     *
+     * @param contentManager
+     * @param jComponent     jTabbedPane
+     * @param name           table名称
+     * @param index          table下标
      */
     public static void register(ContentManager contentManager, JComponent jComponent, String name, int index) {
         //获取内容工厂的实例
@@ -145,7 +151,7 @@ public class XToolsAction extends AnAction {
         XHttpModel xHttpModel = new XHttpModel();
         xHttpModel.setKey(id);
         xHttpModel.setMethodType(methodType.getMethod());
-        xHttpModel.setParamList(getParamList(psiMethod));
+        putParamList(xHttpModel, psiMethod);
         xHttpModel.setPath(getPath(psiClass, psiMethod));
         modelMap.put(id, xHttpModel);
         return xHttpModel;
@@ -155,10 +161,10 @@ public class XToolsAction extends AnAction {
     /**
      * 获取请求参数
      *
-     * @param psiMethod psiMethod
-     * @return List<XHttpParam>
+     * @param xHttpModel xHttpModel
+     * @param psiMethod  psiMethod
      */
-    private List<XHttpParam> getParamList(PsiMethod psiMethod) {
+    private void putParamList(XHttpModel xHttpModel, PsiMethod psiMethod) {
         PsiParameterList parameterList = psiMethod.getParameterList();
         //获取参数集合
         PsiParameter[] parameters = parameterList.getParameters();
@@ -169,19 +175,40 @@ public class XToolsAction extends AnAction {
                     .getExclude(), parameter.getType()
                     .getCanonicalText());
             if (contains) continue;
-            PsiClass psiClass = PsiTypesUtil.getPsiClass(parameter.getType());
-            //TODO 获取类文件，分析类，生成入参json
+
             String canonicalText = parameter.getType()
                     .getCanonicalText();
             PsiAnnotation annotation = parameter.getAnnotation(SpringUtils.REQUEST_BODY_CLASS_PATH);
             XHttpParam xHttpParam = new XHttpParam();
             xHttpParam.setName(parameter.getName());
             xHttpParam.setClassType(canonicalText);
-            xHttpParam.setType(!ObjectUtil.isEmpty(annotation) ? XHttpParam.BODY_TYPE : SpringUtils.MULTIPART_FILE_CLASS_PATH.equals(canonicalText)
-                    || SpringUtils.MULTIPART_FILES_CLASS_PATH.equals(canonicalText) ? XHttpParam.FILE_TYPE : XHttpParam.TEXT_TYPE);
+            ParamTypeEnum paramTypeEnum = !ObjectUtil.isEmpty(annotation) ? ParamTypeEnum.BODY : SpringUtils.MULTIPART_FILE_CLASS_PATH.equals(canonicalText)
+                    || SpringUtils.MULTIPART_FILES_CLASS_PATH.equals(canonicalText) ? ParamTypeEnum.FILE : ParamTypeEnum.TEXT;
+            xHttpParam.setParamTypeEnum(paramTypeEnum);
             paramList.add(xHttpParam);
+
+            //如果body类型,并且只有一个@RequestBody注释,设置RequestBody,表示有多个RequestBody 只存第一个
+            if (ParamTypeEnum.BODY.equals(paramTypeEnum) && xHttpModel.getRequestBody() == null) {
+                PsiClass psiClass = PsiTypesUtil.getPsiClass(parameter.getType());
+                Map<String, Object> collect = CollUtil.newHashMap();
+                if (psiClass != null) {
+                    collect = Arrays.stream(psiClass.getFields())
+                            .filter(field -> !"serialVersionUID".equals(field.getName()))
+                            .collect(Collectors.toMap(PsiField::getName, this::defaultValue));
+                }
+                xHttpModel.setRequestBody(JSONUtil.formatJsonStr(JSONUtil.toJsonStr(collect)));
+            }
         }
-        return paramList;
+        xHttpModel.setParamList(paramList);
+    }
+
+    /**
+     * 生成json参数默认值
+     * @param field field
+     * @return 默认值
+     */
+    public Object defaultValue(PsiField field) {
+        return StrUtil.EMPTY;
     }
 
 
@@ -197,9 +224,10 @@ public class XToolsAction extends AnAction {
         PsiAnnotation annotation = psiClass.getAnnotation(SpringRequestMethodAnnotation.REQUEST_MAPPING.getQualifiedName());
         if (!ObjectUtil.isEmpty(annotation)) {
             PsiAnnotationMemberValue value = annotation.findAttributeValue(SpringUtils.MAPPING_PARAM_VALUE);
-            if (!ObjectUtil.isEmpty(value) && !"{}".equals(value.getText()))
+            if (!ObjectUtil.isEmpty(value) && !"{}".equals(value.getText())) {
                 path += StrUtil.stripIgnoreCase(value.getText()
                         .replace("\"", ""), "/", "/");
+            }
         }
         PsiAnnotation methodAnnotation = psiMethod.getAnnotation(methodType.getQualifiedName());
         if (ObjectUtil.isEmpty(methodAnnotation)) {
@@ -209,7 +237,10 @@ public class XToolsAction extends AnAction {
         if (ObjectUtil.isEmpty(methodAnnotation)) return path;
         PsiAnnotationMemberValue attributeValue = methodAnnotation.findAttributeValue(SpringUtils.MAPPING_PARAM_VALUE);
 
-        if (ObjectUtil.isEmpty(attributeValue) || attributeValue.getText().equals("{}")) return path;
+        if (ObjectUtil.isEmpty(attributeValue) || attributeValue.getText()
+                .equals("{}")) {
+            return path;
+        }
 
         path += "/" + StrUtil.stripIgnoreCase(attributeValue.getText()
                 .replace("\"", ""), "/", "/");

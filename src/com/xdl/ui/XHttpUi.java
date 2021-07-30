@@ -13,6 +13,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;
 import com.xdl.action.XToolsAction;
+import com.xdl.enums.ParamTypeEnum;
 import com.xdl.model.Settings;
 import com.xdl.model.SpringRequestMethodAnnotation;
 import com.xdl.model.XHttpModel;
@@ -33,7 +34,10 @@ import javax.swing.text.Document;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 /**
  * @author huboxin
@@ -182,6 +186,7 @@ public class XHttpUi {
     }
 
 
+
     /**
      * 发送请求
      */
@@ -205,15 +210,16 @@ public class XHttpUi {
 
         if (!ObjectUtil.isEmpty(xHttpParamBody)) paramList.add(xHttpParamBody);
         Vector<Vector> vector = paramTableModel.getDataVector();
-        HashSet<String> resType = CollUtil.newHashSet();
+        HashSet<ParamTypeEnum> resType = CollUtil.newHashSet();
         for (Vector param : vector) {
             XHttpParam xHttpParam = new XHttpParam();
             xHttpParam.setIsCheck((Boolean) param.get(0));
             xHttpParam.setName((String) param.get(1));
-            if (XHttpParam.FILE_TYPE.equals(param.get(2))) {
-                resType.add(XHttpParam.FILE_TYPE);
+            ParamTypeEnum paramTypeEnum = ParamTypeEnum.getParamTypeEnum(param.get(2));
+            if (ParamTypeEnum.FILE.equals(paramTypeEnum)) {
+                resType.add(ParamTypeEnum.FILE);
             }
-            xHttpParam.setType((String) param.get(2));
+            xHttpParam.setParamTypeEnum(paramTypeEnum);
             xHttpParam.setValue(param.get(3));
             paramList.add(xHttpParam);
         }
@@ -235,9 +241,9 @@ public class XHttpUi {
         header.forEach(request::header);
         //设置body
         paramList.forEach(xHttpParam -> {
-            if (XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) {
+            if (ParamTypeEnum.BODY.equals(xHttpParam.getParamTypeEnum())) {
                 xHttpParam.setValue(jsonBody.getText());
-                resType.add(XHttpParam.BODY_TYPE);
+                resType.add(ParamTypeEnum.BODY);
                 request.body((String) xHttpParam.getValue());
             }
         });
@@ -250,10 +256,10 @@ public class XHttpUi {
             if (contentPath.contains(StrUtil.DELIM_START+ xHttpParam.getName() +StrUtil.DELIM_END)) return;
 
             //body参数
-            if (XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) return;
+            if (ParamTypeEnum.BODY.equals(xHttpParam.getParamTypeEnum())) return;
 
             //body类型请求,拼接参数到url
-            if (resType.contains(XHttpParam.BODY_TYPE) && !XHttpParam.FILE_TYPE.equals(xHttpParam.getType())) {
+            if (resType.contains(ParamTypeEnum.BODY) && !ParamTypeEnum.FILE.equals(xHttpParam.getParamTypeEnum())) {
                 Map<String, Object> hashMap = MapUtil.of(xHttpParam.getName(), xHttpParam.getValue());
                 String toParams = HttpUtil.toParams(hashMap, StandardCharsets.UTF_8);
                 String urlWithForm = HttpUtil.urlWithForm(request.getUrl(), toParams, StandardCharsets.UTF_8, false);
@@ -270,8 +276,8 @@ public class XHttpUi {
             }
         });
         //设置文件上传类型
-        request.contentType(resType.contains(XHttpParam.BODY_TYPE) ?
-                ContentType.JSON.toString() : (resType.contains(XHttpParam.FILE_TYPE) ?
+        request.contentType(resType.contains(ParamTypeEnum.BODY) ?
+                ContentType.JSON.toString() : (resType.contains(ParamTypeEnum.FILE) ?
                 ContentType.MULTIPART.toString() : ContentType.FORM_URLENCODED.toString()));
         urlContent.setText(request.getUrl());
         headerContent.setText(JSONUtil.formatJsonStr(JSONUtil.toJsonStr(request.headers())));
@@ -317,11 +323,11 @@ public class XHttpUi {
         //添加对应参数
         int windowType = 0;
         for (XHttpParam xHttpParam : xHttpModel.getParamList()) {
-            if (!XHttpParam.BODY_TYPE.equals(xHttpParam.getType())) {
-                paramTableModel.addRow(new Object[]{xHttpParam.getIsCheck(), xHttpParam.getName(), xHttpParam.getType(), xHttpParam.getValue()});
+            if (!ParamTypeEnum.BODY.equals(xHttpParam.getParamTypeEnum())) {
+                paramTableModel.addRow(new Object[]{xHttpParam.getIsCheck(), xHttpParam.getName(), xHttpParam.getParamTypeEnum().getName(), xHttpParam.getValue()});
             } else {
                 windowType = 2;
-                jsonBody.setText((String) xHttpParam.getValue());
+                jsonBody.setText(xHttpModel.getRequestBody());
                 xHttpParamBody = xHttpParam;
             }
         }
@@ -371,7 +377,7 @@ public class XHttpUi {
                 .getColumnCount() < 5) {
             return;
         }
-        JXComboBox editorComboBox = new JXComboBox(new String[]{XHttpParam.TEXT_TYPE, XHttpParam.FILE_TYPE});
+        JXComboBox editorComboBox = new JXComboBox(new String[]{ParamTypeEnum.TEXT.getName(), ParamTypeEnum.FILE.getName()});
         editorComboBox.addPropertyChangeListener(e -> {
             TableColumn column4 = paramTable.getColumnModel()
                     .getColumn(4);

@@ -6,7 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.xdl.model.XHttpParam;
+import com.xdl.enums.ParamTypeEnum;
 import com.xdl.ui.XHttpUi;
 
 import javax.swing.*;
@@ -39,7 +39,7 @@ public class XHttpButtonCellEditor  extends AbstractCellEditor implements TableC
         DefaultTableModel paramTableModel = xHttpUi.paramTableModel;
         List<Object[]> objects =  JSONUtil.parseArray(JSONUtil.toJsonStr(paramTableModel.getDataVector()))
                 .toList(Object[].class);
-        if(XHttpParam.FILE_TYPE.equals(objects.get(row)[2])){
+        if( ParamTypeEnum.FILE.equals(ParamTypeEnum.getParamTypeEnum(objects.get(row)[2]))){
             JButton jButton=new JButton("选择文件");
             jButton.addActionListener(e->{
                 //idea文件选择器
