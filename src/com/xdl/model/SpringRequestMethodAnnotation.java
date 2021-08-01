@@ -4,9 +4,11 @@ import cn.hutool.http.Method;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+
 /**
- * @author ZhangYuanSheng
+ * @author Bx_Hu
  */
+
 public enum SpringRequestMethodAnnotation {
 
     /**

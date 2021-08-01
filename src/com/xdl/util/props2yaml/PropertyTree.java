@@ -5,9 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
-/**
- * @author xqchen
- */
+
 public class PropertyTree extends TreeMap<String, Object> {
 
     public PropertyTree() {

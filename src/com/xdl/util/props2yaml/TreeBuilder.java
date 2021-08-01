@@ -6,9 +6,7 @@ import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toMap;
 
-/**
- * @author xqchen
- */
+
 class TreeBuilder {
 
     private final Properties properties;

@@ -14,9 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author yanglin
- */
+
 public final class JavaUtils {
 
     private JavaUtils() {

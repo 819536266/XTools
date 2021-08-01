@@ -12,11 +12,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+
 /**
- * @program:Mark
- * @description:创建内容
- * @author:胡博欣
- * @create:2020-05-23-51
+ * @author Bx_Hu
  */
 public class OutContent extends DialogWrapper {
 

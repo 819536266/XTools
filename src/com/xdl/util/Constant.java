@@ -1,8 +1,6 @@
 package com.xdl.util;
 
-/**
- * @author xqchen
- */
+
 public class Constant {
 
     public final static String YAML = "YAML";

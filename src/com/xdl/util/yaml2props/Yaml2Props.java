@@ -5,9 +5,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * @author xqchen
- */
+
 public class Yaml2Props {
 
     TreeMap<String, Map<String, Object>> config;

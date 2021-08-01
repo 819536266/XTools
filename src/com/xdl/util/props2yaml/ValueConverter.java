@@ -1,8 +1,6 @@
 package com.xdl.util.props2yaml;
 
-/**
- * @author xqchen
- */
+
 class ValueConverter {
     public final static String TRUE_STR = "true";
     public final static String FALSE_STR = "false";

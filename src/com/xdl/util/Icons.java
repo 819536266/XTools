@@ -22,7 +22,6 @@ import java.net.URL;
  */
 public class Icons {
 
-    public static final Icon SERVICE = load("/icons/service.png");
 
     public static final Icon METHOD_UNDEFINED = load("/icons/method/undefined.png");
 

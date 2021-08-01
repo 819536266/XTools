@@ -14,9 +14,6 @@ import java.util.Map;
 
 /**
  * @author huboxin
- * @title: XHttpModel
- * @projectName XHttp
- * @description: 请求参数包装类
  * @date 2020/5/2619:08
  */
 @Data
@@ -28,6 +25,7 @@ public class XHttpModel implements Serializable {
     private static final String HTTP="http://";
 
     private static final String HTTPS="https://";
+
 
 
     /**

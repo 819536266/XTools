@@ -5,9 +5,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;
 
-/**
- * @author xqchen
- */
+
 class YamlPrinter {
 
     private final Map<String, Object> mainMap;

@@ -7,9 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author xqchen
- */
+
 class ArrayProcessor {
 
     private final static Pattern PATTERN = Pattern.compile("(.*)\\[(\\d+)\\]");

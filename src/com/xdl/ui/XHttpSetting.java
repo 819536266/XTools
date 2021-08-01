@@ -25,7 +25,8 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
     private JButton deleteExcludeButton;
     private JTable excludeTable;
     private JButton restartButton;
-    private JButton clear;
+    private JButton clearCacheButton;
+    private JCheckBox cacheCheckBox;
 
     private static final DefaultTableModel DEFAULT_TABLE_MODEL = new DefaultTableModel(null, new String[]{"排除参数类路径"});
 
@@ -38,6 +39,8 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
     public XHttpSetting() {
         doMain.setText(settings.getDoMain());
         String[] exclude = settings.getExclude();
+        cacheCheckBox.setSelected(settings.getOrCache());
+
         DEFAULT_TABLE_MODEL.setDataVector(null, new String[]{"排除参数类路径"});
         Arrays.stream(exclude)
                 .forEach(e -> DEFAULT_TABLE_MODEL.addRow(new String[]{e}));
@@ -59,7 +62,8 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
                     .forEach(e1 -> DEFAULT_TABLE_MODEL.addRow(new String[]{e1}));
         });
         //清除全部缓存
-        clear.addActionListener(e -> XToolsAction.modelMap.clear());
+        clearCacheButton.addActionListener(e -> XToolsAction.modelMap.clear());
+
     }
 
     /**
@@ -97,8 +101,10 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
                 .collect(Collectors.toSet());
         int size = collect.size();
         collect.addAll(Arrays.asList(settings.getExclude()));
+
         return !settings.getDoMain()
-                .equals(doMain.getText()) || collect.size() != size;
+                .equals(doMain.getText()) || collect.size() != size || !settings.getOrCache()
+                .equals(cacheCheckBox.isSelected());
     }
 
 
@@ -107,14 +113,19 @@ public class XHttpSetting implements Configurable, Configurable.Composite {
      */
     @Override
     public void apply() {
+        //设置默认域名
         settings.setDoMain(doMain.getText());
+
         List<String[]> strings1 = JSONUtil.parseArray(JSONUtil.toJsonStr(DEFAULT_TABLE_MODEL.getDataVector()))
                 .toList(String[].class);
         String[] string = new String[strings1.size()];
         for (int i = 0; i < strings1.size(); i++) {
             string[i] = strings1.get(i)[0];
         }
+        //设置排除的headers
         settings.setExclude(string);
+        //设置是否缓存
+        settings.setOrCache(cacheCheckBox.isSelected());
     }
 
     /**

@@ -187,9 +187,10 @@
         <group id="XTools" text="XTools" description="XTools" popup="true">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
 
+<!--
             <action id="Preview" class="com.xdl.action.utilAction.Preview1Action" text="Preview" description="预览实体类" keymap="$default">
                 <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
-            </action>
+            </action>-->
             <!-- yml转properties -->
             <action id="Y_TO_P" class="com.xdl.action.utilAction.Y2PAction" text="Y-TO-P" description="yml转properties"
                     keymap="$default">
@@ -246,8 +247,6 @@
                 text="Convert YAML OR Properties "
                 description="You can quickly convert Properties files to YAML files, or YAML files to Properties files">
 
-            <!--            &lt;!&ndash;在ide左边编辑栏菜单文件右击中显示&ndash;&gt;-->
-            <!--            <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
             <!--在ide右边项目打开的文件中右击显示-->
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
         </action>

@@ -8,9 +8,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author xqchen
- */
+
 public class CommonUtils {
     /**
      * get selected file

@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @author Bx_Hu
+ */
 public class XToolsAction extends AnAction {
 
     public static Map<String, XHttpModel> modelMap = new HashMap<>();
@@ -44,7 +47,10 @@ public class XToolsAction extends AnAction {
     private PsiMethod psiMethod;
 
     private SpringRequestMethodAnnotation methodType;
-
+    /**
+     * 设置对象
+     */
+    private final Settings settings = Settings.getInstance();
 
     public XToolsAction() {
         super();
@@ -144,16 +150,24 @@ public class XToolsAction extends AnAction {
     private XHttpModel createXHttpModel() {
         PsiClass psiClass = (PsiClass) psiMethod.getParent();
         String id = psiClass.getQualifiedName() + "." + psiMethod.getName() + "." + methodType.getQualifiedName();
-        XHttpModel xHttpModel1 = modelMap.get(id);
-        if (ObjectUtil.isNotEmpty(xHttpModel1)) {
-            return xHttpModel1;
+
+        //从缓存中获取接口请求
+        if (settings.getOrCache()) {
+            XHttpModel xHttpModel1 = modelMap.get(id);
+            if (ObjectUtil.isNotEmpty(xHttpModel1)) {
+                return xHttpModel1;
+            }
         }
         XHttpModel xHttpModel = new XHttpModel();
         xHttpModel.setKey(id);
         xHttpModel.setMethodType(methodType.getMethod());
         putParamList(xHttpModel, psiMethod);
         xHttpModel.setPath(getPath(psiClass, psiMethod));
-        modelMap.put(id, xHttpModel);
+
+        //设置到缓存中
+        if(settings.getOrCache()){
+            modelMap.put(id, xHttpModel);
+        }
         return xHttpModel;
     }
 
@@ -204,6 +218,7 @@ public class XToolsAction extends AnAction {
 
     /**
      * 生成json参数默认值
+     *
      * @param field field
      * @return 默认值
      */

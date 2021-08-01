@@ -107,6 +107,7 @@ public class XHttpUi {
 
     private Map<String, String> herder = CollUtil.newHashMap(1);
 
+    private final Settings settings = Settings.getInstance();
 
     /**
      * 初始化
@@ -186,7 +187,6 @@ public class XHttpUi {
     }
 
 
-
     /**
      * 发送请求
      */
@@ -209,6 +209,7 @@ public class XHttpUi {
         paramList.clear();
 
         if (!ObjectUtil.isEmpty(xHttpParamBody)) paramList.add(xHttpParamBody);
+
         Vector<Vector> vector = paramTableModel.getDataVector();
         HashSet<ParamTypeEnum> resType = CollUtil.newHashSet();
         for (Vector param : vector) {
@@ -223,6 +224,7 @@ public class XHttpUi {
             xHttpParam.setValue(param.get(3));
             paramList.add(xHttpParam);
         }
+
         if (ObjectUtil.isEmpty(path.getText())) {
             responseContent.setText("路径错误");
             return;
@@ -239,12 +241,16 @@ public class XHttpUi {
         //设置请求头
         Map<String, String> header = xHttpModel.getHeader();
         header.forEach(request::header);
+
         //设置body
         paramList.forEach(xHttpParam -> {
             if (ParamTypeEnum.BODY.equals(xHttpParam.getParamTypeEnum())) {
-                xHttpParam.setValue(jsonBody.getText());
+                String text = jsonBody.getText();
+                xHttpParam.setValue(text);
                 resType.add(ParamTypeEnum.BODY);
-                request.body((String) xHttpParam.getValue());
+                request.body(text);
+
+                xHttpModel.setRequestBody(text);
             }
         });
         //设置选中的参数
@@ -253,7 +259,7 @@ public class XHttpUi {
             if (!xHttpParam.getIsCheck()) return;
 
             //restful风格
-            if (contentPath.contains(StrUtil.DELIM_START+ xHttpParam.getName() +StrUtil.DELIM_END)) return;
+            if (contentPath.contains(StrUtil.DELIM_START + xHttpParam.getName() + StrUtil.DELIM_END)) return;
 
             //body参数
             if (ParamTypeEnum.BODY.equals(xHttpParam.getParamTypeEnum())) return;
@@ -281,6 +287,13 @@ public class XHttpUi {
                 ContentType.MULTIPART.toString() : ContentType.FORM_URLENCODED.toString()));
         urlContent.setText(request.getUrl());
         headerContent.setText(JSONUtil.formatJsonStr(JSONUtil.toJsonStr(request.headers())));
+
+        //请求之前重新设置请求内容，放入缓存
+        xHttpModel.setParamList(paramList);
+        xHttpModel.setPath(path.getText());
+        if (settings.getOrCache() && !ObjectUtil.isEmpty(xHttpModel.getKey())) {
+            XToolsAction.modelMap.put(xHttpModel.getKey(), xHttpModel);
+        }
 
         HttpResponse execute = null;
         try {

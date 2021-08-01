@@ -22,8 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.List;
 
+
 /**
- * @author 15290
+ * @author Bx_Hu
  */
 public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
 
