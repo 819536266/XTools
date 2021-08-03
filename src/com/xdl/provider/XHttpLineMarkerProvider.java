@@ -11,11 +11,14 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.editor.markup.MarkupEditorFilter;
 import com.intellij.openapi.editor.markup.MarkupEditorFilterFactory;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiAnnotationMemberValue;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMethod;
 import com.intellij.util.Function;
 import com.xdl.action.XToolsAction;
+import com.xdl.enums.MethodEnum;
 import com.xdl.model.SpringRequestMethodAnnotation;
-import com.xdl.util.Icons;
 import com.xdl.util.SpringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +57,7 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
                     for (SpringRequestMethodAnnotation springRequestMethodAnnotation : SpringUtils.NO_REQUEST_METHOD_TYPE) {
                         XToolsAction xToolsAction = new XToolsAction(psiMethod, springRequestMethodAnnotation
                                 , SpringUtils.getMethodText(springRequestMethodAnnotation.getMethod())
-                                , "发个请求吧!", Icons.getMethodIcon(springRequestMethodAnnotation.getMethod()));
+                                , "发个请求吧!", MethodEnum.getMethodIcon(springRequestMethodAnnotation.getMethod()) );
                         list.add(xToolsAction);
                     }
                     break;
@@ -64,7 +67,7 @@ public class XHttpLineMarkerProvider extends LineMarkerProviderDescriptor {
             }
             XToolsAction xToolsAction = new XToolsAction(psiMethod, methodType
                     , SpringUtils.getMethodText(methodType.getMethod()), "发个请求吧!"
-                    , Icons.getMethodIcon(methodType.getMethod()));
+                    , MethodEnum.getMethodIcon(methodType.getMethod()));
             list.add(xToolsAction);
             break;
         }

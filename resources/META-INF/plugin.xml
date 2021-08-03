@@ -176,7 +176,21 @@
         <toolWindow id="XTools" anchor="right" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png"
                     secondary="true"/>
 
-        <intentionAction><className>com.xdl.action.utilAction.PreviewAction</className></intentionAction>
+        <intentionAction>
+            <className>com.xdl.action.setter.GenerateAllSetterAction</className>
+        </intentionAction>
+
+        <intentionAction>
+            <className>com.xdl.action.setter.GenerateWithBuilderAction</className>
+        </intentionAction>
+
+        <intentionAction>
+            <className>com.xdl.action.setter.GenerateAllSetterNoDefaultValueAction</className>
+        </intentionAction>
+
+        <intentionAction>
+            <className>com.xdl.action.setter.GenerateWithAccessorsAction</className>
+        </intentionAction>
     </extensions>
 
 

@@ -2,17 +2,16 @@ package com.xdl.ui;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.ContentType;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
+import cn.hutool.http.*;
 import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;
 import com.xdl.action.XToolsAction;
+import com.xdl.enums.MethodEnum;
 import com.xdl.enums.ParamTypeEnum;
 import com.xdl.model.Settings;
 import com.xdl.model.SpringRequestMethodAnnotation;
@@ -57,7 +56,6 @@ public class XHttpUi {
     private JTextField pathPrefix;
     private JButton emptyResponseButton;
     private JButton emptyButton;
-    private JLabel methodType;
 
     private JTextArea jsonBody;
     private JTable jsonParamTable;
@@ -79,13 +77,12 @@ public class XHttpUi {
     private JScrollPane jsonParamScroll;
     private JPanel json;
     private JPanel formTable;
+    private JComboBox<String> methodComboBox;
 
     private JButton formAddButton;
     private JButton formDeleteButton;
     private JButton formAddButton1;
     private JButton formDeleteButton1;
-
-    private JScrollPane parentJScroll;
 
     public XHttpModel xHttpModel;
 
@@ -131,6 +128,10 @@ public class XHttpUi {
         headerTable.setEnabled(true);
         pathPrefix.setText(Settings.getInstance()
                 .getDoMain());
+
+        for (MethodEnum methodEnum : MethodEnum.values()) {
+            methodComboBox.addItem(methodEnum.getMethod().toString());
+        }
     }
 
 
@@ -140,7 +141,6 @@ public class XHttpUi {
      * @param project project
      */
     public XHttpUi(Project project) {
-
         init();
         toolWindow = XToolsAction.ToolWindows.get(project);
         this.project = project;
@@ -229,7 +229,7 @@ public class XHttpUi {
             responseContent.setText("路径错误");
             return;
         }
-
+        xHttpModel.setMethodType(EnumUtil.fromString(Method.class, methodComboBox.getSelectedItem().toString()));
         String contentPath = StrUtil.addSuffixIfNot(StrUtil.stripIgnoreCase(pathPrefix.getText(), "/", "/"), "/") + StrUtil.removePrefix(path.getText(), "/");
         String restful = SpringUtils.restful(contentPath, paramList);
         HttpRequest request = HttpUtil.createRequest(xHttpModel.getMethodType()
@@ -357,8 +357,8 @@ public class XHttpUi {
         }
         path.setDocument(pathDocument);
         //设置图标
-        methodTypeIcon = Icons.getMethodIcon(xHttpModel.getMethodType());
-        methodType.setIcon(methodTypeIcon);
+        methodTypeIcon = MethodEnum.getMethodIcon(xHttpModel.getMethodType());
+        methodComboBox.setSelectedItem(xHttpModel.getMethodType().toString());
         tabbedPane3.setSelectedIndex(windowType == 2 ? 2 : SpringRequestMethodAnnotation.POST_MAPPING.getMethod()
                 .equals(xHttpModel.getMethodType()) ? 1 : 0);
         //打开
