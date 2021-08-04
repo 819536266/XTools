@@ -1,7 +1,7 @@
 <idea-plugin url="https://github.com/819536266/XTools">
     <id>com.xdl</id>
     <name>XTools</name>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
     <vendor email="819536266@qq.com" url="https://github.com/819536266/XTools">XTools</vendor>
 
     <description><![CDATA[
