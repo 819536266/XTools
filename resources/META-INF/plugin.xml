@@ -1,16 +1,12 @@
 <idea-plugin url="https://github.com/819536266/XTools">
     <id>com.xdl</id>
     <name>XTools</name>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
     <vendor email="819536266@qq.com" url="https://github.com/819536266/XTools">XTools</vendor>
 
     <description><![CDATA[
         <h1>XTools plugin</h1>
-        </br></br></br>
-        <p><a href="https://github.com/819536266/XTools">GitHub</a> |  <a href="https://gitee.com/BeALaity/XTools">Gitee</a></p>
-        <p> <strong>  </strong></br></p>
-        <strong>  </strong>
-      <strong>  </strong></br>
+        <p><a href="https://github.com/819536266/XTools">GitHub</a> |  <a href="https://gitee.com/BeALaity/XTools">Gitee</a></p> |  <a href="https://blog.csdn.net/qq_35036073/article/details/117227175">CSDN</a></p>
       <strong>English</strong></br>
       <ul>
          <li>Run tests based on SpringBoot and SpringMvc developed interfaces.</li>
@@ -224,12 +220,13 @@
         <group id="XTools" text="XTools" description="XTools" popup="true">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
 
-<!--
-            <action id="Preview" class="com.xdl.action.utilAction.Preview1Action" text="Preview" description="预览实体类" keymap="$default">
-                <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
-            </action>-->
+            <!--
+                        <action id="Preview" class="com.xdl.action.utilAction.Preview1Action" text="Preview" description="预览实体类" keymap="$default">
+                            <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
+                        </action>-->
             <!-- yml转properties -->
-            <action id="BeanTOJson" class="com.xdl.action.utilAction.ObjectJsonAction" text="Bean TO Json" description="BeanTOJson"
+            <action id="BeanTOJson" class="com.xdl.action.utilAction.ObjectJsonAction" text="Bean TO Json"
+                    description="BeanTOJson"
                     keymap="$default">
                 <keyboard-shortcut first-keystroke="alt  S" keymap="$default"/>
             </action>
