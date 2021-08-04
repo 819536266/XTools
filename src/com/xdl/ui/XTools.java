@@ -17,6 +17,7 @@ public class XTools {
     private Convert convert;
     private final Project project;
     private ToolWindow toolWindow;
+    private JsonFormat jsonFormat;
 
 
     public XTools(Project project) {

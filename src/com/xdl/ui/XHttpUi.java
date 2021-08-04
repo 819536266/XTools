@@ -363,7 +363,10 @@ public class XHttpUi {
                 .equals(xHttpModel.getMethodType()) ? 1 : 0);
         //打开
         toolWindow.show(null);
-
+        Content content = toolWindow.getContentManager().getContent(0);
+        if (content != null) {
+            toolWindow.getContentManager().setSelectedContent(content);
+        }
     }
 
     /**

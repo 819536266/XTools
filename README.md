@@ -13,6 +13,8 @@ IDEA自动检测Spring注解，生成测试简易PostMan，快速测试接口；
 
 [ConvertYamlAndProperties](https://github.com/chencn/ConvertYamlAndProperties)
 
+[intellij-generateAllSetMethod](https://github.com/gejun123456/intellij-generateAllSetMethod)
+
 ## 使用环境
 IntelliJ IDEA版（182+)
 
@@ -29,13 +31,9 @@ IntelliJ IDEA版（182+)
 9.  Markdown文档生成工具
 10. yaml与properties代码互转
 11. 字段转大小写、驼峰、下滑线、加减引号等
+12. 生成对象无默认值的setter方法、有默认值的setter方法、构造器的setter方法、链式调用的setter方法
+13. 选择Bean生成Bean的JSON字符串
 
-## 后期规划
-
-1.  生成实体类所有属set方法
-2.  生成实体类基于lombok->@Accessors注解的链式调用属性的set方法
-3.  生成实体类基于lombok->@Builder注解的建造者模式调用属性的set方法
-4.  小窗口预览选中对象的内容
 
 ## 安装说明
 
@@ -51,6 +49,7 @@ IntelliJ IDEA版（182+)
 
 | 功能                           | win快捷键       | 右键点击|
 | ------------------------------ | --------------- | --------------- |
+| 实体类生成JSON字符串              | Alt + S         | XTools -> Bean TO Json |
 | yaml转properties              | Alt + Y         | XTools -> Y-TO-P |
 | properties转yaml              | Alt + P      | XTools -> P-TO-Y   |
 | 字符串大小写互转               | Alt + U     |  XTools -> Upper OR Lower Case |

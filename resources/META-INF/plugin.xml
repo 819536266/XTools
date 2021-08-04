@@ -16,6 +16,8 @@
          <li>Run tests based on SpringBoot and SpringMvc developed interfaces.</li>
          <li>Integration port closed, quickly generate Markdown file small function.</li>
          <li>Code conversion tools (case, hump, underline, YML to Pro).</li>
+         <li>Bean generation Setter tool.</li>
+         <li>JSON tools.</li>
          <li>If you have any Suggestions or bugs during continuous optimization, please email to 819536266@qq.com ,Thank you . </li>
       </ul>
      <strong>中文</strong></br>
@@ -23,11 +25,32 @@
          <li>运行基于SpringBoot开发接口的测试.</li>
          <li>集成端口关闭，快速生成Markdown文件小功能.</li>
          <li>代码转化工具（大小写、驼峰、下划线、YML转PRO）.</li>
+         <li>Bean生成Setter工具.</li>
+         <li>JSON工具.</li>
          <li>在持续优化过程中,如有任何建议或bug，请发邮件至819536266@qq.com,谢谢.</li>
       </ul>
     ]]>
     </description>
     <change-notes><![CDATA[
+         <strong>2.1.0</strong></br>
+          <ul>
+                <li>Add the setter method of the generated object without default value, the setter method with default value, the setter method of the constructor, and the setter method of chain call.</li>
+                <li>Add right-click tool to generate JSON string of Bean.</li>
+                <li>Added window tool JSON formatting toolbar.</li>
+                <li>Increase request cache. Cache content: request address, request method, parameter name, parameter value, request header.</li>
+                <li>Add request method drop-down, optional request method.</li>
+                <li>Fix the problem that the address bar parameters are not spliced ​​when @RequestBody；#I42VLN.</li>
+                <li>Fix the non-X Http problem of opening the window when clicking the request.</li>
+          </ul>
+           <ul>
+                <li>增加生成对象无默认值的setter方法、有默认值的setter方法、构造器的setter方法、链式调用的setter方法。</li>
+                <li>增加右键工具生成Bean的JSON字符串。</li>
+                <li>增加窗口工具JSON格式化工具栏</li>
+                <li>增加请求缓存。缓存内容：请求地址、请求方式、参数名称、参数值、请求头。</li>
+                <li>增加请求方式下拉，可选请求方式。</li>
+                <li>修复@RequestBody时，存在地址栏参数未拼接问题；#I42VLN。</li>
+                <li>修复点击请求打开窗口非XHttp问题。</li>
+          </ul>
        <strong>2.0.0</strong></br>
       <ul>
             <li>Change the tool window to XHTTP, XTools;Delete request window;Improve the P2Y window YAML and Properties interchange function</li>
@@ -206,12 +229,16 @@
                 <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
             </action>-->
             <!-- yml转properties -->
-            <action id="Y_TO_P" class="com.xdl.action.utilAction.Y2PAction" text="Y-TO-P" description="yml转properties"
+            <action id="BeanTOJson" class="com.xdl.action.utilAction.ObjectJsonAction" text="Bean TO Json" description="BeanTOJson"
+                    keymap="$default">
+                <keyboard-shortcut first-keystroke="alt  S" keymap="$default"/>
+            </action>
+            <action id="Y_TO_P" class="com.xdl.action.utilAction.Y2PAction" text="Y-TO-P" description="Yml转properties"
                     keymap="$default">
                 <keyboard-shortcut first-keystroke="alt  Y" keymap="$default"/>
             </action>
             <!--             properties转yml -->
-            <action id="P_TO_Y" class="com.xdl.action.utilAction.P2YAction" text="P-TO-Y" description="properties转yml">
+            <action id="P_TO_Y" class="com.xdl.action.utilAction.P2YAction" text="P-TO-Y" description="Properties转yml">
                 <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
             </action>
             <!-- 随机生成UUID -->
