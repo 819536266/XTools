@@ -17,6 +17,7 @@ package com.xdl.util;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.xdl.action.setter.GenerateAllSetterAction;
+import com.xdl.constant.CommonConstants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -40,13 +41,13 @@ public class PsiClassUtils {
     }
 
     public static boolean isValidSetMethod(PsiMethod m) {
-        return m.hasModifierProperty("public") &&
-                !m.hasModifierProperty("static") &&
+        return m.hasModifierProperty(CommonConstants.PUBLIC) &&
+                !m.hasModifierProperty(CommonConstants.STATIC) &&
                 (m.getName().startsWith("set") || m.getName().startsWith("with"));
     }
 
     public static boolean isValidGetMethod(PsiMethod m) {
-        return m.hasModifierProperty("public") && !m.hasModifierProperty("static") &&
+        return m.hasModifierProperty("public") && !m.hasModifierProperty(CommonConstants.STATIC) &&
                 (m.getName().startsWith(GenerateAllSetterAction.GET) || m.getName().startsWith(GenerateAllSetterAction.IS));
     }
 

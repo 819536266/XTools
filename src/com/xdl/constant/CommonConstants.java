@@ -35,4 +35,9 @@ public class CommonConstants {
     public static final String GENERATE_CONVERTER_FROM_METHOD = "Generate setter getter converter";
 
     public static final String BUILDER_METHOD_NAME = "builder";*/
+
+    public static String SERIAL_VERSION_UID = "serialVersionUID";
+    public static String STATIC = "static";
+    public static String PUBLIC = "public";
+    public static String FINAL = "final";
 }
