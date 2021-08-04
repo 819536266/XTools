@@ -6,7 +6,7 @@
 
     <description><![CDATA[
         <h1>XTools plugin</h1>
-        <p><a href="https://github.com/819536266/XTools">GitHub</a> |  <a href="https://gitee.com/BeALaity/XTools">Gitee</a></p> |  <a href="https://blog.csdn.net/qq_35036073/article/details/117227175">CSDN</a></p>
+        <p><a href="https://github.com/819536266/XTools">GitHub</a> |  <a href="https://gitee.com/BeALaity/XTools">Gitee</a> |  <a href="https://blog.csdn.net/qq_35036073/article/details/117227175">CSDN</a></p>
       <strong>English</strong></br>
       <ul>
          <li>Run tests based on SpringBoot and SpringMvc developed interfaces.</li>

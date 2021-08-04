@@ -67,7 +67,7 @@ public class ObjectJsonAction extends AnAction {
                 String classType = field.getType()
                         .getCanonicalText();
                 String value = typeGeneratedMap.get(classType);
-                jsonObject.put(field.getName(), value);
+                jsonObject.put(field.getName(), value == null ? "" : value);
             }
         }
         XTools xTools = XToolsAction.getUi(anActionEvent.getProject(), XTools.class);
