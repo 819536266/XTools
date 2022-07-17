@@ -20,7 +20,7 @@ public enum MethodEnum {
     GET(Method.GET, SpringUtils.GET_MAPPING, Icons.METHOD_GET),
     POST(Method.POST, SpringUtils.POST_MAPPING, Icons.METHOD_POST),
     PUT(Method.PUT, SpringUtils.PUT_MAPPING, Icons.METHOD_PUT),
-    DELETE(Method.POST, SpringUtils.DELETE_MAPPING, Icons.METHOD_POST),
+    DELETE(Method.DELETE, SpringUtils.DELETE_MAPPING, Icons.METHOD_POST),
     PATCH(Method.PATCH, SpringUtils.PATCH_MAPPING, Icons.METHOD_PATCH);
 
     /**

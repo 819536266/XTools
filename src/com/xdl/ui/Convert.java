@@ -3,7 +3,7 @@ package com.xdl.ui;
 import cn.hutool.core.util.StrUtil;
 import com.xdl.util.props2yaml.Props2Yaml;
 import com.xdl.util.yaml2props.Yaml2Props;
-import org.eclipse.xtend.lib.annotations.Data;
+import lombok.Data;
 
 import javax.swing.*;
 

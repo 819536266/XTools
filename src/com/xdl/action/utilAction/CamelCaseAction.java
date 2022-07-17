@@ -10,8 +10,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
-import com.xdl.model.DataCenter;
-import com.xdl.ui.OutContent;
 
 public class CamelCaseAction extends AnAction {
     @Override

@@ -2,7 +2,7 @@ package com.xdl.ui;
 
 import com.intellij.openapi.ui.Messages;
 import com.xdl.util.KillServer;
-import org.eclipse.xtend.lib.annotations.Data;
+import lombok.Data;
 
 import javax.swing.*;
 

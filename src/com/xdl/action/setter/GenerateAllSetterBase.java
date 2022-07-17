@@ -33,7 +33,7 @@ import com.xdl.util.PsiClassUtils;
 import com.xdl.util.PsiDocumentUtils;
 import com.xdl.util.PsiToolUtils;
 import com.xdl.util.setter.*;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 

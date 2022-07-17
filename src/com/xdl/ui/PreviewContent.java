@@ -26,9 +26,9 @@ public class PreviewContent extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         JPanel jPanel = new JPanel();
-        jPanel.setPreferredSize(new Dimension(500, 800));
+        jPanel.setPreferredSize(new Dimension(500, 700));
         JScrollPane jPanel1 = new JScrollPane();
-        jPanel1.setPreferredSize(new Dimension(500, 800));
+        jPanel1.setPreferredSize(new Dimension(500, 700));
         jPanel1.setMaximumSize(new Dimension(-1, -1));
         jPanel1.setMinimumSize(new Dimension(-1, -1));
 

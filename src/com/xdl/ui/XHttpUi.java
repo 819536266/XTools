@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.*;
 import cn.hutool.json.JSONUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;
 import com.xdl.action.XToolsAction;
@@ -21,7 +22,6 @@ import com.xdl.util.Icons;
 import com.xdl.util.SpringUtils;
 import com.xdl.util.XHttpButtonCellEditor;
 import lombok.Data;
-import org.jdesktop.swingx.JXComboBox;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -236,8 +236,8 @@ public class XHttpUi {
                 , restful);
 
         //设置超时时间,不设置会DeBug时,发请求IDEA会挂掉
-        request.setReadTimeout(1000)
-                .timeout(1000);
+        request.setReadTimeout(10000)
+                .timeout(10000);
         //设置请求头
         Map<String, String> header = xHttpModel.getHeader();
         header.forEach(request::header);
@@ -297,7 +297,7 @@ public class XHttpUi {
 
         HttpResponse execute = null;
         try {
-            execute = request.execute(true);
+            execute = request.executeAsync();
         } catch (Exception e1) {
             responseContent.setText("请求超时!!!");
         }
@@ -393,8 +393,9 @@ public class XHttpUi {
                 .getColumnCount() < 5) {
             return;
         }
-        JXComboBox editorComboBox = new JXComboBox(new String[]{ParamTypeEnum.TEXT.getName(), ParamTypeEnum.FILE.getName()});
-        editorComboBox.addPropertyChangeListener(e -> {
+        DefaultComboBoxModel<String> stringDefaultComboBoxModel = new DefaultComboBoxModel<>(new String[]{ParamTypeEnum.TEXT.getName(), ParamTypeEnum.FILE.getName()});
+        ComboBox<String> comboBox = new ComboBox<>(stringDefaultComboBoxModel);
+        comboBox.addPropertyChangeListener(e -> {
             TableColumn column4 = paramTable.getColumnModel()
                     .getColumn(4);
             column4.setCellEditor(new XHttpButtonCellEditor(this));
@@ -402,7 +403,7 @@ public class XHttpUi {
         //设置三列为下拉
         TableColumn column2 = paramTable.getColumnModel()
                 .getColumn(2);
-        column2.setCellEditor(new DefaultCellEditor(editorComboBox));
+        column2.setCellEditor(new DefaultCellEditor(comboBox));
         //第四列不可编辑
         TableColumn column4 = paramTable.getColumnModel()
                 .getColumn(4);

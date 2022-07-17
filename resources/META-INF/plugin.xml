@@ -28,6 +28,16 @@
     ]]>
     </description>
     <change-notes><![CDATA[
+          <strong>2.1.1</strong></br>
+          <ul>
+                <li>Right click option to change to Chinese.</li>
+                <li>fix some bug.</li>
+          </ul>
+           <ul>
+                <li>右键选项改为中文。</li>
+                <li>修复一些bug。</li>
+          </ul>
+       <strong>2.0.0</strong></br>
          <strong>2.1.0</strong></br>
           <ul>
                 <li>Add the setter method of the generated object without default value, the setter method with default value, the setter method of the constructor, and the setter method of chain call.</li>
@@ -181,6 +191,7 @@
     <depends>com.intellij.modules.lang</depends>
     -->
     <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.spring</depends>
 
 
     <extensions defaultExtensionNs="com.intellij">
@@ -220,71 +231,71 @@
         <group id="XTools" text="XTools" description="XTools" popup="true">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
 
-            <!--
-                        <action id="Preview" class="com.xdl.action.utilAction.Preview1Action" text="Preview" description="预览实体类" keymap="$default">
-                            <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
-                        </action>-->
-            <!-- yml转properties -->
-            <action id="BeanTOJson" class="com.xdl.action.utilAction.ObjectJsonAction" text="Bean TO Json"
+            <action id="Preview" class="com.xdl.action.utilAction.Preview1Action" text="Preview" description="'预览实体类'"
+                    keymap="$default">
+                <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
+            </action>
+            <action id="BeanToJson" class="com.xdl.action.utilAction.ObjectJsonAction" text="Bean TO Json"
                     description="BeanTOJson"
                     keymap="$default">
                 <keyboard-shortcut first-keystroke="alt  S" keymap="$default"/>
             </action>
-            <action id="Y_TO_P" class="com.xdl.action.utilAction.Y2PAction" text="Y-TO-P" description="Yml转properties"
-                    keymap="$default">
-                <keyboard-shortcut first-keystroke="alt  Y" keymap="$default"/>
-            </action>
-            <!--             properties转yml -->
-            <action id="P_TO_Y" class="com.xdl.action.utilAction.P2YAction" text="P-TO-Y" description="Properties转yml">
-                <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
-            </action>
             <!-- 随机生成UUID -->
             <!--            <action id="Uuid" class="com.xdl.action.utilAction.UuidAction" text="UUID" description="随机生成UUID"/>-->
             <!-- 换给定字符串中的大小写。大写转小写，小写转大写 -->
-            <action id="Upper OR Lower Case" class="com.xdl.action.utilAction.SwapCaseAction" text="Upper OR Lower Case"
-                    description="换给定字符串中的大小写。大写转小写，小写转大写">
+            <action id="Upper OR Lower Case" class="com.xdl.action.utilAction.SwapCaseAction" text="字符大小写互转"
+                    description="'换给定字符串中的大小写。大写转小写，小写转大写'">
                 <keyboard-shortcut first-keystroke="alt u" keymap="$default"/>
             </action>
             <!-- 首字母大写 -->
             <action id="UpperLowerFirst" class="com.xdl.action.utilAction.UpperOrLowerFirstAction"
-                    text="Upper OR Lower First"
-                    description="首字母大小写" keymap="$default" popup="true">
+                    text="首字母大小写互转"
+                    description="'首字母大小写'" keymap="$default" popup="true">
                 <keyboard-shortcut first-keystroke="alt shift u" keymap="$default"/>
             </action>
+            <!-- 驼峰式命名的字符串转换为下划线方式 -->
+            <action id="Underline Case" class="com.xdl.action.utilAction.UnderlineCaseAction" text="驼峰转下划线"
+                    description="'驼峰式命名的字符串转换为下划线方式'">
+                <keyboard-shortcut first-keystroke="alt K" keymap="$default"/>
+            </action>
+            <action id="Underline And UpperCase" class="com.xdl.action.utilAction.UnderlineUpperCaseAction"
+                    text="驼峰转下划线并大写"
+                    description="'驼峰式命名的字符串转换为下划线方式并转大写'">
+                <keyboard-shortcut first-keystroke="alt shift K" keymap="$default"/>
+            </action>
+            <!-- 下划线方式命名的字符串转换为驼峰式 -->
+            <action id="Camel Case" class="com.xdl.action.utilAction.CamelCaseAction" text="下划线转驼峰"
+                    description="'下划线转驼峰'">
+            </action>
             <!-- 单引号转双引号,双引号转单引号 -->
-            <action id="Quotes Cast" class="com.xdl.action.utilAction.QuotesCastAction" text="Quotes Cast"
-                    description="单引号转双引号,双引号转单引号">
+            <action id="Quotes Cast" class="com.xdl.action.utilAction.QuotesCastAction" text="单双引号互转"
+                    description="'单引号转双引号,双引号转单引号'">
                 <keyboard-shortcut first-keystroke="alt QUOTE" keymap="$default"/>
             </action>
             <!-- 去双引号 加 双引号 -->
-            <action id="Quotes Change" class="com.xdl.action.utilAction.QuotesChangeAction" text="Quotes Change"
-                    description="去双引号 加 双引号">
+            <action id="Quotes Change" class="com.xdl.action.utilAction.QuotesChangeAction" text="增加/去除双引号"
+                    description="'去双引号 加 双引号'">
                 <keyboard-shortcut first-keystroke="alt shift  QUOTE" keymap="$default"/>
             </action>
-
-            <action id="Underline And UpperCase" class="com.xdl.action.utilAction.UnderlineUpperCaseAction"
-                    text="Underline And UpperCase"
-                    description="驼峰式命名的字符串转换为下划线方式并转大写">
+            <!-- yml转properties -->
+            <action id="Y_TO_P" class="com.xdl.action.utilAction.Y2PAction" text="Yaml转properties"
+                    description="Yml转properties"
+                    keymap="$default">
+                <keyboard-shortcut first-keystroke="alt  Y" keymap="$default"/>
             </action>
-            <!-- 驼峰式命名的字符串转换为下划线方式 -->
-            <action id="Underline Case" class="com.xdl.action.utilAction.UnderlineCaseAction" text="Underline Case"
-                    description="驼峰式命名的字符串转换为下划线方式">
+            <!--             properties转yml -->
+            <action id="P_TO_Y" class="com.xdl.action.utilAction.P2YAction" text="Properties转Yaml"
+                    description="Properties转yml">
+                <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
             </action>
-            <!-- 下划线方式命名的字符串转换为驼峰式 -->
-            <action id="Camel Case" class="com.xdl.action.utilAction.CamelCaseAction" text="Camel Case"
-                    description="下划线方式命名的字符串转换为驼峰式">
-            </action>
-
-
             <action id="MarkBook" class="com.xdl.action.MarkBookAction" text="Create Markdown"
-                    description="创建MD笔记"/>
+                    description="'创建Markdown笔记'"/>
         </group>
 
         <!-- Add your actions here -->
         <action id="com.github.chencn.yamlandprops" class="com.xdl.action.ConvertAction"
-                text="Convert YAML OR Properties "
+                text="Yaml与Properties文件互转"
                 description="You can quickly convert Properties files to YAML files, or YAML files to Properties files">
-
             <!--在ide右边项目打开的文件中右击显示-->
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
         </action>
