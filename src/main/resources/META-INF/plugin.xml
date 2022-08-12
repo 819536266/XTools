@@ -1,0 +1,304 @@
+<idea-plugin url="https://github.com/819536266/XTools">
+    <id>com.xdl</id>
+    <name>XTools</name>
+    <version>2.1.1</version>
+    <vendor email="819536266@qq.com" url="https://github.com/819536266/XTools">XTools</vendor>
+
+    <description><![CDATA[
+        <h1>XTools plugin</h1>
+        <p><a href="https://github.com/819536266/XTools">GitHub</a> |  <a href="https://gitee.com/BeALaity/XTools">Gitee</a> |  <a href="https://blog.csdn.net/qq_35036073/article/details/117227175">CSDN</a></p>
+      <strong>English</strong></br>
+      <ul>
+         <li>Run tests based on SpringBoot and SpringMvc developed interfaces.</li>
+         <li>Integration port closed, quickly generate Markdown file small function.</li>
+         <li>Code conversion tools (case, hump, underline, YML to Pro).</li>
+         <li>Bean generation Setter tool.</li>
+         <li>JSON tools.</li>
+         <li>If you have any Suggestions or bugs during continuous optimization, please email to 819536266@qq.com ,Thank you . </li>
+      </ul>
+     <strong>中文</strong></br>
+     <ul>
+         <li>运行基于SpringBoot开发接口的测试.</li>
+         <li>集成端口关闭，快速生成Markdown文件小功能.</li>
+         <li>代码转化工具（大小写、驼峰、下划线、YML转PRO）.</li>
+         <li>Bean生成Setter工具.</li>
+         <li>JSON工具.</li>
+         <li>在持续优化过程中,如有任何建议或bug，请发邮件至819536266@qq.com,谢谢.</li>
+      </ul>
+    ]]>
+    </description>
+    <change-notes><![CDATA[
+          <strong>2.1.1</strong></br>
+          <ul>
+                <li>Right click option to change to Chinese.</li>
+                <li>fix some bug.</li>
+          </ul>
+           <ul>
+                <li>右键选项改为中文。</li>
+                <li>修复一些bug。</li>
+          </ul>
+       <strong>2.0.0</strong></br>
+         <strong>2.1.0</strong></br>
+          <ul>
+                <li>Add the setter method of the generated object without default value, the setter method with default value, the setter method of the constructor, and the setter method of chain call.</li>
+                <li>Add right-click tool to generate JSON string of Bean.</li>
+                <li>Added window tool JSON formatting toolbar.</li>
+                <li>Increase request cache. Cache content: request address, request method, parameter name, parameter value, request header.</li>
+                <li>Add request method drop-down, optional request method.</li>
+                <li>Fix the problem that the address bar parameters are not spliced ​​when @RequestBody；#I42VLN.</li>
+                <li>Fix the non-X Http problem of opening the window when clicking the request.</li>
+          </ul>
+           <ul>
+                <li>增加生成对象无默认值的setter方法、有默认值的setter方法、构造器的setter方法、链式调用的setter方法。</li>
+                <li>增加右键工具生成Bean的JSON字符串。</li>
+                <li>增加窗口工具JSON格式化工具栏</li>
+                <li>增加请求缓存。缓存内容：请求地址、请求方式、参数名称、参数值、请求头。</li>
+                <li>增加请求方式下拉，可选请求方式。</li>
+                <li>修复@RequestBody时，存在地址栏参数未拼接问题；#I42VLN。</li>
+                <li>修复点击请求打开窗口非XHttp问题。</li>
+          </ul>
+       <strong>2.0.0</strong></br>
+      <ul>
+            <li>Change the tool window to XHTTP, XTools;Delete request window;Improve the P2Y window YAML and Properties interchange function</li>
+            <li>Right click TO add XTool function: Y-to-P-YAML TO Properties</li>
+            <li>Right click TO add XTool function: p-to-y-properties go TO YAML</a></li>
+            <li>Right-click and merge the UpperCase and LowerCase functions. Upper OR LowerCase - change the string to Case</li>
+            <li>Right-click and merge Upper OR LowerFirst to change the First letter to case</li>
+            <li>Add and modify shortcuts in the right-click function</li>
+            <li>Fixed bug with initial tool window for the first time</li>
+      </ul>
+       <ul>
+            <li>修改工具窗口为XHttp、XTools；删除请求窗口；完善P2Y窗口 YAML与Properties 互转功能</li>
+            <li>右键增加XTool功能:Y-TO-P - YAML转Properties</li>
+            <li>右键增加XTool功能:P-TO-Y - Properties转YAML</li>
+            <li>右键合并原UpperCase、LowerCase功能，现为：Upper OR Lower Case - 字符串转大小写</li>
+            <li>右键合并原UpperFirst、LowerFirst功能，现为：Upper OR Lower First - 首字母转大小写</li>
+            <li>添加以及修改右键功能中快捷键</li>
+            <li>修复首次需初始化工具窗口问题</li>
+      </ul>
+       <strong>1.5.0</strong></br>
+      <ul>
+            <li>Fixed an error in the request URL because the annotation did not define parameters</li>
+            <li>Remove Spring dependency</li>
+            <li>Add open source YML and Properties exchange tool-address:<a href="https://github.com/chencn/ConvertYamlAndProperties">https://github.com/chencn/ConvertYamlAndProperties</a></li>
+            <li>Add right - click function set -XTools</li>
+            <li>Transfer the create Markdown document functionality to XTools</li>
+            <li>Added XTool function: UnderlineAndUpperCase-camel case-named strings are converted to underscores and converted to uppercase</li>
+            <li>Added XTool functionality :UnderlineCase - humped named strings converted to underscore</li>
+            <li>Added XTool functionality: Transform a CamelCase - underscore named string into a CamelCase</li>
+            <li>UpperCase - String UpperCase</li>
+            <li>Add XTool functionality :LowerCase - string LowerCase</li>
+            <li>Added XTool function: SwapCase-change the case of a given string. Uppercase to lowercase, lowercase to uppercase</li>
+            <li>Added XTool function: UpperFirst-uppercase first letter</li>
+            <li>Added XTool function: LowerFirst-lowercase first letter</li>
+            <li>Added XTool function: QuotesCast-single quote to double quote, double quote to single quote</li>
+            <li>Added XTool function: QuotesChange-remove double quotes and add double quotes</li>
+      </ul>
+       <ul>
+            <li>修复请求URL因为注解未定义参数引起的错误</li>
+            <li>去除Spring依赖</li>
+            <li>增加开源YML与Properties互转工具--地址:<a href="https://github.com/chencn/ConvertYamlAndProperties">https://github.com/chencn/ConvertYamlAndProperties</a></li>
+            <li>添加右键功能集合-XTools</li>
+            <li>转移创建Markdown文档功能到XTools</li>
+            <li>增加XTool功能:UnderlineAndUpperCase - 驼峰式命名的字符串转换为下划线方式并转大写</li>
+            <li>增加XTool功能:UnderlineCase - 驼峰式命名的字符串转换为下划线方式</li>
+            <li>增加XTool功能:CamelCase - 下划线方式命名的字符串转换为驼峰式</li>
+            <li>增加XTool功能:UpperCase - 字符串转大写</li>
+            <li>增加XTool功能:LowerCase - 字符串转小写</li>
+            <li>增加XTool功能:SwapCase - 换给定字符串中的大小写。大写转小写，小写转大写</li>
+            <li>增加XTool功能:UpperFirst - 大写首字母</li>
+            <li>增加XTool功能:LowerFirst - 小写首字母</li>
+            <li>增加XTool功能:QuotesCast - 单引号转双引号,双引号转单引号</li>
+            <li>增加XTool功能:QuotesChange - 去双引号 加 双引号</li>
+      </ul>
+      <strong>1.2.3</strong></br>
+      <ul>
+            <li>Add a window toggle button for vertical or horizontal</li>
+      </ul>
+       <ul>
+            <li>添加窗口切换按钮,用于竖状或横状</li>
+      </ul>
+      <strong>1.2.2</strong></br>
+      <ul>
+            <li>Fix some bugs</li>
+            <li>Fix global configuration, restart client automatic reset problem</li>
+            <li>Add return TAB.ResponseBody automatic JSON formatting bar,Response bar,URL bar,Header bar</li>
+            <li>There are three types of sending requests: address bar, form, and Body</li>
+            <li>Continuous optimization</li>
+      </ul>
+       <ul>
+            <li>修复一些BUG</li>
+            <li>修复全局配置，重启客户端自动重置的问题</li>
+            <li>添加返回选项卡。自动JSON格式化栏，响应栏，URL栏，标题栏</li>
+            <li>发送请求有三种类型:地址栏、表单和正文</li>
+      </ul>
+       <strong>1.2.1</strong></br>
+      <ul>
+            <li>Add port close widget</li>
+      </ul>
+      <ul>
+            <li>添加端口关闭小部件</li>
+      </ul><br/>
+       <strong>1.2.0</strong></br>
+      <ul>
+            <li>The return information is automatically JSON formatted</li>
+            <li>Supports file upload requests</li>
+            <li>RequestBody requests are supported<br/></li>
+            <li>Request headers are dynamically added and removed</li>
+            <li>When you click Clear, clear the single request cache </li>
+            <li>Sets the add exclude parameter configuration </li>
+            <li>The request parameters box can be dragged</li>
+      </ul>
+      <ul>
+            <li>返回Body自动JSON格式化</li>
+            <li>支持文件上传请求</li>
+            <li>支持RequestBody请求<br/></li>
+            <li>请求头可以动态添加和删除,重启客户端清除</li>
+            <li>当您单击清除时，清除单个请求缓存 </li>
+            <li>设置添加排除参数配置 </li>
+            <li>可以拖动“请求参数”框</li>
+      </ul><br/>
+      <strong>1.1.2</strong></br>
+      <ul>
+            <li>Plugin.xml adds JAVA dependencies</li>
+            <li>Add support for RequestMapping</li>
+            <li>Add automatic exclusion parameter,HttpSession,HttpServletResponse,HttpServletRequest</li>
+      </ul>
+      <ul >
+            <li>xml添加了JAVA依赖关系</li>
+            <li>添加对RequestMapping的支持</li>
+            <li>添加自动排除参数，HttpSession,HttpServletResponse,HttpServletRequest</li>
+      </ul>
+      <strong>1.1.1</strong></br>
+      <ul>
+            <li>Based on the interface of SpringBoot and SpringMvc, it supports one-key generation of corresponding interface testing tools</li>
+            <li>Modify the window adaptation problem, improve the interface parameter cache</li>
+      </ul><br/>
+      <ul>
+            <li>基于SpringBoot和SpringMvc的接口，支持一键生成相应的接口测试工具</li>
+            <li>修改窗口适配问题，请求接口参数缓存</li>
+      </ul>
+      <br/>
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="222.00"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!--实例化配置信息服务-->
+        <applicationService serviceImplementation="com.xdl.model.Settings"/>
+
+        <applicationConfigurable instance="com.xdl.ui.XHttpSetting" dynamic="true"/>
+
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.xdl.provider.XHttpLineMarkerProvider"
+                                        id="XHttpLineMarkerProvider"/>
+        <!-- Add your extensions here -->
+        <toolWindow id="XTools" anchor="right" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png"
+                    secondary="true"/>
+
+        <intentionAction>
+            <className>com.xdl.action.setter.GenerateAllSetterAction</className>
+        </intentionAction>
+
+        <intentionAction>
+            <className>com.xdl.action.setter.GenerateWithBuilderAction</className>
+        </intentionAction>
+
+        <intentionAction>
+            <className>com.xdl.action.setter.GenerateAllSetterNoDefaultValueAction</className>
+        </intentionAction>
+
+        <intentionAction>
+            <className>com.xdl.action.setter.GenerateWithAccessorsAction</className>
+        </intentionAction>
+    </extensions>
+
+
+    <actions>
+        <action id="XHttpAction" class="com.xdl.action.XToolsAction" text="XHttpAction" description="XHttpAction">
+            <!--      <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
+        </action>
+        <group id="XTools" text="XTools" description="XTools" popup="true">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+
+            <action id="Preview" class="com.xdl.action.utilAction.Preview1Action" text="预览" description="'预览'"
+                    keymap="$default">
+                <keyboard-shortcut first-keystroke="alt p" keymap="$default"/>
+            </action>
+            <action id="BeanToJson" class="com.xdl.action.utilAction.ObjectJsonAction" text="Bean TO Json"
+                    description="BeanTOJson"
+                    keymap="$default">
+                <keyboard-shortcut first-keystroke="alt shift j" keymap="$default"/>
+            </action>
+            <!-- 随机生成UUID -->
+            <!--            <action id="Uuid" class="com.xdl.action.utilAction.UuidAction" text="UUID" description="随机生成UUID"/>-->
+            <!-- 换给定字符串中的大小写。大写转小写，小写转大写 -->
+            <action id="Upper OR Lower Case" class="com.xdl.action.utilAction.SwapCaseAction" text="字符大小写互转"
+                    description="'换给定字符串中的大小写。大写转小写，小写转大写'">
+                <keyboard-shortcut first-keystroke="alt u" keymap="$default"/>
+            </action>
+            <!-- 首字母大写 -->
+            <action id="UpperLowerFirst" class="com.xdl.action.utilAction.UpperOrLowerFirstAction"
+                    text="首字母大小写互转"
+                    description="'首字母大小写'" keymap="$default" popup="true">
+                <keyboard-shortcut first-keystroke="alt shift u" keymap="$default"/>
+            </action>
+            <!-- 驼峰式命名的字符串转换为下划线方式 -->
+            <action id="Underline Case" class="com.xdl.action.utilAction.UnderlineCaseAction" text="驼峰转下划线"
+                    description="'驼峰式命名的字符串转换为下划线方式'">
+                <keyboard-shortcut first-keystroke="alt K" keymap="$default"/>
+            </action>
+            <action id="Underline And UpperCase" class="com.xdl.action.utilAction.UnderlineUpperCaseAction"
+                    text="驼峰转下划线并大写"
+                    description="'驼峰式命名的字符串转换为下划线方式并转大写'">
+                <keyboard-shortcut first-keystroke="alt shift K" keymap="$default"/>
+            </action>
+            <!-- 下划线方式命名的字符串转换为驼峰式 -->
+            <action id="Camel Case" class="com.xdl.action.utilAction.CamelCaseAction" text="下划线转驼峰"
+                    description="'下划线转驼峰'">
+            </action>
+            <!-- 单引号转双引号,双引号转单引号 -->
+            <action id="Quotes Cast" class="com.xdl.action.utilAction.QuotesCastAction" text="单双引号互转"
+                    description="'单引号转双引号,双引号转单引号'">
+                <keyboard-shortcut first-keystroke="alt QUOTE" keymap="$default"/>
+            </action>
+            <!-- 去双引号 加 双引号 -->
+            <action id="Quotes Change" class="com.xdl.action.utilAction.QuotesChangeAction" text="增加/去除双引号"
+                    description="'去双引号 加 双引号'">
+                <keyboard-shortcut first-keystroke="alt shift  QUOTE" keymap="$default"/>
+            </action>
+            <!-- yml转properties -->
+            <action id="Y_TO_P" class="com.xdl.action.utilAction.Y2PAction" text="Yaml转properties"
+                    description="Yml转properties"
+                    keymap="$default">
+                <keyboard-shortcut first-keystroke="alt  Y" keymap="$default"/>
+            </action>
+            <!--             properties转yml -->
+            <action id="P_TO_Y" class="com.xdl.action.utilAction.P2YAction" text="Properties转Yaml"
+                    description="Properties转yml">
+                <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
+            </action>
+            <action id="MarkBook" class="com.xdl.action.MarkBookAction" text="创建Markdown片段"
+                    description="'创建Markdown笔记'"/>
+        </group>
+
+        <!-- Add your actions here -->
+        <action id="com.github.chencn.yamlandprops" class="com.xdl.action.ConvertAction"
+                text="Yaml与Properties文件互转"
+                description="You can quickly convert Properties files to YAML files, or YAML files to Properties files">
+            <!--在ide右边项目打开的文件中右击显示-->
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+
+</idea-plugin>
