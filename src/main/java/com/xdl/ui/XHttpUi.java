@@ -7,6 +7,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.*;
 import cn.hutool.json.JSONUtil;
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.wm.ToolWindow;
@@ -147,7 +148,7 @@ public class XHttpUi {
         this.project = project;
         //发送请求监听事件
         send.addActionListener(e -> sendHttp());
-
+        responseContent.setFileType(JavaFileType.INSTANCE);
         ///切换窗口模式
         closeButton.addActionListener(e -> {
             if (paramPane.getOrientation() == JSplitPane.VERTICAL_SPLIT) {

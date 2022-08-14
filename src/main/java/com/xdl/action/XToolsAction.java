@@ -23,6 +23,7 @@ import com.xdl.model.XHttpParam;
 import com.xdl.ui.XHttpUi;
 import com.xdl.ui.XHttpWindowFactory;
 import com.xdl.ui.XTools;
+import com.xdl.util.PsiClassUtils;
 import com.xdl.util.SpringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -166,7 +167,7 @@ public class XToolsAction extends AnAction {
         xHttpModel.setPath(getPath(psiClass, psiMethod));
 
         //设置到缓存中
-        if(settings.getOrCache()){
+        if (settings.getOrCache()) {
             modelMap.put(id, xHttpModel);
         }
         return xHttpModel;
@@ -205,13 +206,10 @@ public class XToolsAction extends AnAction {
             //如果body类型,并且只有一个@RequestBody注释,设置RequestBody,表示有多个RequestBody 只存第一个
             if (ParamTypeEnum.BODY.equals(paramTypeEnum) && xHttpModel.getRequestBody() == null) {
                 PsiClass psiClass = PsiTypesUtil.getPsiClass(parameter.getType());
-                Map<String, Object> collect = MapUtil.newHashMap();
-                if (psiClass != null) {
-                    collect = Arrays.stream(psiClass.getFields())
-                            .filter(field -> !"serialVersionUID".equals(field.getName()))
-                            .collect(Collectors.toMap(PsiField::getName, this::defaultValue));
+                if(psiClass == null){
+                    return;
                 }
-                xHttpModel.setRequestBody(JSONUtil.formatJsonStr(JSONUtil.toJsonStr(collect)));
+                xHttpModel.setRequestBody(JSONUtil.formatJsonStr(PsiClassUtils.beanToJsonStr(psiClass)));
             }
         }
         xHttpModel.setParamList(paramList);

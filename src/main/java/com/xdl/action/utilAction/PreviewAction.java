@@ -28,7 +28,7 @@ public class PreviewAction extends PsiElementBaseIntentionAction {
         if (localVarialbeContainingClass == null) {
             return;
         }
-        PreviewContent.text = localVarialbeContainingClass.getText();
+//        PreviewContent.text = localVarialbeContainingClass.getText();
         PreviewContent outContent = new PreviewContent();
         outContent.show();
     }
