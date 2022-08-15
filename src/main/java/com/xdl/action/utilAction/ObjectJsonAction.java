@@ -25,6 +25,8 @@ import com.xdl.ui.JsonFormat;
 import com.xdl.ui.XTools;
 import com.xdl.util.Icons;
 import com.xdl.util.PsiClassUtils;
+import com.xdl.util.parser.POJO2JSONParser;
+import com.xdl.util.parser.type.SpecifyType;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -45,10 +47,11 @@ public class ObjectJsonAction extends AnAction {
         if (psiClass == null) {
             return;
         }
+        POJO2JSONParser pojo2JSONParser = new DefaultPOJO2JSONParser()
         XTools xTools = XToolsAction.getUi(anActionEvent.getProject(), XTools.class);
         JsonFormat jsonFormat = xTools.getJsonFormat();
         jsonFormat.getFormatJson()
-                .setText(JSONUtil.formatJsonStr(PsiClassUtils.beanToJsonStr(psiClass)));
+                .setText(JSONUtil.formatJsonStr(pojo2JSONParser.psiClasstToJSONString(psiClass)));
         xTools.openParent(3);
     }
 
