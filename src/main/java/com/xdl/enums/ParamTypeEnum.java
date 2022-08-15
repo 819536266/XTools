@@ -17,8 +17,7 @@ public enum ParamTypeEnum {
      * 参数类型名称
      */
     @Getter
-    @Setter
-    private String name;
+    private final String name;
 
     ParamTypeEnum(String name) {
         this.name = name;

@@ -25,6 +25,8 @@ import com.xdl.ui.XHttpWindowFactory;
 import com.xdl.ui.XTools;
 import com.xdl.util.PsiClassUtils;
 import com.xdl.util.SpringUtils;
+import com.xdl.util.parser.DefaultPOJO2JSONParser;
+import com.xdl.util.parser.POJO2JSONParser;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -209,7 +211,8 @@ public class XToolsAction extends AnAction {
                 if(psiClass == null){
                     return;
                 }
-                xHttpModel.setRequestBody(JSONUtil.formatJsonStr(PsiClassUtils.beanToJsonStr(psiClass)));
+                POJO2JSONParser pojo2JSONParser = new DefaultPOJO2JSONParser();
+                xHttpModel.setRequestBody(pojo2JSONParser.psiClasstToJSONString(psiClass));
             }
         }
         xHttpModel.setParamList(paramList);

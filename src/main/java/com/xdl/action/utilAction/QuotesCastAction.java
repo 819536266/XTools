@@ -23,7 +23,7 @@ public class QuotesCastAction extends AnAction {
         Editor requiredData = e.getRequiredData(LangDataKeys.EDITOR);
         SelectionModel selectionModel = requiredData.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-        if (!ObjectUtil.isEmpty(selectedText)) {
+        if (ObjectUtil.isNotEmpty(selectedText)) {
             int selectionStart = selectionModel.getSelectionStart();
             int selectionEnd = selectionModel.getSelectionEnd();
             Document document = selectionModel.getEditor().getDocument();

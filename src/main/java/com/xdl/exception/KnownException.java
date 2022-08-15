@@ -1,4 +1,4 @@
-package com.xdl.util.parser;
+package com.xdl.exception;
 
 public class KnownException extends RuntimeException {
 

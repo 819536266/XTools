@@ -52,7 +52,7 @@ public class ObjectJsonAction extends AnAction {
         XTools xTools = XToolsAction.getUi(anActionEvent.getProject(), XTools.class);
         JsonFormat jsonFormat = xTools.getJsonFormat();
         jsonFormat.getFormatJson()
-                .setText(JSONUtil.formatJsonStr(pojo2JSONParser.psiClasstToJSONString(psiClass)));
+                .setText(pojo2JSONParser.psiClasstToJSONString(psiClass));
         xTools.openParent(3);
     }
 

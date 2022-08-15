@@ -203,8 +203,8 @@
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.xdl.provider.XHttpLineMarkerProvider"
                                         id="XHttpLineMarkerProvider"/>
         <!-- Add your extensions here -->
-        <toolWindow id="XTools" anchor="right" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png"
-                    secondary="true"/>
+        <toolWindow id="XTools" anchor="right" order="before Commit" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png"
+                    secondary="false" doNotActivateOnStart="false" largeStripeAnchor="right"/>
 
         <intentionAction>
             <className>com.xdl.action.setter.GenerateAllSetterAction</className>
@@ -238,7 +238,7 @@
             <action id="BeanToJson" class="com.xdl.action.utilAction.ObjectJsonAction" text="Bean TO Json"
                     description="BeanTOJson"
                     keymap="$default">
-                <keyboard-shortcut first-keystroke="alt shift j" keymap="$default"/>
+                <keyboard-shortcut first-keystroke="alt b j" keymap="$default"/>
             </action>
             <!-- 随机生成UUID -->
             <!--            <action id="Uuid" class="com.xdl.action.utilAction.UuidAction" text="UUID" description="随机生成UUID"/>-->
