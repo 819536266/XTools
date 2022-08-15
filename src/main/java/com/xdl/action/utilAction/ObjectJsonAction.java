@@ -25,6 +25,7 @@ import com.xdl.ui.JsonFormat;
 import com.xdl.ui.XTools;
 import com.xdl.util.Icons;
 import com.xdl.util.PsiClassUtils;
+import com.xdl.util.parser.DefaultPOJO2JSONParser;
 import com.xdl.util.parser.POJO2JSONParser;
 import com.xdl.util.parser.type.SpecifyType;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +48,7 @@ public class ObjectJsonAction extends AnAction {
         if (psiClass == null) {
             return;
         }
-        POJO2JSONParser pojo2JSONParser = new DefaultPOJO2JSONParser()
+        POJO2JSONParser pojo2JSONParser = new DefaultPOJO2JSONParser();
         XTools xTools = XToolsAction.getUi(anActionEvent.getProject(), XTools.class);
         JsonFormat jsonFormat = xTools.getJsonFormat();
         jsonFormat.getFormatJson()

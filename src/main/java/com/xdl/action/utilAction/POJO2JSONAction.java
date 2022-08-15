@@ -29,7 +29,7 @@ public abstract class POJO2JSONAction extends AnAction {
         final Project project = psiFile.getProject();
 
         if (!uastSupported(psiFile)) {
-            Notifier.notifyWarn("This file can't convert to json.", project);
+//            Notifier.notifyWarn("This file can't convert to json.", project);
             return;
         }
 
@@ -49,7 +49,7 @@ public abstract class POJO2JSONAction extends AnAction {
             String fileText = psiFile.getText();
             int offset = fileText.contains("class") ? fileText.indexOf("class") : fileText.indexOf("record");
             if (offset < 0) {
-                Notifier.notifyWarn("Can't find class scope.", project);
+//                Notifier.notifyWarn("Can't find class scope.", project);
                 return;
             }
             PsiElement elementAt = psiFile.findElementAt(offset);
@@ -59,13 +59,13 @@ public abstract class POJO2JSONAction extends AnAction {
         try {
             String json = pojo2JSONParser.uElementToJSONString(uElement);
 
-            ClipboardHandler.copyToClipboard(json);
+//            ClipboardHandler.copyToClipboard(json);
 
 
-            Notifier.notifyInfo("Convert " + psiFile.getName() + " to JSON success, copied to clipboard.", project);
+//            Notifier.notifyInfo("Convert " + psiFile.getName() + " to JSON success, copied to clipboard.", project);
 
-        } catch (KnownException ex) {
-            Notifier.notifyWarn(ex.getMessage(), project);
+        } catch (Exception ex) {
+//            Notifier.notifyWarn(ex.getMessage(), project);
         }
     }
 
