@@ -25,6 +25,7 @@ public class Icons {
 
     public static final Icon METHOD_UNDEFINED = load("/icons/method/undefined.png");
     public static final Icon CLOSE = load("/icons/close.png");
+    public static final Icon X = load("/icons/x.png");
     public static final Icon METHOD_GET = load("/icons/method/GET.png");
     public static final Icon METHOD_POST = load("/icons/method/POST.png");
     public static final Icon METHOD_DELETE = load("/icons/method/DELETE.png");

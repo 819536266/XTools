@@ -27,21 +27,18 @@ public enum MethodEnum {
      * 请求方式
      */
     @Getter
-    @Setter
     private final Method method;
 
     /**
      * spring mapping
      */
     @Getter
-    @Setter
     private final String mapping;
 
     /**
      * 对应图标
      */
     @Getter
-    @Setter
     private final Icon icon;
 
     MethodEnum(Method method, String mapping, Icon icon) {

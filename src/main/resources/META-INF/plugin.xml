@@ -231,14 +231,14 @@
         <group id="XTools" text="XTools" description="XTools" popup="true" icon="/icons/x.png">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
 
-            <action id="Preview" class="com.xdl.action.utilAction.Preview1Action" text="预览" description="'预览'"
+            <action id="Preview" class="com.xdl.action.utilAction.PreviewAction" text="预览" description="'预览'"
                     keymap="$default">
                 <keyboard-shortcut first-keystroke="alt p" keymap="$default"/>
             </action>
-            <action id="BeanToJson" class="com.xdl.action.utilAction.ObjectJsonAction" text="Bean TO Json"
+            <action id="BeanToJson" class="com.xdl.action.utilAction.BeanToJsonAction" text="Bean转Json"
                     description="BeanTOJson"
                     keymap="$default">
-                <keyboard-shortcut first-keystroke="alt b j" keymap="$default"/>
+                <keyboard-shortcut first-keystroke="alt i" keymap="$default"/>
             </action>
             <!-- 随机生成UUID -->
             <!--            <action id="Uuid" class="com.xdl.action.utilAction.UuidAction" text="UUID" description="随机生成UUID"/>-->
@@ -256,7 +256,7 @@
             <!-- 驼峰式命名的字符串转换为下划线方式 -->
             <action id="Underline Case" class="com.xdl.action.utilAction.UnderlineCaseAction" text="驼峰转下划线"
                     description="'驼峰式命名的字符串转换为下划线方式'">
-                <keyboard-shortcut first-keystroke="alt K" keymap="$default"/>
+                <keyboard-shortcut first-keystroke="alt k" keymap="$default"/>
             </action>
             <action id="Underline And UpperCase" class="com.xdl.action.utilAction.UnderlineUpperCaseAction"
                     text="驼峰转下划线并大写"
@@ -275,7 +275,7 @@
             <!-- 去双引号 加 双引号 -->
             <action id="Quotes Change" class="com.xdl.action.utilAction.QuotesChangeAction" text="增加/去除双引号"
                     description="'去双引号 加 双引号'">
-                <keyboard-shortcut first-keystroke="alt shift  QUOTE" keymap="$default"/>
+                <keyboard-shortcut first-keystroke="alt shift QUOTE" keymap="$default"/>
             </action>
             <!-- yml转properties -->
             <action id="Y_TO_P" class="com.xdl.action.utilAction.Y2PAction" text="Yaml转properties"
@@ -286,10 +286,12 @@
             <!--             properties转yml -->
             <action id="P_TO_Y" class="com.xdl.action.utilAction.P2YAction" text="Properties转Yaml"
                     description="Properties转yml">
-                <keyboard-shortcut first-keystroke="alt  P" keymap="$default"/>
+                <keyboard-shortcut first-keystroke="alt shift Y" keymap="$default"/>
             </action>
             <action id="MarkBook" class="com.xdl.action.MarkBookAction" text="创建Markdown片段"
-                    description="'创建Markdown笔记'"/>
+                    description="'创建Markdown笔记'">
+                <keyboard-shortcut first-keystroke="alt m" keymap="$default"/>
+            </action>
         </group>
 
         <!-- Add your actions here -->

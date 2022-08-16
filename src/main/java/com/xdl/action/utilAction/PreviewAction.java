@@ -1,15 +1,22 @@
 package com.xdl.action.utilAction;
 
-import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
-import com.intellij.codeInspection.util.IntentionFamilyName;
-import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
+import com.intellij.ide.highlighter.JavaFileType;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.editor.*;
+import com.intellij.openapi.ui.popup.ActiveIcon;
+import com.intellij.openapi.ui.popup.IconButton;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiTypesUtil;
-import com.intellij.util.IncorrectOperationException;
-import com.xdl.ui.PreviewContent;
+import com.intellij.ui.*;
+import com.intellij.ui.components.*;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.components.BorderLayoutPanel;
+import com.xdl.util.Icons;
+import com.xdl.util.MyLanguageTextField;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -19,19 +26,49 @@ import org.jetbrains.annotations.NotNull;
  * @description: 预览文件
  * @date 2021-7-2714:27
  */
-public class PreviewAction extends PsiElementBaseIntentionAction {
+public class PreviewAction extends AnAction {
+
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor,
-                       @NotNull PsiElement psiElement) throws IncorrectOperationException {
-        PsiClass localVarialbeContainingClass = getLocalVarialbeContainingClass(psiElement);
-        if (localVarialbeContainingClass == null) {
+    public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
+        PsiElement requiredData;
+        try {
+            requiredData = anActionEvent.getRequiredData(LangDataKeys.PSI_ELEMENT);
+        } catch (Exception e) {
             return;
         }
-//        PreviewContent.text = localVarialbeContainingClass.getText();
-        PreviewContent outContent = new PreviewContent();
-        outContent.show();
+        PsiElement psiClass = PreviewAction.getPsiClass(requiredData);
+        PsiElement psiMethod = PreviewAction.getPsiMethod(requiredData);
+        Editor editor = anActionEvent.getRequiredData(LangDataKeys.EDITOR);
+        PsiElement psiElement = psiClass;
+        if (psiClass == null) {
+            if (psiMethod == null) {
+                return;
+            }
+            psiElement = psiMethod;
+        }
+        LanguageTextField languageTextField = new MyLanguageTextField(anActionEvent.getProject(), JavaFileType.INSTANCE.getLanguage(), JavaFileType.INSTANCE);
+        languageTextField.setText(psiElement.getText());
+        BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel()
+                .withPreferredSize(600, 400)
+                .addToCenter(languageTextField);
+        JBPopupFactory.getInstance()
+                .createComponentPopupBuilder(borderLayoutPanel, new JBViewport())
+                .setTitle("预览")
+                .setTitleIcon(new ActiveIcon(Icons.X))
+                .setMovable(true)
+//                .setCancelButton(new IconButton("Close", Icons.CLOSE))
+                .setCancelKeyEnabled(true)
+                .setProject(anActionEvent.getProject())
+                .setBelongsToGlobalPopupStack(true)
+                .setCancelOnClickOutside(true)
+                .setResizable(true)
+                .setCancelOnOtherWindowOpen(true)
+                .setNormalWindowLevel(false)
+                .createPopup()
+                .showInBestPositionFor(editor);
     }
+
 
     public static PsiClass getLocalVarialbeContainingClass(@NotNull PsiElement element) {
         PsiElement psiParent = PsiTreeUtil.getContextOfType(element,PsiClass.class, PsiLocalVariable.class, PsiParameter.class);
@@ -75,23 +112,5 @@ public class PreviewAction extends PsiElementBaseIntentionAction {
             psiClass =(PsiMethod) element;
         }
         return psiClass;
-    }
-
-    @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) {
-        PsiClass localVarialbeContainingClass = getLocalVarialbeContainingClass(psiElement);
-        return localVarialbeContainingClass != null;
-    }
-
-    @Override
-    public @NotNull String getFamilyName() {
-        return "previewFile1";
-    }
-
-    @Override
-    public
-    @NotNull
-    String getText() {
-        return "previewFile";
     }
 }
