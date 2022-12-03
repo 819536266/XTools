@@ -19,10 +19,10 @@
      <strong>中文</strong></br>
      <ul>
          <li>运行基于SpringBoot开发接口的测试.</li>
-         <li>集成端口关闭，快速生成Markdown文件小功能.</li>
+         <li>JSON工具.</li>
          <li>代码转化工具（大小写、驼峰、下划线、YML转PRO）.</li>
          <li>Bean生成Setter工具.</li>
-         <li>JSON工具.</li>
+         <li>集成端口关闭，快速生成Markdown文件小功能.</li>
          <li>在持续优化过程中,如有任何建议或bug，请发邮件至819536266@qq.com,谢谢.</li>
       </ul>
     ]]>
@@ -31,13 +31,14 @@
           <strong>2.1.1</strong></br>
           <ul>
                 <li>Right click option to change to Chinese.</li>
+                <li>Right-click tool to add preview.</li>
                 <li>fix some bug.</li>
           </ul>
            <ul>
                 <li>右键选项改为中文。</li>
+                <li>右键工具增加预览。</li>
                 <li>修复一些bug。</li>
           </ul>
-       <strong>2.0.0</strong></br>
          <strong>2.1.0</strong></br>
           <ul>
                 <li>Add the setter method of the generated object without default value, the setter method with default value, the setter method of the constructor, and the setter method of chain call.</li>
