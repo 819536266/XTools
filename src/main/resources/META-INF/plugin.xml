@@ -206,7 +206,7 @@
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.xdl.provider.XHttpLineMarkerProvider"
                                         id="XHttpLineMarkerProvider"/>
         <!-- Add your extensions here -->
-        <toolWindow id="XTools" anchor="right" order="before Commit" factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png"
+        <toolWindow id="XTools" anchor="right" order="first"  factoryClass="com.xdl.ui.XHttpWindowFactory" icon="/icons/x.png"
                     secondary="false" doNotActivateOnStart="false" largeStripeAnchor="right"/>
 
         <intentionAction>
