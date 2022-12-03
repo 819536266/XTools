@@ -32,11 +32,13 @@
           <ul>
                 <li>Right click option to change to Chinese.</li>
                 <li>Right-click tool to add preview.</li>
+                <li>Change the project build mode to Gradle.</li>
                 <li>fix some bug.</li>
           </ul>
            <ul>
                 <li>右键选项改为中文。</li>
                 <li>右键工具增加预览。</li>
+                <li>项目构建方式改为Gradle。</li>
                 <li>修复一些bug。</li>
           </ul>
          <strong>2.1.0</strong></br>
