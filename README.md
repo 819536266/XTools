@@ -39,7 +39,7 @@ IntelliJ IDEA版（182+)
 
 ## 安装说明
 
-1. IDEA插件商店搜索改名为XTools(原插件名为XHttp)，安装重启即可
+1. IDEA插件商店搜索改名为[XTools](https://plugins.jetbrains.com/plugin/14400-xtools)(原插件名为XHttp)，安装重启即可 
 2. XTools-version.zip，IDEA导入插件安装包重启
 
 ## XHttp使用说明
