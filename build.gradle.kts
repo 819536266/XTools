@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.xdl"
-version = "2.1.1"
+version = "2.1.2"
 
 repositories {
     mavenLocal()
@@ -29,7 +29,7 @@ dependencies {
     implementation("org.freemarker:freemarker:2.3.31")
     implementation("org.projectlombok","lombok","1.18.24")
     implementation("org.yaml","snakeyaml","1.30")
-    implementation("cn.hutool","hutool-all","5.8.5")
+    implementation("cn.hutool","hutool-all","5.8.16")
 }
 
 tasks {
@@ -42,7 +42,6 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("213")
-        untilBuild.set("223.*")
     }
 
     signPlugin {

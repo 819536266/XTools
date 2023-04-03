@@ -1,7 +1,7 @@
 <idea-plugin url="https://github.com/819536266/XTools">
     <id>com.xdl</id>
     <name>XTools</name>
-    <version>2.1.1</version>
+    <version>2.1.2</version>
     <vendor email="819536266@qq.com" url="https://github.com/819536266/XTools">XTools</vendor>
 
     <description><![CDATA[
@@ -28,6 +28,17 @@
     ]]>
     </description>
     <change-notes><![CDATA[
+          <strong>2.1.2</strong></br>
+          <ul>
+                <li>Update methods that have expired.</li>
+                <li>Upgrade Hutool dependency.</li>
+                <li>fix some bug.</li>
+          </ul>
+           <ul>
+                <li>更新已过期方法。</li>
+                <li>升级Hutool依赖。</li>
+                <li>修复一些bug。</li>
+          </ul>
           <strong>2.1.1</strong></br>
           <ul>
                 <li>Right click option to change to Chinese.</li>
@@ -269,6 +280,7 @@
             <!-- 下划线方式命名的字符串转换为驼峰式 -->
             <action id="Camel Case" class="com.xdl.action.utilAction.CamelCaseAction" text="下划线转驼峰"
                     description="'下划线转驼峰'">
+                <keyboard-shortcut first-keystroke="alt u" keymap="$default"/>
             </action>
             <!-- 单引号转双引号,双引号转单引号 -->
             <action id="Quotes Cast" class="com.xdl.action.utilAction.QuotesCastAction" text="单双引号互转"

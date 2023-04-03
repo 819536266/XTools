@@ -31,7 +31,7 @@ public class JsonFormat {
 
         formatButton.addActionListener(o->{
             String text = json.getText();
-            if(!StrUtil.isEmpty(text) && JSONUtil.isJson(text)){
+            if(!StrUtil.isEmpty(text) && JSONUtil.isTypeJSON(text)){
                 formatJson.setText(JSONUtil.formatJsonStr(text));
                 //设置光标在开始位置
                 formatJson.setSelectionStart(1);
@@ -45,14 +45,14 @@ public class JsonFormat {
 
         compressButton.addActionListener(o->{
             String text = formatJson.getText();
-            if(StrUtil.isEmpty(text) && !JSONUtil.isJson(text)){
+            if(StrUtil.isEmpty(text) && !JSONUtil.isTypeJSON(text)){
                 json.setText("JSON格式错误！");
             }
-            if(JSONUtil.isJsonArray(text)){
+            if(JSONUtil.isTypeJSONArray(text)){
                 JSONArray objects = JSONUtil.parseArray(text);
                 json.setText(JSONUtil.toJsonStr(objects.toBean(HashMap.class)));
             }
-            if(JSONUtil.isJsonObj(text)){
+            if(JSONUtil.isTypeJSONObject(text)){
                 JSONObject jsonObject = JSONUtil.parseObj(text);
                 json.setText(JSONUtil.toJsonStr(jsonObject.toBean(HashMap.class)));
             }

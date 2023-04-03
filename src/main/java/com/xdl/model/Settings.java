@@ -1,9 +1,7 @@
 package com.xdl.model;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.annotations.Transient;
 import com.xdl.util.MethodExcludeParam;
 import lombok.Data;
@@ -12,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * 全局配置信息
+ *
  * @author Bx_Hu
-
  */
 @Data
 @State(name = "XHttpSetting", storages = @Storage("x-http-setting.xml"))
@@ -24,7 +22,7 @@ public class Settings implements PersistentStateComponent<Settings> {
     @Transient
     public static final String DEFAULT_NAME = "Default";
 
-    private static final String LOCALHOST="http://localhost:8080";
+    private static final String LOCALHOST = "http://localhost:8080";
 
     /**
      * 域名
@@ -46,7 +44,7 @@ public class Settings implements PersistentStateComponent<Settings> {
      * @return 实例对象
      */
     public static Settings getInstance() {
-        return ServiceManager.getService(Settings.class);
+        return ApplicationManager.getApplication().getService(Settings.class);
     }
 
     public Settings() {
@@ -55,7 +53,7 @@ public class Settings implements PersistentStateComponent<Settings> {
     }
 
 
-    public  void restart(){
+    public void restart() {
         this.doMain = LOCALHOST;
         this.exclude = MethodExcludeParam.EXCLUDE;
     }
@@ -68,8 +66,8 @@ public class Settings implements PersistentStateComponent<Settings> {
 
     @Override
     public void loadState(@NotNull Settings settings) {
-        this.exclude=settings.exclude;
-        this.doMain=settings.doMain;
-        this.orCache=settings.orCache;
+        this.exclude = settings.exclude;
+        this.doMain = settings.doMain;
+        this.orCache = settings.orCache;
     }
 }

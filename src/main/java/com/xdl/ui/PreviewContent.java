@@ -2,6 +2,7 @@ package com.xdl.ui;
 
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.EditorTextField;
+import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -28,7 +29,7 @@ public class PreviewContent extends DialogWrapper {
     protected JComponent createCenterPanel() {
         JPanel jPanel = new JPanel();
         jPanel.setPreferredSize(new Dimension(500, 700));
-        JScrollPane jPanel1 = new JScrollPane();
+        JScrollPane jPanel1 = new JBScrollPane();
         jPanel1.setPreferredSize(new Dimension(500, 700));
         jPanel1.getViewport().add(editorTextField);
         jPanel1.validate();
